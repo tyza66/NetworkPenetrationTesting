@@ -1,0 +1,2 @@
+deb https://mirrors.ustc.edu.cn/kali kali-last-snapshot main non-free non-free-firmware contrib
+deb-src https://mirrors.ustc.edu.cn/kali kali-last-snapshot main non-free non-free-firmware contrib
