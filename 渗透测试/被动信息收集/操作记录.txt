@@ -1,0 +1,171 @@
+1.DNS信息收集
+DNS就是域名服务器,分为根域DNS和顶级域名DNS服务器
+首先了解一下域名的解析过程
+理解一下递归从查询和迭代查序
+递归查询: 客户端只发一次请求,要求对方给出最终结果
+迭代查询: 客户端发送一次请求,如果对方没有授权回答,它回返回一个能解答这个查询的其他服务器列表,客户端会再向返回的列表中发送请求,直到找到最终负责所查询域名的服务器 ,从它得到最终结果
+dns信息收集最终要做的就是域名信息收集和子域名信息的挖掘
+咱们可以ping一下12306网站
+ping 12306.cn 
+PING 12306.cn.wsglb0.com (119.115.249.223) 56(84) bytes of data.
+64 bytes from 119.115.249.223: icmp_seq=1 ttl=52 time=18.1 ms
+64 bytes from 119.115.249.223: icmp_seq=2 ttl=52 time=18.2 ms
+64 bytes from 119.115.249.223: icmp_seq=3 ttl=52 time=22.2 ms
+64 bytes from 119.115.249.223: icmp_seq=4 ttl=52 time=20.5 ms
+64 bytes from 119.115.249.223: icmp_seq=5 ttl=52 time=18.0 ms
+64 bytes from 119.115.249.223: icmp_seq=6 ttl=52 time=19.2 ms
+64 bytes from 119.115.249.223: icmp_seq=7 ttl=52 time=18.0 ms
+
+咱们还可以用nslookup 拿到非权威的域名解析信息
+nslookup 12306.cn
+Server:         114.114.114.114
+Address:        114.114.114.114#53
+
+Non-authoritative answer:
+12306.cn        canonical name = 12306.cn.wsglb0.com.
+Name:   12306.cn.wsglb0.com
+Address: 218.24.86.118
+Name:   12306.cn.wsglb0.com
+Address: 119.115.249.222
+Name:   12306.cn.wsglb0.com
+Address: 119.115.249.223
+Name:   12306.cn.wsglb0.com
+Address: 119.115.249.221
+Name:   12306.cn.wsglb0.com
+Address: 2408:862e:4402:2::2c
+Name:   12306.cn.wsglb0.com
+Address: 2408:862e:4402:2::42
+Name:   12306.cn.wsglb0.com
+Address: 2408:862e:ff:ff23::32
+Name:   12306.cn.wsglb0.com
+Address: 2408:862e:4402:2::2d
+
+我们还可以用dig
+dig 12306.cn            
+
+; <<>> DiG 9.19.21-1+b1-Debian <<>> 12306.cn
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 35223
+;; flags: qr rd ra; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;12306.cn.                      IN      A
+
+;; ANSWER SECTION:
+12306.cn.               2605    IN      CNAME   12306.cn.wsglb0.com.
+12306.cn.wsglb0.com.    37      IN      A       119.115.249.223
+12306.cn.wsglb0.com.    37      IN      A       218.24.86.118
+12306.cn.wsglb0.com.    37      IN      A       119.115.249.222
+12306.cn.wsglb0.com.    37      IN      A       119.115.249.221
+
+;; Query time: 32 msec
+;; SERVER: 114.114.114.114#53(114.114.114.114) (UDP)
+;; WHEN: Sat Feb 15 20:46:30 CST 2025
+;; MSG SIZE  rcvd: 134
+
+
+我们还可以用@指定域名解析提供者
+dig @8.8.8.8 12306.cn
+
+; <<>> DiG 9.19.21-1+b1-Debian <<>> @8.8.8.8 12306.cn
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 12487
+;; flags: qr rd ra; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;12306.cn.                      IN      A
+
+;; ANSWER SECTION:
+12306.cn.               3566    IN      CNAME   12306.cn.wsglb0.com.
+12306.cn.wsglb0.com.    60      IN      A       119.115.249.221
+12306.cn.wsglb0.com.    60      IN      A       119.115.249.222
+12306.cn.wsglb0.com.    60      IN      A       119.115.249.223
+12306.cn.wsglb0.com.    60      IN      A       218.24.86.118
+
+;; Query time: 64 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8) (UDP)
+;; WHEN: Sat Feb 15 20:47:42 CST 2025
+;; MSG SIZE  rcvd: 134
+
+
+我们还可以使用any查看更多
+dig @114.114.114.114 12306.cn any
+
+; <<>> DiG 9.19.21-1+b1-Debian <<>> @114.114.114.114 12306.cn any
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 46594
+;; flags: qr rd ra; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;12306.cn.                      IN      ANY
+
+;; ANSWER SECTION:
+12306.cn.               2467    IN      CNAME   12306.cn.wsglb0.com.
+12306.cn.               1292    IN      NS      dns1.zdnscloud.info.
+12306.cn.               1292    IN      NS      ins1.zdnscloud.com.
+12306.cn.               1292    IN      NS      vns1.zdnscloud.biz.
+12306.cn.               1292    IN      NS      cns1.zdnscloud.net.
+
+;; Query time: 264 msec
+;; SERVER: 114.114.114.114#53(114.114.114.114) (TCP)
+;; WHEN: Sat Feb 15 20:48:47 CST 2025
+;; MSG SIZE  rcvd: 196
+
+我们还可以用-x进行反查询
+dig -x 114.114.114.114      可以将ip解析成域名      
+
+; <<>> DiG 9.19.21-1+b1-Debian <<>> -x 114.114.114.114
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 59668
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;114.114.114.114.in-addr.arpa.  IN      PTR
+
+;; ANSWER SECTION:
+114.114.114.114.in-addr.arpa. 474 IN    PTR     public1.114dns.com.
+
+;; Query time: 28 msec
+;; SERVER: 114.114.114.114#53(114.114.114.114) (UDP)
+;; WHEN: Sat Feb 15 20:51:23 CST 2025
+;; MSG SIZE  rcvd: 89
+
+我们还可以查询域名的注册信息和备案信息
+https://whois.aliyun.com/
+除了阿里云 腾讯云 站长之家也可以用
+
+命令行也可以通过whois查询
+whois 12306.cn 
+Domain Name: 12306.cn
+ROID: 20030310s10001s00012731-cn
+Domain Status: ok
+Registrant: 中国铁道科学研究院集团有限公司
+Registrant Contact Email: 13501238352@139.com
+Sponsoring Registrar: 北京国科云计算技术有限公司（原北京中科三方网络技术有限公司）
+Name Server: cns1.zdnscloud.net
+Name Server: dns1.zdnscloud.info
+Name Server: ins1.zdnscloud.com
+Name Server: vns1.zdnscloud.biz
+Registration Time: 2003-03-10 18:50:16
+Expiration Time: 2029-01-13 14:16:31
+DNSSEC: unsigned
+
+查询备案信息
+https://icp.chinaz.com/
+有很多网站虽然不能访问但是备案信息还是存在的
+通过进一步查询我们就能获得更多的信息
+----------------------------------------------------
