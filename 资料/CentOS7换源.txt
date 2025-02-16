@@ -1,0 +1,26 @@
+更换为国内镜像源
+备份原有yum源配置：执行命令sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak，备份原有的yum源配置文件。
+下载新的yum源配置文件
+阿里云源：执行命令sudo wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo。
+网易源：执行命令sudo wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.163.com/.help/CentOS7-Base-163.repo。
+清理yum缓存并更新源：执行命令sudo yum clean all清理缓存，然后执行sudo yum makecache生成新的缓存。
+测试新的镜像源：执行命令yum check-update，检查更换镜像源是否成功。123
+更换为vault源
+由于CentOS 7已停止维护，可更换为vault源继续获取软件包。
+
+访问国内镜像站，如阿里云或网易，找到CentOS 7的vault源地址。
+按照镜像站提供的指引，替换原有的yum源配置文件中的地址为vault源地址。
+清理yum缓存并更新源，执行命令sudo yum clean all和sudo yum makecache。
+配置本地yum源
+在没有公网访问权限的场景下，可配置本地yum源。
+
+准备CentOS 7的安装镜像ISO文件，挂载到本地目录，如/mnt。
+在/etc/yum.repos.d/目录下新建一个repo文件，如local.repo，内容如下：
+ini   [local]
+   name=local
+   baseurl=file:///mnt
+   enabled=1
+   gpgcheck=0
+   
+清理yum缓存并生成新的缓存，执行命令yum clean all和yum makecache。
+通过以上方法，可有效更换CentOS 7的yum源，确保软件包的正常下载和安装。建议定期检查和更新yum源，以获取最新的软件包和安全更新。

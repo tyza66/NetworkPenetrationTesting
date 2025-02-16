@@ -174,7 +174,6 @@ https://icp.chinaz.com/
 我们还可以直接通过网站下面的备案号进行查询
 可以查到一个备案号下面都有哪些站点
 
-
 以上都是收集的主域名的信息,每个主域名下面可以有多级的子域名
 一般我们说的顶级域名就是域名点最后的一段字母比如com
 子域名可以根据技术的多少分为二级域名和三级域名
@@ -187,5 +186,489 @@ https://icp.chinaz.com/
 还可以去证书公开日志的枚举crt.sh
 查询子域名其实是爆破的
 
-我们还可以用layer子域名挖掘机 它能通过字典查子域名
+我们还可以用layer子域名挖掘机 它能通过字典查子域名 之后还可以右键导出
+但是最好用网上的 因为不走自己的ip 走网站的ip 不容易被发现
 ----------------------------------------------------
+2.使用FOFA搜索引擎收集信息
+FOFA是网络空间资产检索系统 国外还有shodan
+支持一些很好用的语法
+最常用的语法是title="" 就是网站标题
+body="" 也可以用来查询框架的版本 之后应对对应的漏洞
+domain="12306.cn" 还可以搜域名
+country="CN" 指定国家
+region="" 指的是行政区
+city="" 指定的是城市
+
+如果想反向选择就用!=就行了
+组合条件可以用()和&&
+
+还可以使用ip进行搜索 有快捷填写功能
+还可以根据icon进行搜索
+
+js_name=""  搜索一些从其他链接引入的js
+
+知道他用的是什么框架或者组件之后直接搜对应漏洞就行了
+----------------------------------------------------
+ARL资产侦察灯塔系统 它可以快速地发现并整理企业外网资产并为资产构建基础数据库,收集中不需要任何凭证
+这里咱们用docker安装
+centOS安装好docker环境之后 配置好镜像
+docker info可以看一下
+ Insecure Registries:
+  172.24.86.231
+  127.0.0.0/8
+ Registry Mirrors:
+  https://dockerproxy.com/
+  https://mirror.baidubce.com/
+  https://ccr.ccs.tencentyun.com/
+  https://docker.m.daocloud.io/
+  https://docker.nju.edu.cn/
+  https://docker.mirrors.ustc.edu.cn/
+ Live Restore Enabled: false
+
+[root@192 ~]# docker pull tophant/arl
+Using default tag: latest
+Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+[root@192 ~]# vim /etc/docker/daemon.json
+[root@192 ~]# 启动和校验 常用操作
+bash: 启动和校验: 未找到命令...
+[root@192 ~]# # 启动Docker
+[root@192 ~]# systemctl start docker
+[root@192 ~]#  
+[root@192 ~]# # 停止Docker
+[root@192 ~]# systemctl stop docker
+Warning: Stopping docker.service, but it can still be activated by:
+  docker.socket
+[root@192 ~]#  
+[root@192 ~]# # 重启
+[root@192 ~]# systemctl restart docker
+[root@192 ~]#  
+[root@192 ~]# # 设置开机自启
+[root@192 ~]# systemctl enable docker
+[root@192 ~]# docker pull tophant/arl
+Using default tag: latest
+^C
+[root@192 ~]# docker pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+c353fd29d8c5: Pull complete 
+98b095d7d2b4: Pull complete 
+af5f0e3644c1: Pull complete 
+Digest: sha256:fad8e1cd52e24bce7b72cd7cb674a2efad671647b917055f5bd8a1f7ac9b1af8
+Status: Downloaded newer image for nginx:latest
+docker.io/library/nginx:latest
+[root@192 ~]# docker pull tophant/arl
+Using default tag: latest
+Error response from daemon: Get "https://registry-1.docker.io/v2/": net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+[root@192 ~]# cd home
+-bash: cd: home: 没有那个文件或目录
+[root@192 ~]# cd /home
+[root@192 home]# cd home
+-bash: cd: home: 没有那个文件或目录
+[root@192 home]# cd /home
+[root@192 home]# docker load -i arl.tar.gz
+174f56854903: Loading layer [==================================================>]  211.7MB/211.7MB
+aee8aba40060: Loading layer [==================================================>]  1.536kB/1.536kB
+2527844684f6: Loading layer [==================================================>]  310.4MB/310.4MB
+5f70bf18a086: Loading layer [==================================================>]  1.024kB/1.024kB
+e398ecb94d34: Loading layer [==================================================>]  11.89MB/11.89MB
+2d603b91a2be: Loading layer [==================================================>]  54.73MB/54.73MB
+af71df42425b: Loading layer [==================================================>]    205MB/205MB
+16f7a12d16a2: Loading layer [==================================================>]  60.38MB/60.38MB
+8502e6c391da: Loading layer [==================================================>]  70.07MB/70.07MB
+7e17a2ee980b: Loading layer [==================================================>]  88.58kB/88.58kB
+10dd600025c7: Loading layer [==================================================>]   2.56kB/2.56kB
+ccb59d8e96dd: Loading layer [==================================================>]   2.28MB/2.28MB
+ccf320760b6f: Loading layer [==================================================>]  6.144kB/6.144kB
+d06e9419c967: Loading layer [==================================================>]  3.072kB/3.072kB
+435c5589eef4: Loading layer [==================================================>]  8.192kB/8.192kB
+0f6ea0bd4d7b: Loading layer [==================================================>]  639.5kB/639.5kB
+30557e9a08b8: Loading layer [==================================================>]  4.608kB/4.608kB
+2d6af01ab893: Loading layer [==================================================>]  591.4kB/591.4kB
+e7c949f7c282: Loading layer [==================================================>]   55.3kB/55.3kB
+f3f902cada21: Loading layer [==================================================>]  4.096kB/4.096kB
+c76faba4b1da: Loading layer [==================================================>]   2.56kB/2.56kB
+550a00a706b5: Loading layer [==================================================>]  62.69MB/62.69MB
+a3030d4ddf44: Loading layer [==================================================>]  104.5MB/104.5MB
+d7092f989be7: Loading layer [==================================================>]  11.71MB/11.71MB
+2976fbdd2b57: Loading layer [==================================================>]  76.62MB/76.62MB
+d62c2921381a: Loading layer [==================================================>]   26.5MB/26.5MB
+126a67c5a462: Loading layer [==================================================>]  10.28MB/10.28MB
+1dda1688b387: Loading layer [==================================================>]  6.144kB/6.144kB
+c213d80204b9: Loading layer [==================================================>]  683.5kB/683.5kB
+Loaded image: tophant/arl:v2.6.2
+d4fc045c9e3a: Loading layer [==================================================>]  7.667MB/7.667MB
+83b47a2ea3a4: Loading layer [==================================================>]  77.96MB/77.96MB
+2dfedc0ba165: Loading layer [==================================================>]  3.072kB/3.072kB
+ffb063216922: Loading layer [==================================================>]  24.94MB/24.94MB
+37227289c7d1: Loading layer [==================================================>]  3.072kB/3.072kB
+4889d6f9c480: Loading layer [==================================================>]  7.725MB/7.725MB
+b7aa9ff6e6f2: Loading layer [==================================================>]  25.94MB/25.94MB
+76920ce34a18: Loading layer [==================================================>]  3.072kB/3.072kB
+36511f495258: Loading layer [==================================================>]  1.536kB/1.536kB
+69671e74e613: Loading layer [==================================================>]  4.608kB/4.608kB
+5aa22c5fb212: Loading layer [==================================================>]  4.608kB/4.608kB
+0727b10448a2: Loading layer [==================================================>]  40.02MB/40.02MB
+Loaded image: rabbitmq:3.13.1-management-alpine
+be96a3f634de: Loading layer [==================================================>]  138.9MB/138.9MB
+df54c846128d: Loading layer [==================================================>]  15.87kB/15.87kB
+47ef83afae74: Loading layer [==================================================>]  11.78kB/11.78kB
+1251204ef8fc: Loading layer [==================================================>]  3.072kB/3.072kB
+493727825a44: Loading layer [==================================================>]    341kB/341kB
+fef80af5a6a6: Loading layer [==================================================>]  7.421MB/7.421MB
+86ebf8b192a8: Loading layer [==================================================>]  3.682MB/3.682MB
+f50f5ddd3c5b: Loading layer [==================================================>]  2.048kB/2.048kB
+1cbd549e6e1b: Loading layer [==================================================>]   5.12kB/5.12kB
+1a605785a65b: Loading layer [==================================================>]  3.584kB/3.584kB
+ba2b0d29bb5e: Loading layer [==================================================>]  285.9MB/285.9MB
+7efe1d0d2b41: Loading layer [==================================================>]  3.072kB/3.072kB
+7e99b864a28d: Loading layer [==================================================>]  17.41kB/17.41kB
+Loaded image: mongo:4.0.27
+[root@192 home]# unzip ARL.zip
+Archive:  ARL.zip
+   creating: ARL/
+   creating: ARL/.github/
+   creating: ARL/.github/ISSUE_TEMPLATE/
+  inflating: ARL/.github/ISSUE_TEMPLATE/问题反馈.md  
+   creating: ARL/.github/workflows/
+  inflating: ARL/.github/workflows/arm-builder.yml  
+  inflating: ARL/.github/workflows/builder.yml  
+  inflating: ARL/.github/workflows/push-docker-manifest.yml  
+  inflating: ARL/.github/workflows/release.yml  
+  inflating: ARL/.gitignore          
+  inflating: ARL/Disclaimer.md       
+  inflating: ARL/LICENSE.md          
+  inflating: ARL/Readme.md           
+   creating: ARL/app/
+  inflating: ARL/app/__init__.py     
+ extracting: ARL/app/__main__.py     
+  inflating: ARL/app/celerytask.py   
+  inflating: ARL/app/config.py       
+  inflating: ARL/app/config.yaml.example  
+   creating: ARL/app/dicts/
+  inflating: ARL/app/dicts/altdnsdict.txt  
+  inflating: ARL/app/dicts/black_asset_site.txt  
+  inflating: ARL/app/dicts/blackdomain.txt  
+  inflating: ARL/app/dicts/blackhexie.txt  
+  inflating: ARL/app/dicts/cdn_info.json  
+  inflating: ARL/app/dicts/dnsserver.txt  
+  inflating: ARL/app/dicts/domain_2w.txt  
+ extracting: ARL/app/dicts/domain_dict_test.txt  
+ extracting: ARL/app/dicts/file_test.txt  
+  inflating: ARL/app/dicts/file_top_200.txt  
+  inflating: ARL/app/dicts/file_top_2000.txt  
+  inflating: ARL/app/dicts/noscreenshot.jpg  
+  inflating: ARL/app/dicts/webapp.json  
+  inflating: ARL/app/dicts/wih_rules.yml  
+   creating: ARL/app/helpers/
+  inflating: ARL/app/helpers/__init__.py  
+  inflating: ARL/app/helpers/asset_domain.py  
+  inflating: ARL/app/helpers/asset_site.py  
+  inflating: ARL/app/helpers/asset_site_monitor.py  
+  inflating: ARL/app/helpers/asset_wih.py  
+  inflating: ARL/app/helpers/asset_wih_monitor.py  
+  inflating: ARL/app/helpers/domain.py  
+  inflating: ARL/app/helpers/message_notify.py  
+  inflating: ARL/app/helpers/policy.py  
+  inflating: ARL/app/helpers/scheduler.py  
+  inflating: ARL/app/helpers/scope.py  
+  inflating: ARL/app/helpers/task.py  
+  inflating: ARL/app/helpers/task_schedule.py  
+  inflating: ARL/app/helpers/url.py  
+  inflating: ARL/app/main.py         
+   creating: ARL/app/modules/
+  inflating: ARL/app/modules/__init__.py  
+  inflating: ARL/app/modules/baseInfo.py  
+  inflating: ARL/app/modules/domainInfo.py  
+  inflating: ARL/app/modules/ipInfo.py  
+  inflating: ARL/app/modules/pageInfo.py  
+  inflating: ARL/app/modules/wihRecord.py  
+   creating: ARL/app/routes/
+  inflating: ARL/app/routes/__init__.py  
+  inflating: ARL/app/routes/assetDomain.py  
+  inflating: ARL/app/routes/assetIP.py  
+  inflating: ARL/app/routes/assetScope.py  
+  inflating: ARL/app/routes/assetSite.py  
+  inflating: ARL/app/routes/assetWih.py  
+  inflating: ARL/app/routes/batchExport.py  
+  inflating: ARL/app/routes/cert.py  
+  inflating: ARL/app/routes/cip.py   
+  inflating: ARL/app/routes/console.py  
+  inflating: ARL/app/routes/domain.py  
+  inflating: ARL/app/routes/export.py  
+  inflating: ARL/app/routes/fileleak.py  
+  inflating: ARL/app/routes/fingerprint.py  
+  inflating: ARL/app/routes/github_monitor_result.py  
+  inflating: ARL/app/routes/github_result.py  
+  inflating: ARL/app/routes/github_scheduler.py  
+  inflating: ARL/app/routes/github_task.py  
+  inflating: ARL/app/routes/image.py  
+  inflating: ARL/app/routes/ip.py    
+  inflating: ARL/app/routes/npoc_service.py  
+  inflating: ARL/app/routes/nuclei_result.py  
+  inflating: ARL/app/routes/poc.py   
+  inflating: ARL/app/routes/policy.py  
+  inflating: ARL/app/routes/scheduler.py  
+  inflating: ARL/app/routes/service.py  
+  inflating: ARL/app/routes/site.py  
+  inflating: ARL/app/routes/stat_finger.py  
+  inflating: ARL/app/routes/task.py  
+  inflating: ARL/app/routes/taskFofa.py  
+  inflating: ARL/app/routes/task_schedule.py  
+  inflating: ARL/app/routes/url.py   
+  inflating: ARL/app/routes/user.py  
+  inflating: ARL/app/routes/vuln.py  
+  inflating: ARL/app/routes/wih.py   
+  inflating: ARL/app/scheduler.py    
+   creating: ARL/app/services/
+  inflating: ARL/app/services/__init__.py  
+  inflating: ARL/app/services/altDNS.py  
+  inflating: ARL/app/services/asset_site_monitor.py  
+  inflating: ARL/app/services/asset_wih_monitor.py  
+  inflating: ARL/app/services/autoTag.py  
+  inflating: ARL/app/services/baseThread.py  
+  inflating: ARL/app/services/baseUpdateTask.py  
+  inflating: ARL/app/services/buildDomainInfo.py  
+  inflating: ARL/app/services/checkHTTP.py  
+  inflating: ARL/app/services/commonTask.py  
+  inflating: ARL/app/services/dns_query.py  
+   creating: ARL/app/services/dns_query_plugin/
+ extracting: ARL/app/services/dns_query_plugin/__init__.py  
+  inflating: ARL/app/services/dns_query_plugin/alienvault.py  
+  inflating: ARL/app/services/dns_query_plugin/certspotter.py  
+  inflating: ARL/app/services/dns_query_plugin/chaos.py  
+  inflating: ARL/app/services/dns_query_plugin/crtsh.py  
+  inflating: ARL/app/services/dns_query_plugin/fofa.py  
+  inflating: ARL/app/services/dns_query_plugin/hunter_qax.py  
+  inflating: ARL/app/services/dns_query_plugin/passivetotal.py  
+  inflating: ARL/app/services/dns_query_plugin/quake_360.py  
+  inflating: ARL/app/services/dns_query_plugin/rapiddns.py  
+  inflating: ARL/app/services/dns_query_plugin/securitytrails.py  
+  inflating: ARL/app/services/dns_query_plugin/virustotal.py  
+  inflating: ARL/app/services/dns_query_plugin/zoomeye.py  
+  inflating: ARL/app/services/domainSiteUpdate.py  
+  inflating: ARL/app/services/expr.py  
+  inflating: ARL/app/services/fetchCert.py  
+  inflating: ARL/app/services/fetchSite.py  
+  inflating: ARL/app/services/fileLeak.py  
+  inflating: ARL/app/services/findVhost.py  
+  inflating: ARL/app/services/fingerprint.py  
+  inflating: ARL/app/services/fingerprint_cache.py  
+  inflating: ARL/app/services/fofaClient.py  
+  inflating: ARL/app/services/githubSearch.py  
+  inflating: ARL/app/services/infoHunter.py  
+  inflating: ARL/app/services/massdns.py  
+  inflating: ARL/app/services/npoc.py  
+  inflating: ARL/app/services/nuclei_scan.py  
+  inflating: ARL/app/services/pageFetch.py  
+  inflating: ARL/app/services/portScan.py  
+  inflating: ARL/app/services/probeHTTP.py  
+  inflating: ARL/app/services/resolverDomain.py  
+  inflating: ARL/app/services/searchEngines.py  
+  inflating: ARL/app/services/siteScreenshot.py  
+  inflating: ARL/app/services/siteUrlSpider.py  
+  inflating: ARL/app/services/syncAsset.py  
+  inflating: ARL/app/services/webAnalyze.py  
+  inflating: ARL/app/services/webhook.py  
+   creating: ARL/app/tasks/
+  inflating: ARL/app/tasks/__init__.py  
+  inflating: ARL/app/tasks/asset_site.py  
+  inflating: ARL/app/tasks/asset_wih.py  
+  inflating: ARL/app/tasks/domain.py  
+  inflating: ARL/app/tasks/github.py  
+  inflating: ARL/app/tasks/ip.py     
+  inflating: ARL/app/tasks/poc.py    
+  inflating: ARL/app/tasks/scheduler.py  
+   creating: ARL/app/tools/
+  inflating: ARL/app/tools/apps.json  
+  inflating: ARL/app/tools/driver.js  
+  inflating: ARL/app/tools/massdns   
+  inflating: ARL/app/tools/phantomjs  
+  inflating: ARL/app/tools/screenshot.js  
+  inflating: ARL/app/tools/targetGen.py  
+  inflating: ARL/app/tools/wappalyzer.js  
+   creating: ARL/app/utils/
+  inflating: ARL/app/utils/IPy.py    
+  inflating: ARL/app/utils/__init__.py  
+  inflating: ARL/app/utils/arl.py    
+  inflating: ARL/app/utils/arlupdate.py  
+  inflating: ARL/app/utils/cdn.py    
+  inflating: ARL/app/utils/cert.py   
+  inflating: ARL/app/utils/conn.py   
+  inflating: ARL/app/utils/cron.py   
+  inflating: ARL/app/utils/device.py  
+  inflating: ARL/app/utils/domain.py  
+  inflating: ARL/app/utils/fingerprint.py  
+  inflating: ARL/app/utils/github_task.py  
+  inflating: ARL/app/utils/http.py   
+  inflating: ARL/app/utils/ip.py     
+  inflating: ARL/app/utils/nmap.py   
+  inflating: ARL/app/utils/push.py   
+  inflating: ARL/app/utils/query_loader.py  
+  inflating: ARL/app/utils/time.py   
+  inflating: ARL/app/utils/url.py    
+  inflating: ARL/app/utils/user.py   
+   creating: ARL/arl_tool/
+  inflating: ARL/arl_tool/GithubLeak.py  
+  inflating: ARL/arl_tool/fileleakV2.py  
+   creating: ARL/docker/
+ extracting: ARL/docker/.env         
+   creating: ARL/docker/ARMWorker/
+  inflating: ARL/docker/ARMWorker/Dockerfile  
+ extracting: ARL/docker/arl_web.log  
+ extracting: ARL/docker/arl_worker.log  
+  inflating: ARL/docker/config-docker.yaml  
+  inflating: ARL/docker/docker-compose.yml  
+   creating: ARL/docker/frontend/
+   creating: ARL/docker/frontend/css/
+  inflating: ARL/docker/frontend/css/app~d0ae3f07.4bf36d09.css  
+  inflating: ARL/docker/frontend/css/assetsMonitor~f71cff67.90e05005.css  
+  inflating: ARL/docker/frontend/css/chunk-367f8a7a.01e58279.css  
+  inflating: ARL/docker/frontend/css/chunk-7fa6e08b.42412e6b.css  
+  inflating: ARL/docker/frontend/css/chunk-a2febf90.c9ac60be.css  
+  inflating: ARL/docker/frontend/css/chunk-b4506206.e8a39534.css  
+  inflating: ARL/docker/frontend/css/groupAssetsDetail~f71cff67.69a66a2f.css  
+  inflating: ARL/docker/frontend/css/groupAssetsManagement~f71cff67.10c25a72.css  
+  inflating: ARL/docker/frontend/css/npm.ant-design-vue~301ae65c.698f9410.css  
+  inflating: ARL/docker/frontend/css/npm.ant-design-vue~4acf2f4a.ab870312.css  
+  inflating: ARL/docker/frontend/css/npm.ant-design-vue~5f8813c1.680b71d4.css  
+  inflating: ARL/docker/frontend/css/npm.ant-design-vue~731d2fff.1b7a0c24.css  
+  inflating: ARL/docker/frontend/css/npm.ant-design-vue~9a6beb85.3a1e913e.css  
+  inflating: ARL/docker/frontend/css/npm.ant-design-vue~ac50015d.5698995a.css  
+  inflating: ARL/docker/frontend/css/pocList~31ecd969.83581b2f.css  
+  inflating: ARL/docker/frontend/css/search~f71cff67.d188b78c.css  
+  inflating: ARL/docker/frontend/css/taskDetail~f71cff67.0ff6bde8.css  
+  inflating: ARL/docker/frontend/css/taskList~f71cff67.1de399be.css  
+  inflating: ARL/docker/frontend/favicon.ico  
+  inflating: ARL/docker/frontend/index.html  
+   creating: ARL/docker/frontend/js/
+  inflating: ARL/docker/frontend/js/app~d0ae3f07.210036a0.js  
+  inflating: ARL/docker/frontend/js/assetsMonitor~f71cff67.169bf576.js  
+  inflating: ARL/docker/frontend/js/chunk-367f8a7a.d0a009a4.js  
+  inflating: ARL/docker/frontend/js/chunk-7fa6e08b.b27d6ea5.js  
+  inflating: ARL/docker/frontend/js/chunk-a2febf90.d19ba28d.js  
+  inflating: ARL/docker/frontend/js/chunk-b4506206.17ea8349.js  
+  inflating: ARL/docker/frontend/js/groupAssetsDetail~f71cff67.551ee1f9.js  
+  inflating: ARL/docker/frontend/js/groupAssetsManagement~f71cff67.adf08fed.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~1a7f21e9.8e943d65.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~301ae65c.74d1b758.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~33d5c1c7.34a1fc3f.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~4acf2f4a.d775f7f3.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~5f8813c1.d2140e0d.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~731d2fff.3c247f2e.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~85ffde94.a113f60f.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~9a6beb85.01c84af1.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~ac50015d.7c330d84.js  
+  inflating: ARL/docker/frontend/js/npm.ant-design-vue~f99c446b.e6b72f64.js  
+  inflating: ARL/docker/frontend/js/npm.core-js~987e6011.b6479e3d.js  
+  inflating: ARL/docker/frontend/js/npm.lodash~2930ad93.97832723.js  
+  inflating: ARL/docker/frontend/js/npm.moment~0a56fd24.02de3ecf.js  
+ extracting: ARL/docker/frontend/js/npm.moment~0a56fd24.02de3ecf.js.LICENSE.txt  
+  inflating: ARL/docker/frontend/js/npm.vue~daa565d3.f8374a41.js  
+ extracting: ARL/docker/frontend/js/npm.vue~daa565d3.f8374a41.js.LICENSE.txt  
+  inflating: ARL/docker/frontend/js/pocList~31ecd969.5ff0f285.js  
+  inflating: ARL/docker/frontend/js/runtime.be27a04b.js  
+  inflating: ARL/docker/frontend/js/search~f71cff67.e94d4c0f.js  
+  inflating: ARL/docker/frontend/js/taskDetail~f71cff67.aa553549.js  
+  inflating: ARL/docker/frontend/js/taskList~f71cff67.163aa2af.js  
+  inflating: ARL/docker/frontend/js/vendors~app~253ae210.6ccf677e.js  
+  inflating: ARL/docker/frontend/js/vendors~app~678f84af.2f5e7f43.js  
+ extracting: ARL/docker/frontend/js/vendors~app~678f84af.2f5e7f43.js.LICENSE.txt  
+  inflating: ARL/docker/frontend/js/vendors~app~d939e436.211f1ac1.js  
+  inflating: ARL/docker/frontend/js/vendors~app~d939e436.211f1ac1.js.LICENSE.txt  
+  inflating: ARL/docker/mongo-init.js  
+  inflating: ARL/docker/nginx.conf   
+   creating: ARL/docker/worker/
+  inflating: ARL/docker/worker/Dockerfile  
+  inflating: ARL/docker/worker/gen_crt.sh  
+  inflating: ARL/docker/worker/wait-for-it.sh  
+   creating: ARL/image/
+  inflating: ARL/image/domain.png    
+  inflating: ARL/image/github_monitor.png  
+  inflating: ARL/image/login.png     
+  inflating: ARL/image/monitor.png   
+  inflating: ARL/image/policy.png    
+  inflating: ARL/image/scan.png      
+  inflating: ARL/image/site.png      
+  inflating: ARL/image/task.png      
+  inflating: ARL/image/task_scheduler.png  
+   creating: ARL/misc/
+  inflating: ARL/misc/arl-scheduler.service  
+  inflating: ARL/misc/arl-web.service  
+  inflating: ARL/misc/arl-worker-github.service  
+  inflating: ARL/misc/arl-worker.service  
+  inflating: ARL/misc/arl.conf       
+  inflating: ARL/misc/manage.sh      
+  inflating: ARL/misc/setup-arl.sh   
+  inflating: ARL/misc/setup-docker-arl.sh  
+  inflating: ARL/requirements.txt    
+   creating: ARL/test/
+ extracting: ARL/test/__init__.py    
+  inflating: ARL/test/ip.py          
+  inflating: ARL/test/main.py        
+  inflating: ARL/test/scheduler.py   
+  inflating: ARL/test/sync_asset.py  
+  inflating: ARL/test/task.py        
+  inflating: ARL/test/test_asset_site_monitor.py  
+  inflating: ARL/test/test_asset_site_update.py  
+  inflating: ARL/test/test_asset_wih_monitor.py  
+  inflating: ARL/test/test_asset_wih_task.py  
+  inflating: ARL/test/test_autotag.py  
+  inflating: ARL/test/test_cdn.py    
+  inflating: ARL/test/test_check_domain_black.py  
+  inflating: ARL/test/test_doamin.py  
+  inflating: ARL/test/test_domain_site_update.py  
+  inflating: ARL/test/test_domain_task_search_engines_spider.py  
+  inflating: ARL/test/test_expr.py   
+  inflating: ARL/test/test_fetch_favicon.py  
+  inflating: ARL/test/test_fetch_site.py  
+  inflating: ARL/test/test_findvhost.py  
+  inflating: ARL/test/test_finger.py  
+  inflating: ARL/test/test_fofa.py   
+  inflating: ARL/test/test_geoip2.py  
+  inflating: ARL/test/test_github_cron.py  
+  inflating: ARL/test/test_github_search.py  
+  inflating: ARL/test/test_github_task.py  
+  inflating: ARL/test/test_helper_domain.py  
+  inflating: ARL/test/test_ip_excutor.py  
+  inflating: ARL/test/test_normal_url.py  
+  inflating: ARL/test/test_npoc.py   
+  inflating: ARL/test/test_nuclei_scan.py  
+  inflating: ARL/test/test_policy_edit.py  
+  inflating: ARL/test/test_probe_http.py  
+  inflating: ARL/test/test_proxy_url.py  
+  inflating: ARL/test/test_query_plugin.py  
+  inflating: ARL/test/test_risk_cruising.py  
+  inflating: ARL/test/test_scan_port.py  
+  inflating: ARL/test/test_scheduler.py  
+  inflating: ARL/test/test_search_engines.py  
+  inflating: ARL/test/test_site_spider_thread.py  
+  inflating: ARL/test/test_task_helpers.py  
+  inflating: ARL/test/test_util_gen_cip.py  
+  inflating: ARL/test/test_utils.py  
+  inflating: ARL/test/test_utils_ports.py  
+  inflating: ARL/test/test_utils_push.py  
+  inflating: ARL/test/test_webhook.py  
+  inflating: ARL/test/test_wih.py    
+ extracting: ARL/version.txt         
+[root@192 home]# cd ARL/docker/
+[root@192 docker]# docker volume create --name=arl_db
+arl_db
+[root@192 docker]# docker compose up -d
+WARN[0000] /home/ARL/docker/docker-compose.yml: `version` is obsolete 
+[+] Running 6/6
+ ✔ Network docker_default   Created                                                                                   0.2s 
+ ✔ Container arl_mongodb    Started                                                                                   0.9s 
+ ✔ Container arl_rabbitmq   Started                                                                                   0.9s 
+ ✔ Container arl_scheduler  Started                                                                                   1.9s 
+ ✔ Container arl_web        Started                                                                                   2.1s 
+ ✔ Container arl_worker     Started                                                                                   2.0s 
+[root@192 docker]# 
+[root@192 docker]# docker compose ps
+WARN[0000] /home/ARL/docker/docker-compose.yml: `version` is obsolete 
+NAME            IMAGE                               COMMAND                   SERVICE     CREATED              STATUS          PORTS
+arl_mongodb     mongo:4.0.27                        "docker-entrypoint.s…"   mongodb     About a minute ago   Up 58 seconds   27017/tcp
+arl_rabbitmq    rabbitmq:3.13.1-management-alpine   "docker-entrypoint.s…"   rabbitmq    About a minute ago   Up 58 seconds   4369/tcp, 5671-5672/tcp, 15671-15672/tcp, 15691-15692/tcp, 25672/tcp
+arl_scheduler   tophant/arl:v2.6.2                  "sh -c 'wait-for-it.…"   scheduler   59 seconds ago       Up 57 seconds   
+arl_web         tophant/arl:v2.6.2                  "sh -c 'gen_crt.sh; …"   web         59 seconds ago       Up 57 seconds   0.0.0.0:5003->443/tcp, :::5003->443/tcp
+arl_worker      tophant/arl:v2.6.2                  "sh -c 'wait-for-it.…"   worker      About a minute ago   Up 57 seconds   
+
