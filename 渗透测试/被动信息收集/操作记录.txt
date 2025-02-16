@@ -703,4 +703,24 @@ kali filetype:torrent 搜索内容包含种子的
 apache site:cnvd.org.cn   site可以将搜索限定在某个网站中 搜漏洞和文章比较好
 intext:user.sql intitle:index.of 查找包含user.sql用户数据库信息的页面 并且目录是开放状态 能搜到数据库备份状态
 
-site:gov.* intitle:"index of" *.csv
+site:gov.* intitle:"index of" *.csv  查csv类型的
+s3 site:amazonsws.com filetype:xls password
+dell filetype:xls password
+
+更多搜索语法在这
+https://www.exploit-db.com/google-hacking-database'
+
+常见漏洞公开网站
+美国著名安全公司 Offensive Security 的漏洞库 http://www.exploit-db.com [比较及时]
+赛门铁克的漏洞库 http://www.securityfocus.com （国际权威漏洞库）
+国家信息安全漏洞共享平台 http://www.cnvd.org.cn/
+国内安全厂商——绿盟科技 http://www.nsfocus.net
+俄罗斯知名安全实验室 https://www.securitylab.ru/vulnerability/
+CVE 常见漏洞和披露 http://cve.mitre.org
+信息安全漏洞门户 http://vulhub.org.cn/index
+安全客 https://www.anquanke.com/
+美国国家信息安全漏洞库 https://nvd.nist.gov/
+知道创宇漏洞库 https://www.seebug.org/
+
+全球攻防实时
+https://cybermap.kaspersky.com/cn

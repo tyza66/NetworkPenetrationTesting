@@ -1,1 +1,6 @@
 直接手动扫描的都是手动信息收集
+查看全球攻击情况
+https://cybermap.kaspersky.com/cn
+https://ssa.yundun.com/cc
+
+主动会被目标发现我们的存在 尽量使用代理 随时做好被封的准备
