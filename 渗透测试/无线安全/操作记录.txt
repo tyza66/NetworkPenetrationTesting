@@ -1,0 +1,1294 @@
+┌──(root💀tyza66)-[~]
+└─# sudo  apt update
+sudo  apt  install  dkms  bc  mokutil build-essential libelf-dev linux-headers-amd64  linux-image-amd64  -y
+命中:1 https://mirrors.ustc.edu.cn/kali kali-last-snapshot InRelease
+有 1963 个软件包可以升级。请执行 ‘apt list --upgradable’ 来查看它们。
+dkms 已经是最新版 (3.0.13-1)。                 
+dkms 已设置为手动安装。
+bc 已经是最新版 (1.07.1-4)。
+bc 已设置为手动安装。
+linux-headers-amd64 已经是最新版 (6.11.2-1kali1)。
+linux-image-amd64 已经是最新版 (6.11.2-1kali1)。
+下列软件包是自动安装的并且现在不需要了：
+  cpp-13                   libgfrpc0         librdmacm1t64
+  ibverbs-providers        libgfxdr0         python3-lib2to3
+  libboost-iostreams1.83.0 libglusterfs0     python3.11
+  libboost-thread1.83.0    libibverbs1       python3.11-dev
+  libcephfs2               libpython3.11-dev python3.11-minimal
+  libgfapi0                librados2         samba-vfs-modules
+使用'sudo apt autoremove'来卸载它(它们)。
+
+将被升级：
+  blueman              openssl
+  build-essential      python3
+  cpp                  python3-arc4
+  cpp-x86-64-linux-gnu python3-dev
+  dpkg                 python3-faraday-agent-parameters-types
+  dpkg-dev             python3-faraday-plugins                               
+  faraday              python3-gpg                                           
+  g++                  python3-ldb                                           
+  g++-x86-64-linux-gnu python3-minimal                                       
+  gcc                  python3-nassl                                         
+  gcc-x86-64-linux-gnu python3-pkg-resources                                 
+  libdpkg-perl         python3-samba                                         
+  libdw1t64            python3-setuptools                                    
+  libelf1t64           python3-talloc                                        
+  libgpg-error0        python3-tdb                                           
+  libgpgme11t64        python3-zstandard                                     
+  libjs-sphinxdoc      samba                                                 
+  libldb2              samba-ad-provision                                    
+  libpython3-dev       samba-common                                          
+  libpython3-stdlib    samba-common-bin                                      
+  libsmbclient0        samba-dsdb-modules                                    
+  libssl3t64           samba-libs                                            
+  libtalloc2           samba-vfs-modules                                     
+  libtdb1              smbclient                                             
+  libwbclient0         tdb-tools                                             
+  libzstd1             wfuzz                                                 
+  onboard              winexe                                                
+  onboard-common       zstd                                                  
+  onboard-data                                                               
+                                                                             
+将要安装：
+  libelf-dev mokutil
+                                                                             
+将要安装的依赖：
+  g++-14                  libpython3.12-stdlib    python3.12
+  g++-14-x86-64-linux-gnu libpython3.12t64        python3.12-dev             
+  libassuan9              libstdc++-14-dev        python3.12-minimal         
+  libnss-winbind          libzstd-dev             samba-ad-dc                
+  libpam-winbind          openssl-provider-legacy winbind                    
+  libpython3.12-dev       python3-croniter                                   
+  libpython3.12-minimal   python3-elasticsearch                              
+                                                                             
+建议安装：
+  g++-14-multilib  python-elasticsearch-doc binfmt-support ldb-tools
+  gcc-14-doc       python3.12-venv          bind9          ntp
+  libstdc++-14-doc python3.12-doc           bind9utils     | chrony
+
+【将要卸载】：
+  python3-distutils
+                                                                             
+摘要：
+  升级：57，安装：21，卸载：1，不升级：1906
+  下载大小：69.9 MB
+  所需的空间：136 MB / 84.0 GB 可用
+
+获取:1 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 dpkg amd64 1.22.11+kali2 [1,533 kB]
+获取:2 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 openssl-provider-legacy amd64 3.3.2-2 [298 kB]
+获取:3 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libssl3t64 amd64 3.3.2-2 [2,271 kB]
+获取:4 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3.12-minimal amd64 3.12.7-3 [2,162 kB]
+获取:5 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpython3-dev amd64 3.12.6-1 [9,952 B]
+获取:6 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-dev amd64 3.12.6-1 [26.1 kB]
+获取:7 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 wfuzz all 3.1.0-4.1 [283 kB]
+获取:8 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-setuptools all 74.1.2-2 [736 kB]
+获取:9 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 faraday all 5.8.0-0kali1 [8,115 kB]
+获取:10 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-tdb amd64 1.4.12-1 [16.9 kB]
+获取:11 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libtalloc2 amd64 2.4.2-1+b3 [26.1 kB]
+获取:12 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-talloc amd64 2.4.2-1+b3 [15.2 kB]
+获取:13 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba-ad-provision all 2:4.21.1+dfsg-2kali1 [500 kB]
+获取:14 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba-vfs-modules amd64 2:4.21.1+dfsg-2kali1 [39.1 kB]
+获取:15 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba amd64 2:4.21.1+dfsg-2kali1 [1,329 kB]
+获取:16 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba-common-bin amd64 2:4.21.1+dfsg-2kali1 [1,258 kB]
+获取:17 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libwbclient0 amd64 2:4.21.1+dfsg-2kali1 [64.2 kB]
+获取:18 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 winexe amd64 2:4.21.1+dfsg-2kali1 [100 kB]
+获取:19 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 smbclient amd64 2:4.21.1+dfsg-2kali1 [474 kB]
+获取:20 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-ldb amd64 2:2.10.0+samba4.21.1+dfsg-2kali1 [70.2 kB]
+获取:21 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libldb2 amd64 2:2.10.0+samba4.21.1+dfsg-2kali1 [172 kB]
+获取:22 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba-dsdb-modules amd64 2:4.21.1+dfsg-2kali1 [332 kB]
+获取:23 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libsmbclient0 amd64 2:4.21.1+dfsg-2kali1 [91.7 kB]
+获取:24 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba-libs amd64 2:4.21.1+dfsg-2kali1 [5,951 kB]
+获取:25 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-samba amd64 2:4.21.1+dfsg-2kali1 [2,717 kB]
+获取:26 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-nassl amd64 5.2.0-0kali3 [1,727 kB]
+获取:27 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-arc4 amd64 0.3.0-0kali1+b2 [7,360 B]
+获取:28 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 onboard-data all 1.4.1-9 [3,807 kB]
+获取:29 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 onboard-common all 1.4.1-9 [543 kB]
+获取:30 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 onboard amd64 1.4.1-9 [350 kB]
+获取:31 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 blueman amd64 2.4.3-1 [1,019 kB]
+获取:32 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-minimal amd64 3.12.6-1 [26.7 kB]
+获取:33 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3 amd64 3.12.6-1 [27.8 kB]
+获取:34 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3.12 amd64 3.12.7-3 [671 kB]
+获取:35 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpython3-stdlib amd64 3.12.6-1 [9,692 B]
+获取:36 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libtdb1 amd64 1.4.12-1 [45.2 kB]
+获取:37 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpython3.12t64 amd64 3.12.7-3 [2,153 kB]
+获取:38 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba-common all 2:4.21.1+dfsg-2kali1 [58.2 kB]
+获取:39 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libgpg-error0 amd64 1.50-4 [81.6 kB]
+获取:40 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libassuan9 amd64 3.0.1-2 [60.6 kB]
+获取:41 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libgpgme11t64 amd64 1.24.0-2 [344 kB]
+获取:42 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-zstandard amd64 0.23.0-2+b1 [337 kB]
+获取:43 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libzstd1 amd64 1.5.6+dfsg-1+b1 [300 kB]
+获取:44 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpython3.12-minimal amd64 3.12.7-3 [815 kB]
+获取:45 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpython3.12-stdlib amd64 3.12.7-3 [1,966 kB]
+获取:46 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpython3.12-dev amd64 3.12.7-3 [5,124 kB]
+获取:47 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3.12-dev amd64 3.12.7-3 [505 kB]
+获取:48 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libjs-sphinxdoc all 7.4.7-4 [158 kB]
+获取:49 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-pkg-resources all 74.1.2-2 [213 kB]
+获取:50 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-croniter all 2.0.7-2 [26.4 kB]
+获取:51 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-elasticsearch all 7.17.6-1 [113 kB]
+获取:52 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-faraday-agent-parameters-types all 1.7.2-0kali1 [11.6 kB]
+获取:53 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-faraday-plugins all 1.19.1-0kali1 [124 kB]
+获取:54 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 winbind amd64 2:4.21.1+dfsg-2kali1 [445 kB]
+获取:55 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 samba-ad-dc amd64 2:4.21.1+dfsg-2kali1 [72.2 kB]
+获取:56 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 g++-x86-64-linux-gnu amd64 4:14.2.0-1 [1,200 B]
+获取:57 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 g++ amd64 4:14.2.0-1 [1,344 B]
+获取:58 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 gcc-x86-64-linux-gnu amd64 4:14.2.0-1 [1,436 B]
+获取:59 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 gcc amd64 4:14.2.0-1 [5,136 B]
+获取:60 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 cpp-x86-64-linux-gnu amd64 4:14.2.0-1 [4,840 B]
+获取:61 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 cpp amd64 4:14.2.0-1 [1,568 B]
+获取:62 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libstdc++-14-dev amd64 14.2.0-8 [2,369 kB]
+获取:63 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 g++-14-x86-64-linux-gnu amd64 14.2.0-8 [12.1 MB]
+获取:64 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 g++-14 amd64 14.2.0-8 [20.2 kB]
+获取:65 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 dpkg-dev all 1.22.11+kali2 [1,334 kB]
+获取:66 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libdpkg-perl all 1.22.11+kali2 [645 kB]
+获取:67 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 build-essential amd64 12.12 [4,624 B]
+获取:68 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libdw1t64 amd64 0.192-4 [255 kB]
+获取:69 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libelf1t64 amd64 0.192-4 [189 kB]
+获取:70 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libzstd-dev amd64 1.5.6+dfsg-1+b1 [365 kB]
+获取:71 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libelf-dev amd64 0.192-4 [93.2 kB]
+获取:72 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libnss-winbind amd64 2:4.21.1+dfsg-2kali1 [69.7 kB]
+获取:73 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpam-winbind amd64 2:4.21.1+dfsg-2kali1 [84.3 kB]
+获取:74 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 mokutil amd64 0.6.0-2+b1 [26.1 kB]
+获取:75 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 openssl amd64 3.3.2-2 [1,382 kB]
+获取:76 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 python3-gpg amd64 1.24.0-2 [412 kB]
+获取:77 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 tdb-tools amd64 1.4.12-1 [27.4 kB]
+获取:78 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 zstd amd64 1.5.6+dfsg-1+b1 [737 kB]
+已下载 69.9 MB，耗时 22秒 (3,218 kB/s)                                      
+正在从软件包中解出模板：100%
+(正在读取数据库 ... 系统当前共安装有 414788 个文件和目录。)
+准备解压 .../dpkg_1.22.11+kali2_amd64.deb  ...
+正在解压 dpkg (1.22.11+kali2) 并覆盖 (1.22.6+kali1) ...
+正在设置 dpkg (1.22.11+kali2) ...
+(正在读取数据库 ... 系统当前共安装有 414787 个文件和目录。)
+准备解压 .../libssl3t64_3.3.2-2_amd64.deb  ...
+正在解压 libssl3t64:amd64 (3.3.2-2) 并覆盖 (3.2.1-3) ...
+正在选中未选择的软件包 openssl-provider-legacy。
+准备解压 .../openssl-provider-legacy_3.3.2-2_amd64.deb  ...
+正在解压 openssl-provider-legacy (3.3.2-2) ...
+正在设置 libssl3t64:amd64 (3.3.2-2) ...
+正在设置 openssl-provider-legacy (3.3.2-2) ...
+正在选中未选择的软件包 python3.12-minimal。
+(正在读取数据库 ... 系统当前共安装有 414791 个文件和目录。)
+准备解压 .../0-python3.12-minimal_3.12.7-3_amd64.deb  ...
+正在解压 python3.12-minimal (3.12.7-3) ...
+准备解压 .../1-libpython3-dev_3.12.6-1_amd64.deb  ...
+正在解压 libpython3-dev:amd64 (3.12.6-1) 并覆盖 (3.11.8-1) ...
+准备解压 .../2-python3-dev_3.12.6-1_amd64.deb  ...
+正在解压 python3-dev (3.12.6-1) 并覆盖 (3.11.8-1) ...
+准备解压 .../3-wfuzz_3.1.0-4.1_all.deb  ...
+正在解压 wfuzz (3.1.0-4.1) 并覆盖 (3.1.0-4) ...
+准备解压 .../4-python3-setuptools_74.1.2-2_all.deb  ...
+正在解压 python3-setuptools (74.1.2-2) 并覆盖 (68.1.2-2) ...
+准备解压 .../5-faraday_5.8.0-0kali1_all.deb  ...
+正在解压 faraday (5.8.0-0kali1) 并覆盖 (5.2.2-0kali1) ...
+(正在读取数据库 ... 系统当前共安装有 415158 个文件和目录。)
+正在卸载 python3-distutils (3.12.3-1) ...
+(正在读取数据库 ... 系统当前共安装有 415103 个文件和目录。)
+准备解压 .../00-python3-tdb_1.4.12-1_amd64.deb  ...
+正在解压 python3-tdb (1.4.12-1) 并覆盖 (1.4.10-1) ...
+准备解压 .../01-libtalloc2_2.4.2-1+b3_amd64.deb  ...
+正在解压 libtalloc2:amd64 (2.4.2-1+b3) 并覆盖 (2.4.2-1+b1) ...
+准备解压 .../02-python3-talloc_2.4.2-1+b3_amd64.deb  ...
+正在解压 python3-talloc:amd64 (2.4.2-1+b3) 并覆盖 (2.4.2-1+b1) ...
+准备解压 .../03-samba-ad-provision_2%3a4.21.1+dfsg-2kali1_all.deb  ...
+正在解压 samba-ad-provision (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../04-samba-vfs-modules_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 samba-vfs-modules (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../05-samba_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 samba (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../06-samba-common-bin_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 samba-common-bin (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../07-libwbclient0_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 libwbclient0:amd64 (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../08-winexe_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 winexe (2:4.21.1+dfsg-2kali1) 并覆盖 (1.1~20140107-0kali21) ...
+准备解压 .../09-smbclient_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 smbclient (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../10-python3-ldb_2%3a2.10.0+samba4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 python3-ldb (2:2.10.0+samba4.21.1+dfsg-2kali1) 并覆盖 (2:2.9.0+samba4.20.1+dfsg-1) ...
+准备解压 .../11-libldb2_2%3a2.10.0+samba4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 libldb2:amd64 (2:2.10.0+samba4.21.1+dfsg-2kali1) 并覆盖 (2:2.9.0+samba4.20.1+dfsg-1) ...
+准备解压 .../12-samba-dsdb-modules_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 samba-dsdb-modules:amd64 (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../13-libsmbclient0_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 libsmbclient0:amd64 (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../14-samba-libs_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 samba-libs:amd64 (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../15-python3-samba_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 python3-samba (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../16-python3-nassl_5.2.0-0kali3_amd64.deb  ...
+正在解压 python3-nassl (5.2.0-0kali3) 并覆盖 (5.1.0-0kali1) ...
+准备解压 .../17-python3-arc4_0.3.0-0kali1+b2_amd64.deb  ...
+正在解压 python3-arc4 (0.3.0-0kali1+b2) 并覆盖 (0.3.0-0kali1+b1) ...
+准备解压 .../18-onboard-data_1.4.1-9_all.deb  ...
+正在解压 onboard-data (1.4.1-9) 并覆盖 (1.4.1-6) ...
+准备解压 .../19-onboard-common_1.4.1-9_all.deb  ...
+正在解压 onboard-common (1.4.1-9) 并覆盖 (1.4.1-6) ...
+准备解压 .../20-onboard_1.4.1-9_amd64.deb  ...
+正在解压 onboard (1.4.1-9) 并覆盖 (1.4.1-6+b3) ...
+准备解压 .../21-blueman_2.4.3-1_amd64.deb  ...
+正在解压 blueman (2.4.3-1) 并覆盖 (2.4.1-1) ...
+正在选中未选择的软件包 libpython3.12-minimal:amd64。
+准备解压 .../22-libpython3.12-minimal_3.12.7-3_amd64.deb  ...
+正在解压 libpython3.12-minimal:amd64 (3.12.7-3) ...
+正在设置 libpython3.12-minimal:amd64 (3.12.7-3) ...
+正在设置 python3.12-minimal (3.12.7-3) ...
+(正在读取数据库 ... 系统当前共安装有 415401 个文件和目录。)
+准备解压 .../python3-minimal_3.12.6-1_amd64.deb  ...
+正在解压 python3-minimal (3.12.6-1) 并覆盖 (3.11.8-1) ...
+正在设置 python3-minimal (3.12.6-1) ...
+(正在读取数据库 ... 系统当前共安装有 415401 个文件和目录。)
+准备解压 .../0-python3_3.12.6-1_amd64.deb  ...
+running python pre-rtupdate hooks for python3.12...
+正在解压 python3 (3.12.6-1) 并覆盖 (3.11.8-1) ...
+正在选中未选择的软件包 python3.12。
+准备解压 .../1-python3.12_3.12.7-3_amd64.deb  ...
+正在解压 python3.12 (3.12.7-3) ...
+准备解压 .../2-libpython3-stdlib_3.12.6-1_amd64.deb  ...
+正在解压 libpython3-stdlib:amd64 (3.12.6-1) 并覆盖 (3.11.8-1) ...
+准备解压 .../3-libtdb1_1.4.12-1_amd64.deb  ...
+正在解压 libtdb1:amd64 (1.4.12-1) 并覆盖 (1.4.10-1) ...
+正在选中未选择的软件包 libpython3.12t64:amd64。
+准备解压 .../4-libpython3.12t64_3.12.7-3_amd64.deb  ...
+正在解压 libpython3.12t64:amd64 (3.12.7-3) ...
+准备解压 .../5-samba-common_2%3a4.21.1+dfsg-2kali1_all.deb  ...
+正在解压 samba-common (2:4.21.1+dfsg-2kali1) 并覆盖 (2:4.20.1+dfsg-1) ...
+准备解压 .../6-libgpg-error0_1.50-4_amd64.deb  ...
+正在解压 libgpg-error0:amd64 (1.50-4) 并覆盖 (1.49-2) ...
+正在设置 libgpg-error0:amd64 (1.50-4) ...
+正在选中未选择的软件包 libassuan9:amd64。
+(正在读取数据库 ... 系统当前共安装有 415426 个文件和目录。)
+准备解压 .../libassuan9_3.0.1-2_amd64.deb  ...
+正在解压 libassuan9:amd64 (3.0.1-2) ...
+准备解压 .../libgpgme11t64_1.24.0-2_amd64.deb  ...
+正在解压 libgpgme11t64:amd64 (1.24.0-2) 并覆盖 (1.18.0-4.1+b1) ...
+准备解压 .../python3-zstandard_0.23.0-2+b1_amd64.deb  ...
+正在解压 python3-zstandard (0.23.0-2+b1) 并覆盖 (0.22.0-1+b1) ...
+准备解压 .../libzstd1_1.5.6+dfsg-1+b1_amd64.deb  ...
+正在解压 libzstd1:amd64 (1.5.6+dfsg-1+b1) 并覆盖 (1.5.5+dfsg2-2) ...
+正在设置 libzstd1:amd64 (1.5.6+dfsg-1+b1) ...
+正在选中未选择的软件包 libpython3.12-stdlib:amd64。
+(正在读取数据库 ... 系统当前共安装有 415437 个文件和目录。)
+准备解压 .../00-libpython3.12-stdlib_3.12.7-3_amd64.deb  ...
+正在解压 libpython3.12-stdlib:amd64 (3.12.7-3) ...
+正在选中未选择的软件包 libpython3.12-dev:amd64。
+准备解压 .../01-libpython3.12-dev_3.12.7-3_amd64.deb  ...
+正在解压 libpython3.12-dev:amd64 (3.12.7-3) ...
+正在选中未选择的软件包 python3.12-dev。
+准备解压 .../02-python3.12-dev_3.12.7-3_amd64.deb  ...
+正在解压 python3.12-dev (3.12.7-3) ...
+准备解压 .../03-libjs-sphinxdoc_7.4.7-4_all.deb  ...
+正在解压 libjs-sphinxdoc (7.4.7-4) 并覆盖 (7.2.6-6) ...
+准备解压 .../04-python3-pkg-resources_74.1.2-2_all.deb  ...
+正在解压 python3-pkg-resources (74.1.2-2) 并覆盖 (68.1.2-2) ...
+正在选中未选择的软件包 python3-croniter。
+准备解压 .../05-python3-croniter_2.0.7-2_all.deb  ...
+正在解压 python3-croniter (2.0.7-2) ...
+正在选中未选择的软件包 python3-elasticsearch。
+准备解压 .../06-python3-elasticsearch_7.17.6-1_all.deb  ...
+正在解压 python3-elasticsearch (7.17.6-1) ...
+准备解压 .../07-python3-faraday-agent-parameters-types_1.7.2-0kali1_all.deb  ...
+正在解压 python3-faraday-agent-parameters-types (1.7.2-0kali1) 并覆盖 (1.5.1-0kali1) ...
+准备解压 .../08-python3-faraday-plugins_1.19.1-0kali1_all.deb  ...
+正在解压 python3-faraday-plugins (1.19.1-0kali1) 并覆盖 (1.17.0-0kali1) ...
+正在选中未选择的软件包 winbind。
+准备解压 .../09-winbind_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 winbind (2:4.21.1+dfsg-2kali1) ...
+正在选中未选择的软件包 samba-ad-dc。
+准备解压 .../10-samba-ad-dc_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在添加 通过 samba-ad-dc 从 /lib/systemd/system/samba-ad-dc.service 到 /lib/systemd/system/samba-ad-dc.service.usr-is-merged 的转移
+正在解压 samba-ad-dc (2:4.21.1+dfsg-2kali1) ...
+准备解压 .../11-g++-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb  ...
+正在解压 g++-x86-64-linux-gnu (4:14.2.0-1) 并覆盖 (4:13.2.0-7) ...
+准备解压 .../12-g++_4%3a14.2.0-1_amd64.deb  ...
+正在解压 g++ (4:14.2.0-1) 并覆盖 (4:13.2.0-7) ...
+准备解压 .../13-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb  ...
+正在解压 gcc-x86-64-linux-gnu (4:14.2.0-1) 并覆盖 (4:13.2.0-7) ...
+准备解压 .../14-gcc_4%3a14.2.0-1_amd64.deb  ...
+正在解压 gcc (4:14.2.0-1) 并覆盖 (4:13.2.0-7) ...
+准备解压 .../15-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb  ...
+正在解压 cpp-x86-64-linux-gnu (4:14.2.0-1) 并覆盖 (4:13.2.0-7) ...
+准备解压 .../16-cpp_4%3a14.2.0-1_amd64.deb  ...
+正在解压 cpp (4:14.2.0-1) 并覆盖 (4:13.2.0-7) ...
+正在选中未选择的软件包 libstdc++-14-dev:amd64。
+准备解压 .../17-libstdc++-14-dev_14.2.0-8_amd64.deb  ...
+正在解压 libstdc++-14-dev:amd64 (14.2.0-8) ...
+正在选中未选择的软件包 g++-14-x86-64-linux-gnu。
+准备解压 .../18-g++-14-x86-64-linux-gnu_14.2.0-8_amd64.deb  ...
+正在解压 g++-14-x86-64-linux-gnu (14.2.0-8) ...
+正在选中未选择的软件包 g++-14。
+准备解压 .../19-g++-14_14.2.0-8_amd64.deb  ...
+正在解压 g++-14 (14.2.0-8) ...
+准备解压 .../20-dpkg-dev_1.22.11+kali2_all.deb  ...
+正在解压 dpkg-dev (1.22.11+kali2) 并覆盖 (1.22.6+kali1) ...
+准备解压 .../21-libdpkg-perl_1.22.11+kali2_all.deb  ...
+正在解压 libdpkg-perl (1.22.11+kali2) 并覆盖 (1.22.6+kali1) ...
+准备解压 .../22-build-essential_12.12_amd64.deb  ...
+正在解压 build-essential (12.12) 并覆盖 (12.10) ...
+准备解压 .../23-libdw1t64_0.192-4_amd64.deb  ...
+正在解压 libdw1t64:amd64 (0.192-4) 并覆盖 (0.191-1+b1) ...
+准备解压 .../24-libelf1t64_0.192-4_amd64.deb  ...
+正在解压 libelf1t64:amd64 (0.192-4) 并覆盖 (0.191-1+b1) ...
+正在选中未选择的软件包 libzstd-dev:amd64。
+准备解压 .../25-libzstd-dev_1.5.6+dfsg-1+b1_amd64.deb  ...
+正在解压 libzstd-dev:amd64 (1.5.6+dfsg-1+b1) ...
+正在选中未选择的软件包 libelf-dev:amd64。
+准备解压 .../26-libelf-dev_0.192-4_amd64.deb  ...
+正在解压 libelf-dev:amd64 (0.192-4) ...
+正在选中未选择的软件包 libnss-winbind:amd64。
+准备解压 .../27-libnss-winbind_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 libnss-winbind:amd64 (2:4.21.1+dfsg-2kali1) ...
+正在选中未选择的软件包 libpam-winbind:amd64。
+准备解压 .../28-libpam-winbind_2%3a4.21.1+dfsg-2kali1_amd64.deb  ...
+正在解压 libpam-winbind:amd64 (2:4.21.1+dfsg-2kali1) ...
+正在选中未选择的软件包 mokutil。
+准备解压 .../29-mokutil_0.6.0-2+b1_amd64.deb  ...
+正在解压 mokutil (0.6.0-2+b1) ...
+准备解压 .../30-openssl_3.3.2-2_amd64.deb  ...
+正在解压 openssl (3.3.2-2) 并覆盖 (3.2.1-3) ...
+准备解压 .../31-python3-gpg_1.24.0-2_amd64.deb  ...
+正在解压 python3-gpg (1.24.0-2) 并覆盖 (1.18.0-4.1+b1) ...
+准备解压 .../32-tdb-tools_1.4.12-1_amd64.deb  ...
+正在解压 tdb-tools (1.4.12-1) 并覆盖 (1.4.10-1) ...
+准备解压 .../33-zstd_1.5.6+dfsg-1+b1_amd64.deb  ...
+正在解压 zstd (1.5.6+dfsg-1+b1) 并覆盖 (1.5.5+dfsg2-2) ...
+正在设置 cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+正在设置 mokutil (0.6.0-2+b1) ...
+正在设置 libzstd-dev:amd64 (1.5.6+dfsg-1+b1) ...
+正在设置 libpython3.12-stdlib:amd64 (3.12.7-3) ...
+正在设置 gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+正在设置 samba-vfs-modules (2:4.21.1+dfsg-2kali1) ...
+正在设置 libtdb1:amd64 (1.4.12-1) ...
+正在设置 python3.12 (3.12.7-3) ...
+正在设置 samba-common (2:4.21.1+dfsg-2kali1) ...
+正在设置 libwbclient0:amd64 (2:4.21.1+dfsg-2kali1) ...
+正在设置 libelf1t64:amd64 (0.192-4) ...
+正在设置 libdw1t64:amd64 (0.192-4) ...
+正在设置 libtalloc2:amd64 (2.4.2-1+b3) ...
+正在设置 libpython3.12t64:amd64 (3.12.7-3) ...
+正在设置 tdb-tools (1.4.12-1) ...
+update-alternatives: 使用 /usr/bin/tdbbackup.tdbtools 来在自动模式中提供 /usr/bin/tdbbackup (tdbbackup)
+正在设置 libelf-dev:amd64 (0.192-4) ...
+正在设置 libjs-sphinxdoc (7.4.7-4) ...
+正在设置 libdpkg-perl (1.22.11+kali2) ...
+正在设置 cpp (4:14.2.0-1) ...
+正在设置 libassuan9:amd64 (3.0.1-2) ...
+正在设置 samba-ad-provision (2:4.21.1+dfsg-2kali1) ...
+正在设置 libgpgme11t64:amd64 (1.24.0-2) ...
+正在设置 libldb2:amd64 (2:2.10.0+samba4.21.1+dfsg-2kali1) ...
+正在设置 openssl (3.3.2-2) ...
+正在设置 libstdc++-14-dev:amd64 (14.2.0-8) ...
+正在设置 zstd (1.5.6+dfsg-1+b1) ...
+正在设置 libpython3-stdlib:amd64 (3.12.6-1) ...
+正在设置 samba-libs:amd64 (2:4.21.1+dfsg-2kali1) ...
+正在设置 python3 (3.12.6-1) ...
+running python rtupdate hooks for python3.12...
+/usr/share/commix/src/core/injections/controller/checks.py:683: SyntaxWarning: invalid escape sequence '\$'
+  if "\$" in cmd :
+/usr/share/commix/src/core/injections/controller/checks.py:684: SyntaxWarning: invalid escape sequence '\$'
+  cmd = cmd.replace("\$","$")
+/usr/share/commix/src/core/injections/results_based/techniques/classic/cb_injector.py:287: SyntaxWarning: invalid escape sequence '\/'
+  shell = [backslash.replace("\/","/") for backslash in shell]
+/usr/share/commix/src/core/injections/semiblind/techniques/file_based/fb_handler.py:103: SyntaxWarning: invalid escape sequence '\T'
+  settings.TMP_PATH = "C:\\Windows\TEMP\\"
+/usr/share/commix/src/core/modules/shellshock/shellshock.py:101: SyntaxWarning: invalid escape sequence '\$'
+  cmd = re.findall(r"" + "\$(.*)", settings.IS_ROOT)
+/usr/share/commix/src/core/requests/headers.py:323: SyntaxWarning: invalid escape sequence '\w'
+  authobj = re.match('''(\w*)\s+realm=(.*),''',authline).groups()
+/usr/share/commix/src/core/requests/parameters.py:175: SyntaxWarning: invalid escape sequence '\S'
+  elif re.search(r"" + settings.PARAMETER_DELIMITER + "(.*)=[\S*(\\/)]*" + settings.INJECT_TAG, url) or \
+/usr/share/commix/src/core/requests/parameters.py:397: SyntaxWarning: invalid escape sequence '\S'
+  if re.search(r"" + settings.PARAMETER_DELIMITER + "(.*)=[\S*(\\/)]*" + settings.INJECT_TAG, parameter) or \
+/usr/share/commix/src/core/requests/parameters.py:561: SyntaxWarning: invalid escape sequence '\S'
+  if re.search(r"" + settings.COOKIE_DELIMITER + "(.*)=[\S*(\\/)]*" + settings.INJECT_TAG, cookie) or \
+/usr/share/commix/src/core/requests/requests.py:120: SyntaxWarning: invalid escape sequence '\w'
+  auth_obj = re.match('''(\w*)\s+realm=(.*)''', auth_line).groups()
+/usr/share/commix/src/core/tamper/backslashes.py:21: SyntaxWarning: invalid escape sequence '\)'
+  """
+/usr/share/commix/src/core/tamper/caret.py:34: SyntaxWarning: invalid escape sequence '\w'
+  if re.compile("\w+").findall(payload):
+/usr/share/commix/src/core/tamper/caret.py:36: SyntaxWarning: invalid escape sequence '\w'
+  if len(max(re.compile("\w+").findall(payload), key=lambda word: len(word))) >= 5000:
+/usr/share/commix/src/core/tamper/caret.py:37: SyntaxWarning: invalid escape sequence '\w'
+  long_string = max(re.compile("\w+").findall(payload), key=lambda word: len(word))
+/usr/share/commix/src/core/tamper/sleep2timeout.py:38: SyntaxWarning: invalid escape sequence '\d'
+  for match in re.finditer(r"sleep" + settings.WHITESPACES[0] + "([1-9]\d+|[0-9])", payload):
+/usr/share/commix/src/core/tamper/sleep2usleep.py:36: SyntaxWarning: invalid escape sequence '\d'
+  for match in re.finditer(r"sleep" + settings.WHITESPACES[0] + "([1-9]\d+|[0-9])", payload):
+/usr/share/commix/src/core/tamper/space2ifs.py:31: SyntaxWarning: invalid escape sequence '\$'
+  settings.WHITESPACES[0] = "\${IFS}"
+/usr/share/commix/src/thirdparty/colorama/ansitowin32.py:49: SyntaxWarning: invalid escape sequence '\['
+  ANSI_CSI_RE = re.compile('\001?\033\[((?:\d|;)*)([a-zA-Z])\002?')     # Control Sequence Introducer
+/usr/share/commix/src/thirdparty/colorama/ansitowin32.py:50: SyntaxWarning: invalid escape sequence '\]'
+  ANSI_OSC_RE = re.compile('\001?\033\]((?:.|;)*?)(\x07)\002?')         # Operating System Command
+/usr/share/commix/src/utils/common.py:234: SyntaxWarning: invalid escape sequence '\s'
+  match = re.search(r"(?i)commix.+("+str(item)+")(\s+|=)([^-]+)", err_msg)
+/usr/share/commix/src/utils/common.py:349: SyntaxWarning: invalid escape sequence '\g'
+  exc_msg = re.sub(r'".+?[/\\](\w+\.py)', "\"\g<1>", exc_msg)
+/usr/share/commix/src/utils/menu.py:33: SyntaxWarning: invalid escape sequence '\_'
+  print("""                                      __
+/usr/share/commix/src/utils/menu.py:35: SyntaxWarning: invalid escape sequence '\ '
+  /`___\ / __`\ /' __` __`\ /' __` __`\/\ \ /\ \/'\  """ + settings.COLOR_VERSION + """
+/usr/share/commix/src/utils/menu.py:37: SyntaxWarning: invalid escape sequence '\/'
+  \ \____\ \____/\ \_\ \_\ \_\ \_\ \_\ \_\ \_\\/\_/\\_\\ """ + Fore.GREY + Style.UNDERLINE + settings.APPLICATION_URL + Style.RESET_ALL + """
+/usr/share/commix/src/utils/settings.py:597: SyntaxWarning: invalid escape sequence '\$'
+  EVAL_SYS_USERS = "awk -F ':' '{print \$1}{print \$3}{print \$6}' " + PASSWD_FILE
+/usr/share/commix/src/utils/settings.py:607: SyntaxWarning: invalid escape sequence '\s'
+  WIN_REPLACE_WHITESPACE = "-replace('\s+',' '))"
+/usr/share/commix/src/utils/settings.py:704: SyntaxWarning: invalid escape sequence '\w'
+  VALID_URL_FORMAT = "https?://(?:www)?(?:[\w-]{2,255}(?:\.\w{2,6}){1,2})(?:/[\w&%?#-]{1,310})?"
+/usr/share/fern-wifi-cracker/core/fern.py:257: SyntaxWarning: invalid escape sequence '\d'
+  online_files = re.compile('total_files = \d+', re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/fern.py:323: SyntaxWarning: invalid escape sequence '\d'
+  online_version = re.compile('version = \d+\.?\d+', re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/fern.py:523: SyntaxWarning: invalid escape sequence '\d'
+  regex = re.compile("mon\d", re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/fern.py:527: SyntaxWarning: invalid escape sequence '\d'
+  regex = re.compile("wlan\dmon", re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/toolbox/MITM_Core.py:194: SyntaxWarning: invalid escape sequence '\d'
+  regex = "inet addr:((\d+.){3}\d+)"
+/usr/share/fern-wifi-cracker/core/toolbox/fern_cookie_hijacker.py:250: SyntaxWarning: invalid escape sequence '\d'
+  monitor_interface = re.findall("mon\d+",monitor_output[1])
+/usr/share/fern-wifi-cracker/core/toolbox/fern_cookie_hijacker.py:552: SyntaxWarning: invalid escape sequence '\d'
+  if(not re.match("(\d+.){3}\d+",ip_wep_edit)):
+/usr/share/fern-wifi-cracker/core/toolbox/fern_ray_fusion.py:296: SyntaxWarning: invalid escape sequence '\S'
+  valid_http = re.compile("^(https|http)://\S*",re.IGNORECASE)            # HTTP/HTTPS url regular expression
+/usr/share/fern-wifi-cracker/core/variables.py:84: SyntaxWarning: invalid escape sequence '\:'
+  return bool(re.match('^' + '[\:\-]'.join(['([0-9a-f]{2})'] * 6) + '$', data.lower()))
+/usr/share/fern-wifi-cracker/core/wep.py:170: SyntaxWarning: invalid escape sequence '\S'
+  actual_key = re.findall("WEP KEY: ([\S \w]+)</font>",key_string)
+/usr/share/fern-wifi-cracker/core/wep.py:181: SyntaxWarning: invalid escape sequence '\S'
+  actual_key = re.findall("WEP KEY: ([\S \w]+)</font>",self.original_key)
+/usr/share/fern-wifi-cracker/core/wep.py:192: SyntaxWarning: invalid escape sequence '\S'
+  actual_key = re.findall("WPS PIN: ([\S \w]+)</font>",key_string)
+/usr/share/fern-wifi-cracker/core/wpa.py:156: SyntaxWarning: invalid escape sequence '\S'
+  actual_key = re.findall("WPS PIN: ([\S \w]+)</font>",key_string)
+/usr/share/fern-wifi-cracker/core/wpa.py:161: SyntaxWarning: invalid escape sequence '\S'
+  actual_key = re.findall("WPA KEY: ([\S \w]+)</font>",key_string)
+/usr/share/fern-wifi-cracker/core/wpa.py:544: SyntaxWarning: invalid escape sequence '\w'
+  current_word_regex = re.compile("Current passphrase: ([\w\s!@#$%^&*()-=_+]+)",re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/wpa.py:545: SyntaxWarning: invalid escape sequence '\d'
+  keys_speed_regex = re.compile("(\d+.?\d+) k/s",re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/wpa.py:546: SyntaxWarning: invalid escape sequence '\d'
+  keys_tested_regex = re.compile("(\d+) keys tested",re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/wps.py:126: SyntaxWarning: invalid escape sequence '\S'
+  wps_key_regex = re.compile(": '(\S+)'",re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/wps.py:127: SyntaxWarning: invalid escape sequence '\d'
+  wps_pin_regex = re.compile("WPS PIN: '(\d+)'",re.IGNORECASE)
+/usr/share/fern-wifi-cracker/core/wps.py:128: SyntaxWarning: invalid escape sequence '\d'
+  progress_regex = re.compile("(\d+\.\d+)%",re.IGNORECASE)
+/usr/share/john/adxcsouf2john.py:98: SyntaxWarning: invalid escape sequence '\ '
+  matches = re.findall(b'([a-zA-Z0-9_-]{3,9})\ (\d{8})', data)
+/usr/share/john/aix2john.py:36: SyntaxWarning: invalid escape sequence '\s'
+  if re.match('^\s*\S+\s*:\s*$',line):
+/usr/share/john/dashlane2john.py:75: SyntaxWarning: invalid escape sequence '\D'
+  sys.stderr.write("\nThe required .aes files can be found inside %AppData%\Dashlane\profiles directory tree on Windows.\n")
+/usr/share/john/dashlane2john.py:76: SyntaxWarning: invalid escape sequence '\ '
+  sys.stderr.write("\nThe required .aes files can be found inside ~/Library/Application\ Support/Dashlane/profiles/ directory tree on macOS.\n")
+/usr/share/john/dns/rdata.py:277: SyntaxWarning: invalid escape sequence '\#'
+  if not token.is_identifier() or token.value != '\#':
+/usr/share/john/ejabberd2john.py:80: SyntaxWarning: invalid escape sequence '\s'
+  grammar = Grammar("""\
+/usr/share/john/vmx2john.py:26: SyntaxWarning: invalid escape sequence '\)'
+  ks_re = '.+phrase/(.*?)/pass2key=(.*?):cipher=(.*?):rounds=(.*?):salt=(.*?),(.*?),(.*?)\)'
+/usr/share/kali-undercover/scripts/desktopconfig.py:274: SyntaxWarning: invalid escape sequence '\s'
+  if re.match('^' + fallback_monitor + '[^/\s]+$', pp):
+/usr/share/kali-undercover/scripts/desktopconfig.py:279: SyntaxWarning: invalid escape sequence '\d'
+  w = re.search('^/backdrop/screen\d/monitor[^/]+/workspace\d/', pp)
+/usr/share/legion/app/auxiliary.py:162: SyntaxWarning: invalid escape sequence '\['
+  string = '\[[0-9]+\]\[[a-z-]+\].+'  # when a password is found, the line contains [port#][plugin-name]
+/usr/share/legion/app/auxiliary.py:166: SyntaxWarning: invalid escape sequence '\s'
+  login = re.search('(login:[\s]*)([^\s]+)', line)
+/usr/share/legion/app/auxiliary.py:170: SyntaxWarning: invalid escape sequence '\s'
+  password = re.search('(password:[\s]*)([^\s]+)', line)
+/usr/share/legion/app/auxiliary.py:339: SyntaxWarning: invalid escape sequence '\.'
+  if re.search('[^a-zA-Z0-9\.\/\-\s]', text) != None:
+/usr/share/legion/app/auxiliary.py:369: SyntaxWarning: invalid escape sequence '\.'
+  if re.search('[^a-zA-Z0-9\.\/\-\'\"\*\,\:\s]', text) != None:
+/usr/share/powershell-empire/empire/client/src/menus/ShellMenu.py:62: SyntaxWarning: invalid escape sequence '\)'
+  task_id: int = state.agent_shell(session_id, "(Resolve-Path .\).Path")["id"]
+/usr/share/powershell-empire/empire/client/src/menus/ShellMenu.py:68: SyntaxWarning: invalid escape sequence '\)'
+  task_id: int = state.agent_shell(session_id, "(Resolve-Path .\).Path")["id"]
+/usr/share/powershell-empire/empire/server/common/encryption.py:214: SyntaxWarning: invalid escape sequence '\]'
+  string.ascii_letters + string.digits + "!#$%&()*+,-./:;<=>?@[\]^_`{|}~", 32
+/usr/share/powershell-empire/empire/server/common/helpers.py:268: SyntaxWarning: invalid escape sequence '\$'
+  if re.search("\$Netapi32|\$Advapi32|\$Kernel32|\$Wtsapi32", code, re.IGNORECASE):
+/usr/share/powershell-empire/empire/server/common/pylnk.py:198: SyntaxWarning: invalid escape sequence '\w'
+  _DRIVE_PATTERN = re.compile("(\w)[:/\\\\]*$")
+/usr/share/powershell-empire/empire/server/common/stagers.py:56: SyntaxWarning: invalid escape sequence '\l'
+  + '" -outfile "launcher.bat"; Start-Process -FilePath .\launcher.bat -Wait -passthru -WindowStyle Hidden;'
+/usr/share/powershell-empire/empire/server/data/agent/ironpython_agent.py:1391: SyntaxWarning: invalid escape sequence '\$'
+  """
+/usr/share/powershell-empire/empire/server/data/module_source/python/privesc/linuxprivchecker.py:336: SyntaxWarning: invalid escape sequence '\('
+  "cmd": "find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep root",
+/usr/share/powershell-empire/empire/server/data/module_source/python/privesc/linuxprivchecker.py:341: SyntaxWarning: invalid escape sequence '\('
+  "cmd": "find / \( -wholename '/home/homedir*' -prune \) -o \( -type d -perm -0002 \) -exec ls -ld '{}' ';' 2>/dev/null | grep -v root",
+/usr/share/powershell-empire/empire/server/data/module_source/python/privesc/linuxprivchecker.py:346: SyntaxWarning: invalid escape sequence '\('
+  "cmd": "find / \( -wholename '/home/homedir/*' -prune -o -wholename '/proc/*' -prune \) -o \( -type f -perm -0002 \) -exec ls -l '{}' ';' 2>/dev/null",
+/usr/share/powershell-empire/empire/server/data/module_source/python/privesc/linuxprivchecker.py:351: SyntaxWarning: invalid escape sequence '\('
+  "cmd": "find / \( -perm -2000 -o -perm -4000 \) -exec ls -ld {} \; 2>/dev/null",
+/usr/share/powershell-empire/empire/server/data/module_source/python/privesc/linuxprivchecker.py:1174: SyntaxWarning: invalid escape sequence '\_'
+  """
+/usr/share/powershell-empire/empire/server/listeners/http.py:146: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/listeners/http_hop.py:258: SyntaxWarning: invalid escape sequence '\ '
+  'cmd = "ps -ef | grep Little\ Snitch | grep -v grep"\n'
+/usr/share/powershell-empire/empire/server/listeners/http_malleable.py:121: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/listeners/template.py:124: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/modules/powershell/management/spawnas.py:60: SyntaxWarning: invalid escape sequence '\d'
+  script_end = '$tempLoc = "$env:public\debug.bat"'
+/usr/share/powershell-empire/empire/server/modules/powershell/management/spawnas.py:73: SyntaxWarning: invalid escape sequence '\d'
+  script_end += '-Cmd "$env:public\debug.bat"'
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/schtasks.py:162: SyntaxWarning: invalid escape sequence '\p'
+  "'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\powershell.exe -NonI -W hidden -c \\\"IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String("
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/wmi.py:155: SyntaxWarning: invalid escape sequence '\C'
+  + "';EventNameSpace='root\CimV2';QueryLanguage=\"WQL\";Query=\"SELECT * FROM __InstanceCreationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_NTLogEvent' AND TargetInstance.EventCode='4625' AND TargetInstance.Message LIKE '%"
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/wmi.py:207: SyntaxWarning: invalid escape sequence '\C'
+  + "';EventNameSpace='root\CimV2';QueryLanguage=\"WQL\";Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_LocalTime'"
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/wmi.py:226: SyntaxWarning: invalid escape sequence '\C'
+  + "';EventNameSpace='root\CimV2';QueryLanguage=\"WQL\";Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_LocalTime'"
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/wmi.py:243: SyntaxWarning: invalid escape sequence '\C'
+  + "';EventNameSpace='root\CimV2';QueryLanguage=\"WQL\";Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 325\"};"
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/wmi_updater.py:164: SyntaxWarning: invalid escape sequence '\C'
+  + "';EventNameSpace='root\CimV2';QueryLanguage=\"WQL\";Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_LocalTime'"
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/wmi_updater.py:183: SyntaxWarning: invalid escape sequence '\C'
+  + "';EventNameSpace='root\CimV2';QueryLanguage=\"WQL\";Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_LocalTime'"
+/usr/share/powershell-empire/empire/server/modules/powershell/persistence/elevated/wmi_updater.py:200: SyntaxWarning: invalid escape sequence '\C'
+  + "';EventNameSpace='root\CimV2';QueryLanguage=\"WQL\";Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 325\"};"
+/usr/share/powershell-empire/empire/server/modules/python/persistence/osx/loginhook.py:18: SyntaxWarning: invalid escape sequence '\$'
+  password = password.replace("$", "\$")
+/usr/share/powershell-empire/empire/server/modules/python/persistence/osx/loginhook.py:19: SyntaxWarning: invalid escape sequence '\$'
+  password = password.replace("$", "\$")
+/usr/share/powershell-empire/empire/server/modules/python/persistence/osx/loginhook.py:20: SyntaxWarning: invalid escape sequence '\!'
+  password = password.replace("!", "\!")
+/usr/share/powershell-empire/empire/server/modules/python/persistence/osx/loginhook.py:21: SyntaxWarning: invalid escape sequence '\!'
+  password = password.replace("!", "\!")
+/usr/share/powershell-empire/empire/server/modules/python/persistence/osx/mail.py:132: SyntaxWarning: invalid escape sequence '\ '
+  script = """
+/usr/share/powershell-empire/empire/server/modules/python/situational_awareness/host/osx/situational_awareness.py:26: SyntaxWarning: invalid escape sequence '\ '
+  script += """
+/usr/share/powershell-empire/empire/server/stagers/multi/launcher.py:84: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/multi/macro.py:95: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/multi/macro.py:206: SyntaxWarning: invalid escape sequence '\c'
+  macro = """#If Mac Then
+/usr/share/powershell-empire/empire/server/stagers/multi/war.py:82: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/backdoorLnkMacro.py:137: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, "
+/usr/share/powershell-empire/empire/server/stagers/windows/backdoorLnkMacro.py:381: SyntaxWarning: invalid escape sequence '\d'
+  launch_string2 = ");$u=New-Object -comObject wscript.shell;gci -Pa $env:USERPROFILE\desktop -Fi *.lnk|%{$l=$u.createShortcut($_.FullName);if($l.arguments-like'*xml.xmldocument*'){$s=$l.arguments.IndexOf('''')+1;$r=$l.arguments.Substring($s, $l.arguments.IndexOf('''',$s)-$s);$l.targetPath=$r;$l.Arguments='';$l.Save()}};$b=New-Object System.Xml.XmlDocument;if([int](get-date -U "
+/usr/share/powershell-empire/empire/server/stagers/windows/bunny.py:100: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/cmd_exec.py:80: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/csharp_exe.py:68: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/dll.py:62: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/ducky.py:85: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/generate_agent.py:56: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/hta.py:79: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/launcher_lnk.py:63: SyntaxWarning: invalid escape sequence '\w'
+  "Value": "C:\windows\system32\WindowsPowershell\\v1.0\powershell.exe",
+/usr/share/powershell-empire/empire/server/stagers/windows/launcher_lnk.py:68: SyntaxWarning: invalid escape sequence '\p'
+  "Value": "C:\program files\windows nt\\accessories\wordpad.exe",
+/usr/share/powershell-empire/empire/server/stagers/windows/launcher_lnk.py:93: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/launcher_sct.py:87: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/launcher_vbs.py:75: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/launcher_xml.py:70: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/macro.py:95: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/macro.py:210: SyntaxWarning: invalid escape sequence '\c'
+  macro += '\tSet objWMIService = GetObject("winmgmts:\\\\" & strComputer & "\\root\cimv2")\n'
+/usr/share/powershell-empire/empire/server/stagers/windows/ms16-051.py:82: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/nim.py:54: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/shellcode.py:74: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/teensy.py:70: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/stagers/windows/wmic.py:84: SyntaxWarning: invalid escape sequence '\]'
+  "Description": "Proxy credentials ([domain\]username:password) to use for request (default, none, or other).",
+/usr/share/powershell-empire/empire/server/utils/listener_util.py:45: SyntaxWarning: invalid escape sequence '\ '
+  """
+/usr/share/responder/tools/MultiRelay/RelayMultiCore.py:1957: SyntaxWarning: invalid escape sequence '\p'
+  Command          = "c:\\Windows\\Temp\\"+FileName+" \"rpc::server /protseq:ncacn_np /endpoint:\pipe\\"+NamedPipe+" /guid:{"+DisplayGUID+"} /noreg\" service::me exit"
+/usr/share/responder/tools/MultiRelay/impacket-dev/impacket/dcerpc/v5/transport.py:33: SyntaxWarning: invalid escape sequence '\['
+  +'([^\[]*)' # Network Address (opt.)
+/usr/share/responder/tools/MultiRelay/impacket-dev/impacket/dcerpc/v5/transport.py:34: SyntaxWarning: invalid escape sequence '\['
+  +'(?:\[([^\]]*)\])?') # Endpoint and options (opt.)
+/usr/share/responder/tools/MultiRelay/impacket-dev/impacket/hresult_errors.py:197: SyntaxWarning: invalid escape sequence '\<'
+  0x80004017: ("CO_E_RUNAS_SYNTAX", "A RunAs specification must be <domain name>\<user name> or simply <user name>."),
+/usr/share/responder/tools/MultiRelay/impacket-dev/impacket/hresult_errors.py:285: SyntaxWarning: invalid escape sequence '\<'
+  0x8001012C: ("CO_E_WRONGTRUSTEENAMESYNTAX", "One of the trustee strings provided by the user did not conform to the <Domain>\<Name> syntax and it was not the *\" string\"."),
+/usr/share/responder/tools/MultiRelay/impacket-dev/impacket/uuid.py:41: SyntaxWarning: invalid escape sequence '\d'
+  matches = re.match('([\dA-Fa-f]{8})-([\dA-Fa-f]{4})-([\dA-Fa-f]{4})-([\dA-Fa-f]{4})-([\dA-Fa-f]{4})([\dA-Fa-f]{8})', uuid)
+/usr/share/responder/tools/MultiRelay/impacket-dev/impacket/uuid.py:71: SyntaxWarning: invalid escape sequence '\.'
+  g =  re.search("([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}).*?([0-9]{1,5}\.[0-9]{1,5})",s+" 1.0")
+/usr/share/set/modules/google_analytics_attack.py:74: SyntaxWarning: invalid escape sequence '\/'
+  m = re.search('(https?:\/\/(.*?))\/(.*)',url)
+/usr/share/set/modules/google_analytics_attack.py:86: SyntaxWarning: invalid escape sequence '\/'
+  m = re.search('<title>(.*)<\/title>', r.text)
+/usr/share/set/src/core/fasttrack.py:420: SyntaxWarning: invalid escape sequence '\ '
+  print (""".______       __   _______         _______ .__   __.  __    __  .___  ___.
+/usr/share/set/src/core/setcore.py:1368: SyntaxWarning: invalid escape sequence '\d'
+  a = re.search("\d+/%s" % (flag), stdout_value)
+/usr/share/set/src/core/setcore.py:1806: SyntaxWarning: invalid escape sequence '\.'
+  p = re.compile("^([0-9]{1,3}\.){0,3}[0-9]{1,3}(/[0-9]{1,2}){1}$")
+/usr/share/set/src/fasttrack/ridenum.py:35: SyntaxWarning: invalid escape sequence '\ '
+  print("""
+/usr/share/set/src/fasttrack/sccm/sccm_main.py:24: SyntaxWarning: invalid escape sequence '\s'
+  configuration = '''
+/usr/share/set/src/payloads/set_payloads/listener.py:394: SyntaxWarning: invalid escape sequence '\e'
+  print("""
+/usr/share/set/src/teensy/binary2teensy.py:127: SyntaxWarning: invalid escape sequence '\|'
+  print("""
+/usr/share/set/src/teensy/sd2teensy.py:46: SyntaxWarning: invalid escape sequence '\|'
+  print("""
+/usr/share/set/src/webattack/harvester/scraper.py:79: SyntaxWarning: invalid escape sequence '\w'
+  'action="http?\w://[\w.\?=/&]*/', 'action="http://%s/' % (ipaddr), line)
+/usr/share/set/src/webattack/harvester/scraper.py:85: SyntaxWarning: invalid escape sequence '\w'
+  'action="http?\w://[\w.\?=/&]*/', 'action="https://%s/' % (ipaddr), line)
+/usr/share/unicorn-magic/unicorn.py:1241: SyntaxWarning: invalid escape sequence '\.'
+  elif re.search('\.ps1$', sys.argv[1]) is not None:
+running python post-rtupdate hooks for python3.12...
+正在设置 libpython3.12-dev:amd64 (3.12.7-3) ...
+正在设置 blueman (2.4.3-1) ...
+blueman-mechanism.service is a disabled or a static unit not running, not starting it.
+正在设置 gcc (4:14.2.0-1) ...
+正在设置 dpkg-dev (1.22.11+kali2) ...
+正在设置 python3-tdb (1.4.12-1) ...
+正在设置 python3-zstandard (0.23.0-2+b1) ...
+正在设置 python3-gpg (1.24.0-2) ...
+正在设置 wfuzz (3.1.0-4.1) ...
+正在设置 python3-ldb (2:2.10.0+samba4.21.1+dfsg-2kali1) ...
+正在设置 python3.12-dev (3.12.7-3) ...
+正在设置 onboard-common (1.4.1-9) ...
+正在设置 g++-14-x86-64-linux-gnu (14.2.0-8) ...
+正在设置 samba-common-bin (2:4.21.1+dfsg-2kali1) ...
+正在设置 python3-nassl (5.2.0-0kali3) ...
+正在设置 g++-x86-64-linux-gnu (4:14.2.0-1) ...
+正在设置 g++-14 (14.2.0-8) ...
+正在设置 samba-dsdb-modules:amd64 (2:4.21.1+dfsg-2kali1) ...
+正在设置 libsmbclient0:amd64 (2:4.21.1+dfsg-2kali1) ...
+正在设置 python3-arc4 (0.3.0-0kali1+b2) ...
+正在设置 python3-faraday-agent-parameters-types (1.7.2-0kali1) ...
+正在设置 samba (2:4.21.1+dfsg-2kali1) ...
+Removing obsolete conffile /etc/init.d/samba-ad-dc ...
+smbd.service is a disabled or a static unit not running, not starting it.
+nmbd.service is a disabled or a static unit not running, not starting it.
+正在设置 python3-pkg-resources (74.1.2-2) ...
+正在设置 python3-elasticsearch (7.17.6-1) ...
+正在设置 python3-faraday-plugins (1.19.1-0kali1) ...
+正在设置 libpython3-dev:amd64 (3.12.6-1) ...
+正在设置 python3-setuptools (74.1.2-2) ...
+正在设置 winexe (2:4.21.1+dfsg-2kali1) ...
+正在设置 python3-talloc:amd64 (2.4.2-1+b3) ...
+正在设置 winbind (2:4.21.1+dfsg-2kali1) ...
+update-rc.d: As per Kali policy, winbind init script is left disabled.
+winbind.service is a disabled or a static unit, not starting it.
+正在设置 python3-croniter (2.0.7-2) ...
+正在设置 onboard (1.4.1-9) ...
+正在设置 libnss-winbind:amd64 (2:4.21.1+dfsg-2kali1) ...
+First installation detected, adding winbind to /etc/nsswitch.conf...
+正在设置 python3-dev (3.12.6-1) ...
+正在设置 faraday (5.8.0-0kali1) ...
+faraday.service is a disabled or a static unit not running, not starting it.
+正在设置 smbclient (2:4.21.1+dfsg-2kali1) ...
+正在设置 g++ (4:14.2.0-1) ...
+正在设置 build-essential (12.12) ...
+正在设置 python3-samba (2:4.21.1+dfsg-2kali1) ...
+正在设置 libpam-winbind:amd64 (2:4.21.1+dfsg-2kali1) ...
+正在设置 samba-ad-dc (2:4.21.1+dfsg-2kali1) ...
+正在删除 通过 samba-ad-dc 从 /lib/systemd/system/samba-ad-dc.service 到 /lib/systemd/system/samba-ad-dc.service.usr-is-merged 的转移
+samba-ad-dc.service is a disabled or a static unit, not starting it.
+正在处理用于 wordlists (2023.2.0) 的触发器 ...
+正在处理用于 kali-menu (2023.4.7) 的触发器 ...
+正在处理用于 desktop-file-utils (0.27-2) 的触发器 ...
+正在处理用于 hicolor-icon-theme (0.17-2) 的触发器 ...
+正在处理用于 doc-base (0.11.2) 的触发器 ...
+Processing 1 changed doc-base file...
+正在处理用于 libc-bin (2.38-10) 的触发器 ...
+正在处理用于 systemd (255.5-1) 的触发器 ...
+正在处理用于 man-db (2.12.1-1) 的触发器 ...
+正在处理用于 libglib2.0-0t64:amd64 (2.80.2-1) 的触发器 ...
+正在处理用于 dbus (1.14.10-4+b1) 的触发器 ...
+正在设置 onboard-data (1.4.1-9) ...
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# git clone  https://gitee.com/lab37/aircrack_8812au.git
+正克隆到 'aircrack_8812au'...
+remote: Enumerating objects: 11318, done.
+remote: Total 11318 (delta 0), reused 0 (delta 0), pack-reused 11318
+接收对象中: 100% (11318/11318), 78.82 MiB | 5.91 MiB/s, 完成.
+处理 delta 中: 100% (7621/7621), 完成.
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd     aircrack_8812au
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# git  checkout   63cf0b4
+注意：正在切换到 '63cf0b4'。
+
+您正处于分离头指针状态。您可以查看、做试验性的修改及提交，并且您可以在切换
+回一个分支时，丢弃在此状态下所做的提交而不对分支造成影响。
+
+如果您想要通过创建分支来保留在此状态下所做的提交，您可以通过在 switch 命令
+中添加参数 -c 来实现（现在或稍后）。例如：
+
+  git switch -c <新分支名>
+
+或者撤销此操作：
+
+  git switch -
+
+通过将配置变量 advice.detachedHead 设置为 false 来关闭此建议
+
+HEAD 目前位于 63cf0b4 Merge pull request #1149 from alium/v5.6.4.2
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# sudo  make  dkms_install
+mkdir: 已创建目录 '/usr/src/8812au-5.6.4.2_35491.20191025'
+cp -r * /usr/src/8812au-5.6.4.2_35491.20191025
+dkms add -m 8812au -v 5.6.4.2_35491.20191025
+Creating symlink /var/lib/dkms/8812au/5.6.4.2_35491.20191025/source -> /usr/src/8812au-5.6.4.2_35491.20191025
+dkms build -m 8812au -v 5.6.4.2_35491.20191025
+Sign command: /lib/modules/6.11.2-amd64/build/scripts/sign-file
+Signing key: /var/lib/dkms/mok.key
+Public certificate (MOK): /var/lib/dkms/mok.pub
+
+Building module:
+Cleaning build area...
+Building module(s)............
+Signing module /var/lib/dkms/8812au/5.6.4.2_35491.20191025/build/88XXau.ko
+Cleaning build area...
+dkms install -m 8812au -v 5.6.4.2_35491.20191025
+
+88XXau.ko.xz:
+Running module version sanity check.
+Module version v5.6.4.2_35491.20191025 for 88XXau.ko.xz
+exactly matches what is already found in kernel 6.11.2-amd64.
+DKMS will not replace this module.
+You may override by specifying --force.
+Error! Installation aborted.
+make: *** [Makefile:1791：dkms_install] 错误 6
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# make  &&  sudo make install
+make ARCH=x86_64 CROSS_COMPILE= -C /lib/modules/6.11.2-amd64/build M=/root/aircrack_8812au  modules
+make[1]: 进入目录“/usr/src/linux-headers-6.11.2-amd64”
+  CC [M]  /root/aircrack_8812au/core/rtw_cmd.o
+  CC [M]  /root/aircrack_8812au/core/rtw_security.o
+  CC [M]  /root/aircrack_8812au/core/rtw_debug.o
+  CC [M]  /root/aircrack_8812au/core/rtw_io.o
+  CC [M]  /root/aircrack_8812au/core/rtw_ioctl_query.o
+  CC [M]  /root/aircrack_8812au/core/rtw_ioctl_set.o
+  CC [M]  /root/aircrack_8812au/core/rtw_ieee80211.o
+  CC [M]  /root/aircrack_8812au/core/rtw_mlme.o
+  CC [M]  /root/aircrack_8812au/core/rtw_mlme_ext.o
+/root/aircrack_8812au/core/rtw_mlme_ext.c: In function ‘OnAuth’:
+/root/aircrack_8812au/core/rtw_mlme_ext.c:2154:41: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 2154 |                                         ;/* TODO: STA re_auth within expire_to */
+      |                                         ^
+/root/aircrack_8812au/core/rtw_mlme_ext.c:2159:33: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 2159 |                                 ; /* TODO: STA re_auth and auth timeout */
+      |                                 ^
+  CC [M]  /root/aircrack_8812au/core/rtw_mi.o
+  CC [M]  /root/aircrack_8812au/core/rtw_wlan_util.o
+  CC [M]  /root/aircrack_8812au/core/rtw_vht.o
+  CC [M]  /root/aircrack_8812au/core/rtw_pwrctrl.o
+  CC [M]  /root/aircrack_8812au/core/rtw_rf.o
+  CC [M]  /root/aircrack_8812au/core/rtw_chplan.o
+  CC [M]  /root/aircrack_8812au/core/rtw_recv.o
+/root/aircrack_8812au/core/rtw_recv.c: In function ‘validate_recv_frame’:
+/root/aircrack_8812au/core/rtw_recv.c:2390:79: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+ 2390 |              DBG_COUNTER(adapter->rx_logs.core_rx_pre_data_handled);
+      |                                                                    ^
+
+  CC [M]  /root/aircrack_8812au/core/rtw_sta_mgt.o
+  CC [M]  /root/aircrack_8812au/core/rtw_ap.o
+  CC [M]  /root/aircrack_8812au/core/mesh/rtw_mesh.o
+  CC [M]  /root/aircrack_8812au/core/mesh/rtw_mesh_pathtbl.o
+  CC [M]  /root/aircrack_8812au/core/mesh/rtw_mesh_hwmp.o
+  CC [M]  /root/aircrack_8812au/core/rtw_xmit.o
+/root/aircrack_8812au/core/rtw_xmit.c: In function ‘update_attrib’:
+/root/aircrack_8812au/core/rtw_xmit.c:1376:74: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+ 1376 |           DBG_COUNTER(padapter->tx_logs.core_tx_upd_attrib_unknown);
+      |                                                                    ^
+
+  CC [M]  /root/aircrack_8812au/core/rtw_p2p.o
+  CC [M]  /root/aircrack_8812au/core/rtw_rson.o
+  CC [M]  /root/aircrack_8812au/core/rtw_tdls.o
+  CC [M]  /root/aircrack_8812au/core/rtw_br_ext.o
+  CC [M]  /root/aircrack_8812au/core/rtw_iol.o
+  CC [M]  /root/aircrack_8812au/core/rtw_sreset.o
+  CC [M]  /root/aircrack_8812au/core/rtw_btcoex_wifionly.o
+  CC [M]  /root/aircrack_8812au/core/rtw_btcoex.o
+  CC [M]  /root/aircrack_8812au/core/rtw_beamforming.o
+  CC [M]  /root/aircrack_8812au/core/rtw_odm.o
+  CC [M]  /root/aircrack_8812au/core/rtw_rm.o
+  CC [M]  /root/aircrack_8812au/core/rtw_rm_fsm.o
+  CC [M]  /root/aircrack_8812au/core/efuse/rtw_efuse.o
+  CC [M]  /root/aircrack_8812au/os_dep/osdep_service.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/os_intfs.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/usb_intf.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/usb_ops_linux.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/ioctl_linux.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/xmit_linux.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/mlme_linux.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/recv_linux.o
+/root/aircrack_8812au/os_dep/linux/recv_linux.c: In function ‘rtw_os_recv_indicate_pkt’:
+/root/aircrack_8812au/os_dep/linux/recv_linux.c:537:68: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+  537 |                         DBG_COUNTER(padapter->rx_logs.os_netif_err);
+      |                                                                    ^
+  CC [M]  /root/aircrack_8812au/os_dep/linux/ioctl_cfg80211.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/wifi_regd.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/rtw_android.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/rtw_proc.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/rtw_rhashtable.o
+  CC [M]  /root/aircrack_8812au/os_dep/linux/ioctl_mp.o
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c: In function ‘rtw_mp_txpower_index’:
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:560:25: warning: ‘sprintf’ argument 3 overlaps destination object ‘extra’ [-Wrestrict]
+  560 |                         sprintf(extra, "%s,pathb=%d", extra, txpower_inx);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:533:55: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+  533 |                          struct iw_point *wrqu, char *extra)
+      |                                                 ~~~~~~^~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:564:25: warning: ‘sprintf’ argument 3 overlaps destination object ‘extra’ [-Wrestrict]
+  564 |                         sprintf(extra, "%s,pathc=%d", extra, txpower_inx);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:533:55: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+  533 |                          struct iw_point *wrqu, char *extra)
+      |                                                 ~~~~~~^~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:568:25: warning: ‘sprintf’ argument 3 overlaps destination object ‘extra’ [-Wrestrict]
+  568 |                         sprintf(extra, "%s,pathd=%d", extra, txpower_inx);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:533:55: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+  533 |                          struct iw_point *wrqu, char *extra)
+      |                                                 ~~~~~~^~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c: In function ‘rtw_efuse_mask_file’:
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:2147:25: warning: ‘sprintf’ argument 3 overlaps destination object ‘extra’ [-Wrestrict]
+ 2147 |                         sprintf(extra, "%s:%02x", extra, maskfileBuffer[i]);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:2092:55: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+ 2092 |                         union iwreq_data *wrqu, char *extra)
+      |                                                 ~~~~~~^~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:2151:17: warning: ‘sprintf’ argument 3 overlaps destination object ‘extra’ [-Wrestrict]
+ 2151 |                 sprintf(extra, "%s\nLoad Efuse Mask data %d hex ok\n", extra, count);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/root/aircrack_8812au/os_dep/linux/ioctl_mp.c:2092:55: note: destination object referenced by ‘restrict’-qualified argument 1 was declared here
+ 2092 |                         union iwreq_data *wrqu, char *extra)
+      |                                                 ~~~~~~^~~~~
+  CC [M]  /root/aircrack_8812au/hal/hal_intf.o
+  CC [M]  /root/aircrack_8812au/hal/hal_com.o
+  CC [M]  /root/aircrack_8812au/hal/hal_com_phycfg.o
+  CC [M]  /root/aircrack_8812au/hal/hal_phy.o
+  CC [M]  /root/aircrack_8812au/hal/hal_dm.o
+  CC [M]  /root/aircrack_8812au/hal/hal_dm_acs.o
+  CC [M]  /root/aircrack_8812au/hal/hal_btcoex_wifionly.o
+  CC [M]  /root/aircrack_8812au/hal/hal_btcoex.o
+  CC [M]  /root/aircrack_8812au/hal/hal_mp.o
+  CC [M]  /root/aircrack_8812au/hal/hal_mcc.o
+  CC [M]  /root/aircrack_8812au/hal/hal_hci/hal_usb.o
+  CC [M]  /root/aircrack_8812au/hal/led/hal_led.o
+  CC [M]  /root/aircrack_8812au/hal/led/hal_usb_led.o
+  CC [M]  /root/aircrack_8812au/hal/HalPwrSeqCmd.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/Hal8812PwrSeq.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/Hal8821APwrSeq.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_xmit.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_sreset.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_hal_init.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_phycfg.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_rf6052.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_dm.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_rxdesc.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/rtl8812a_cmd.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/usb/usb_halinit.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/usb/rtl8812au_led.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/usb/rtl8812au_xmit.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/usb/rtl8812au_recv.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/usb/usb_ops_linux.o
+  CC [M]  /root/aircrack_8812au/hal/efuse/rtl8812a/HalEfuseMask8812A_USB.o
+  CC [M]  /root/aircrack_8812au/hal/efuse/rtl8812a/HalEfuseMask8821A_USB.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/hal8812a_fw.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8812a/hal8821a_fw.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/Hal8814PwrSeq.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_xmit.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_sreset.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_hal_init.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_phycfg.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_rf6052.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_dm.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_rxdesc.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/rtl8814a_cmd.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/hal8814a_fw.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/usb/usb_halinit.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/usb/rtl8814au_led.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/usb/rtl8814au_xmit.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/usb/rtl8814au_recv.o
+  CC [M]  /root/aircrack_8812au/hal/rtl8814a/usb/usb_ops_linux.o
+  CC [M]  /root/aircrack_8812au/hal/efuse/rtl8814a/HalEfuseMask8814A_USB.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_debug.o
+/root/aircrack_8812au/hal/phydm/phydm_debug.c: In function ‘phydm_basic_dbg_message’:
+/root/aircrack_8812au/hal/phydm/phydm_debug.c:2219:56: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+ 2219 |                 PHYDM_DBG(dm, DBG_CMN, "No Link !!!\n");
+      |                                                        ^
+/root/aircrack_8812au/hal/phydm/phydm_debug.c: In function ‘phydm_fw_trace_handler_code’:
+/root/aircrack_8812au/hal/phydm/phydm_debug.c:4456:35: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 4456 |                           cmd_len);
+      |                                   ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_antdiv.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_soml.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_smt_ant.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_antdect.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_interface.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_phystatus.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_hwconfig.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_dig.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_pathdiv.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_rainfo.o
+/root/aircrack_8812au/hal/phydm/phydm_rainfo.c: In function ‘phydm_c2h_ra_report_handler’:
+/root/aircrack_8812au/hal/phydm/phydm_rainfo.c:445:60: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  445 |                         PHYDM_DBG(dm, DBG_RA, "Try rate\n");
+      |                                                            ^
+/root/aircrack_8812au/hal/phydm/phydm_rainfo.c: In function ‘phydm_get_tx_stream_num’:
+/root/aircrack_8812au/hal/phydm/phydm_rainfo.c:829:76: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+  829 |         PHYDM_DBG(dm, DBG_RA, "[Warrning] no mimo_type is found\n");
+      |                                                                    ^
+
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_dynamictxpower.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_adaptivity.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_cfotracking.o
+/root/aircrack_8812au/hal/phydm/phydm_cfotracking.c: In function ‘phydm_set_crystal_cap’:
+/root/aircrack_8812au/hal/phydm/phydm_cfotracking.c:218:57: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+  218 |                 PHYDM_DBG(dm, DBG_CFO_TRK, "Set fail\n");
+      |                                                         ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_noisemonitor.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_beamforming.o
+/root/aircrack_8812au/hal/phydm/phydm_beamforming.c: In function ‘phydm_beamforming_notify’:
+/root/aircrack_8812au/hal/phydm/phydm_beamforming.c:1114:44: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+ 1114 |                                   __func__);
+      |                                            ^
+/root/aircrack_8812au/hal/phydm/phydm_beamforming.c: In function ‘beamforming_init_entry’:
+/root/aircrack_8812au/hal/phydm/phydm_beamforming.c:1252:52: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 1252 |                                           __func__);
+      |                                                    ^
+/root/aircrack_8812au/hal/phydm/phydm_beamforming.c: In function ‘beamforming_timer_callback’:
+/root/aircrack_8812au/hal/phydm/phydm_beamforming.c:1680:36: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+ 1680 |                           __func__);
+      |                                    ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_dfs.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.o
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c: In function ‘hal_com_txbf_config_gtab’:
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c:47:47: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+   47 |                 hal_txbf_8822b_config_gtab(dm);
+      |                                               ^
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c: In function ‘hal_com_txbf_enter_work_item_callback’:
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c:194:46: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  194 |                 hal_txbf_8822b_enter(dm, idx);
+      |                                              ^
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c: In function ‘hal_com_txbf_leave_work_item_callback’:
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c:224:46: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  224 |                 hal_txbf_8822b_leave(dm, idx);
+      |                                              ^
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c: In function ‘hal_com_txbf_fw_ndpa_work_item_callback’:
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c:253:48: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  253 |                 hal_txbf_8822b_fw_txbf(dm, idx);
+      |                                                ^
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c: In function ‘hal_com_txbf_status_work_item_callback’:
+/root/aircrack_8812au/hal/phydm/txbf/halcomtxbf.c:351:47: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  351 |                 hal_txbf_8822b_status(dm, idx);
+      |                                               ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/txbf/haltxbfinterface.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/txbf/phydm_hal_txbf_api.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_adc_sampling.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_ccx.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_psd.o
+/root/aircrack_8812au/hal/phydm/phydm_psd.c: In function ‘phydm_psd’:
+/root/aircrack_8812au/hal/phydm/phydm_psd.c:204:66: warning: suggest braces around empty body in an ‘else’ statement [-Wempty-body]
+  204 |                           odm_get_bb_reg(dm, R_0xc50, MASKDWORD));
+      |                                                                  ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_primary_cca.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_cck_pd.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_rssi_monitor.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_auto_dbg.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_math_lib.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_api.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_pow_train.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_lna_sat.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_pmac_tx_setting.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/phydm_mp.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/halrf.o
+/root/aircrack_8812au/hal/phydm/halrf/halrf.c: In function ‘halrf_compare’:
+/root/aircrack_8812au/hal/phydm/halrf/halrf.c:2270:73: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 2270 |            RF_DBG(dm, DBG_RF_DACK, "[DACK]overflow!!!!!!!!!!!!!!!");
+      |                                                                    ^
+
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/halrf_debug.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/halphyrf_ce.o
+/root/aircrack_8812au/hal/phydm/halrf/halphyrf_ce.c: In function ‘odm_txpowertracking_callback_thermal_meter’:
+/root/aircrack_8812au/hal/phydm/halrf/halphyrf_ce.c:481:62: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  481 |                        "reload ofdm index for band switch\n");
+      |                                                              ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/halrf_powertracking_ce.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/halrf_powertracking.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.o
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c: In function ‘phydm_get_thermal_trim_offset_8821c’:
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c:151:49: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  151 |                        power_trim_info->thermal);
+      |                                                 ^
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c: In function ‘phydm_get_thermal_trim_offset_8822b’:
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c:279:49: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  279 |                        power_trim_info->thermal);
+      |                                                 ^
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c: In function ‘phydm_get_thermal_trim_offset_8710b’:
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c:524:49: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  524 |                        power_trim_info->thermal);
+      |                                                 ^
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c: In function ‘phydm_get_power_trim_offset_8710b’:
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c:551:55: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  551 |                        power_trim_info->bb_gain[0][0]);
+      |                                                       ^
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c: In function ‘phydm_get_thermal_trim_offset_8192f’:
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c:608:49: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  608 |                        power_trim_info->thermal);
+      |                                                 ^
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c: In function ‘phydm_get_thermal_trim_offset_8198f’:
+/root/aircrack_8812au/hal/phydm/halrf/halrf_kfree.c:792:49: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  792 |                        power_trim_info->thermal);
+      |                                                 ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8812a/halhwimg8812a_mac.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8812a/halhwimg8812a_bb.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8812a/halhwimg8812a_rf.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.o
+/root/aircrack_8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c: In function ‘phy_iq_calibrate_8812a’:
+/root/aircrack_8812au/hal/phydm/halrf/rtl8812a/halrf_8812a_ce.c:1302:89: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+ 1302 |           "== FW IQK TIMEOUT (Still in progress after 500ms) ==\n");
+      |                                                                    ^
+
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8812a/phydm_regconfig8812a.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8812a/phydm_rtl8812a.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/txbf/haltxbfjaguar.o
+/root/aircrack_8812au/hal/phydm/txbf/haltxbfjaguar.c: In function ‘hal_txbf_jaguar_download_ndpa’:
+/root/aircrack_8812au/hal/phydm/txbf/haltxbfjaguar.c:144:36: warning: suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+  144 |                           __func__);
+      |                                    ^
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8821a/halhwimg8821a_mac.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8821a/halhwimg8821a_bb.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8821a/halhwimg8821a_rf.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/rtl8821a/halrf_8821a_ce.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8821a/phydm_regconfig8821a.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8821a/phydm_rtl8821a.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/rtl8821a/halrf_iqk_8821a_ce.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8814a/halhwimg8814a_bb.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8814a/halhwimg8814a_mac.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8814a/halhwimg8814a_rf.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/rtl8814a/halrf_iqk_8814a.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8814a/phydm_regconfig8814a.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/halrf/rtl8814a/halrf_8814a_ce.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/rtl8814a/phydm_rtl8814a.o
+  CC [M]  /root/aircrack_8812au/hal/phydm/txbf/haltxbf8814a.o
+  CC [M]  /root/aircrack_8812au/platform/platform_ops.o
+  CC [M]  /root/aircrack_8812au/core/rtw_mp.o
+  LD [M]  /root/aircrack_8812au/88XXau.o
+/root/aircrack_8812au/88XXau.o: warning: objtool: rtw_mp_cmd+0xfe: unannotated intra-function call
+  MODPOST /root/aircrack_8812au/Module.symvers
+  CC [M]  /root/aircrack_8812au/88XXau.mod.o
+  LD [M]  /root/aircrack_8812au/88XXau.ko
+  BTF [M] /root/aircrack_8812au/88XXau.ko
+Skipping BTF generation for /root/aircrack_8812au/88XXau.ko due to unavailability of vmlinux
+make[1]: 离开目录“/usr/src/linux-headers-6.11.2-amd64”
+---------------------------------------------------------------------------
+Visit https://github.com/aircrack-ng/rtl8812au for support/reporting issues
+or check for newer versions (branches) of these drivers.                   
+---------------------------------------------------------------------------
+install -p -m 644 88XXau.ko  /lib/modules/6.11.2-amd64/kernel/drivers/net/wireless/
+/sbin/depmod -a 6.11.2-amd64
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# sudo  modprobe   88XXau
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# sudo  modprobe   88XXau
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# wifi-te
+找不到命令 “wifi-te”，您的意思是：
+  “wifite” 命令来自 Debian 软件包 wifite
+尝试 apt install <deb name>
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# wifite 
+   .               .    
+ .´  ·  .     .  ·  `.  wifite2 2.7.0
+ :  :  :  (¯)  :  :  :  a wireless auditor by derv82
+ `.  ·  ` /¯\ ´  ·  .´  maintained by kimocoder
+   `     /¯¯¯\     ´    https://github.com/kimocoder/wifite2
+
+ [!] Warning: Recommended app hcxdumptool was not found. install @ apt install hcxdumptool                                                                
+ [!] Warning: Recommended app hcxpcapngtool was not found. install @ apt install hcxtools                                                                 
+ [!] Conflicting processes: NetworkManager (PID 714), wpa_supplicant (PID 801)                                                                            
+ [!] If you have problems: kill -9 PID or re-run wifite with --kill          
+
+    Interface   PHY   Driver              Chipset                            
+-----------------------------------------------------------------------
+ 1. wlan0       phy4  88XXau              Realtek Semiconductor Corp. Realtek 8812AU/8821AU 802.11ac WLAN Adapter [USB Wireless Dual-Band Adapter 2.4/5Ghz]
+
+ [+] Enabling monitor mode on wlan0... enabled!
+/usr/lib/python3/dist-packages/wifite/attack/pmkid.py:342: SyntaxWarning: invalid escape sequence '\d'
+  essid_safe = re.sub('[^a-zA-Z\d]', '', self.target.essid)
+/usr/lib/python3/dist-packages/wifite/attack/wpa.py:199: SyntaxWarning: invalid escape sequence '\d'
+  essid_safe = re.escape(re.sub('[^a-zA-Z\d]', '', essid))
+/usr/lib/python3/dist-packages/wifite/attack/wpa.py:226: SyntaxWarning: invalid escape sequence '\d'
+  essid_safe = re.sub('[^a-zA-Z\d]', '', handshake.essid)
+
+   NUM                      ESSID   CH  ENCR    PWR    WPS  CLIENT           
+   ---  -------------------------  ---  -----   ----   ---  ------
+     1       (A8:5A:E0:CE:86:FD)     6  WPA-P   66db   yes                   
+     2       (A8:5A:E0:CE:86:F9)     6  WPA-P   66db   yes                   
+     3                 CMCC-9945     1  WPA-P   60db   yes                   
+     4                 CMCC-9945     1  WPA-P   60db   yes                   
+     5       (70:D6:1E:CB:D4:21)     1  WPA-P   56db    no                   
+     6                 CMCC-2717     1  WPA-P   50db   yes                   
+ [+] Select target(s) (1-6) separated by commas, dashes or all: ^C           
+ [!] Interrupted, Shutting down...
+ [!] Note: Leaving interface in Monitor Mode!
+ [!] To disable Monitor Mode when finished: airmon-ng stop wlan0
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# wifite -c  36,40,44,48,149,153,157,161,165
+   .               .    
+ .´  ·  .     .  ·  `.  wifite2 2.7.0
+ :  :  :  (¯)  :  :  :  a wireless auditor by derv82
+ `.  ·  ` /¯\ ´  ·  .´  maintained by kimocoder
+   `     /¯¯¯\     ´    https://github.com/kimocoder/wifite2
+
+ [+] option: scanning for targets on channel 36,40,44,48,149,153,157,161,165
+ [!] Warning: Recommended app hcxdumptool was not found. install @ apt install hcxdumptool                                                                
+ [!] Warning: Recommended app hcxpcapngtool was not found. install @ apt install hcxtools                                                                 
+ [!] Conflicting processes: NetworkManager (PID 714), wpa_supplicant (PID 801)                                                                            
+ [!] If you have problems: kill -9 PID or re-run wifite with --kill          
+
+ [+] Using wlan0 already in monitor mode                                     
+
+   NUM                      ESSID   CH  ENCR    PWR    WPS  CLIENT           
+   NUM                      ESSID   CH  ENCR    PWR    WPS  CLIENT
+   NUM                      ESSID   CH  ENCR    PWR    WPS  CLIENT           
+   NUM                      ESSID   CH  ENCR    PWR    WPS  CLIENT           
+   ---  -------------------------  ---  -----   ----   ---  ------           
+     1       (F0:33:E5:FE:59:7C)    11  WPA     99db    no                   
+     2              MERCURY_1C71    12  WPA-P   74db    no                        3       (A8:5A:E0:CE:86:FD)     6  WPA-P   68db   yes                   
+     4        ChinaUnicom-THN6DT     6  WPA-P   66db   yes    1              
+     5       (A8:5A:E0:CE:86:F9)     6  WPA-P   65db   yes                   
+     6                 CMCC-9945     1  WPA-P   61db   yes                   
+     7       (70:D6:1E:CB:D4:21)     1  WPA-P   59db    no                   
+     8                 CMCC-9945     1  WPA-P   57db   yes                   
+     9           lnunicom_tkm9ut    11  WPA-P   55db   yes                   
+    10                 CMCC-2717     1  WPA-P   46db   yes                   
+    11              TP-LINK_78FD     6  WPA-P   38db    no                   
+    12                 CMCC-F9uF     8  WPA-P   37db    no    1              
+    13                 CMCC-3381    11  WPA-P   37db   yes                   
+    14                baobei1121     6  WPA-P   36db   yes                   
+    15       (FC:94:35:DF:3B:70)    44  WPA     36db    no                       16                 CMCC-qDUX    11  WPA-P   36db    no                   
+    17                 CMCC-9648     4  WPA-P   35db  lock                   
+    18       (E2:EF:02:49:1F:9E)     1  WPA-P   34db    no                   
+    19                  CMCC-116     6  WPA-P   34db    no                   
+    20             ChinaNet-EErT     1  WPA-P   32db    no                   
+    21                 CMCC-4866    11  WPA-P   32db    no                       22              CMCC-9945-5G    36  WPA-P   31db   yes                   
+    23       (B0:11:4B:B7:F7:CC)    36  WPA-P   31db    no                   
+    24               Xiaomi_DF91     2  WPA-P   30db   yes                   
+    25                 CMCC-2244    13  WPA-P   30db    no                   
+    26              CMCC-9945-5G    36  WPA-P   24db    no                   
+    27       (70:D6:1E:CB:D4:29)    36  WPA-P   24db    no                   
+    28       (A8:5A:E0:CE:86:FE)   149  WPA-P   13db   yes                   
+    29       (A8:5A:E0:FE:86:FC)   149  WPA-P   12db   yes                   
+    30     ChinaUnicom-THN6DT_5G   149  WPA-P   12db   yes                   
+ [+] Select target(s) (1-30) separated by commas, dashes or all: ^C          
+ [!] Interrupted, Shutting down...
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# wifite -C  5180-5825"                     
+dquote> 
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# wifite -C  5180-5825 
+   .               .    
+ .´  ·  .     .  ·  `.  wifite2 2.7.0
+ :  :  :  (¯)  :  :  :  a wireless auditor by derv82
+ `.  ·  ` /¯\ ´  ·  .´  maintained by kimocoder
+   `     /¯¯¯\     ´    https://github.com/kimocoder/wifite2
+
+wifite: error: unrecognized arguments: -C 5180-5825
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─#                     
+Wifite 是一款自动化无线网络审核工具，用于破解 WEP 和 WPA 加密的网络。你可以通过一些参数来限制扫描和破解模式，以下是一些常用的参数：
+
+常用参数
+-all：攻击所有目标
+
+-i <iface>：指定用于捕获的无线接口
+
+-mac：匿名化 MAC 地址
+
+-c <channel>：扫描特定信道的目标
+
+-e <essid>：目标特定的 SSID（网络名称）
+
+-b <bssid>：目标特定的 BSSID（MAC 地址）
+
+-pow <db>：攻击信号强度大于指定值的目标
+
+-quiet：不打印扫描到的 AP 列表
+
+限制扫描和破解模式
+-wpa：仅攻击 WPA 网络
+
+-wep：仅攻击 WEP 网络
+
+-wps：仅攻击 WPS 网络
+
+-pps <num>：设置每秒发送的数据包数量
+
+-wept <sec>：等待每次攻击的时间（秒）
+
+-chopchop：使用 chopchop 攻击
+
+-arpreplay：使用 arpreplay 攻击
+
+-fragment：使用碎片攻击
+
+-caffelatte：使用 caffe-latte 攻击
+
+-p0841：使用 -p0841 攻击
+
+-hirte：使用 hirte (cfrag) 攻击
+
+-nofakeauth：停止攻击如果伪造认证失败
+
+-wepca <n>：开始破解当 IV 数量超过 n
+
+-wepsave：保存捕获的 .cap 文件到指定目录
+
+在 wifite 中，-nowpa 参数可以用来排除 WPA 和 WPA2 网络，只扫描 WEP 和开放网络。这可以帮助你更快地定位到你需要攻击的目标网络，而不浪费时间在 WPA 网络上。
+
+
+--no-wps 可以跳过wps扫描
+
+wifite -h -v 这样可以查看帮助
+
+
+
+

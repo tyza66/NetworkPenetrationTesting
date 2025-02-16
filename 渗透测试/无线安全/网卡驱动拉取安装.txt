@@ -1,0 +1,23 @@
+添加源的方法：
+使用下面的命令打开配置文件
+sudo  mousepad   /etc/apt/sources.list
+然后在打开的文件中把原来的内容清空，把下面4行软件源粘贴到文件保存即可
+#deb      http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
+#deb-src  http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
+#deb      https://mirrors.aliyun.com/kali kali-rolling main contrib non-free non-free-firmware
+deb       https://mirrors.ustc.edu.cn/kali kali-rolling main contrib non-free non-free-firmware
+#deb-src  https://mirrors.aliyun.com/kali kali-rolling main contrib non-free non-free-firmware
+
+
+sudo  apt   install    linux-image-amd64  linux-headers-amd64  realtek-rtl88xxau-dkms -y(用于64位系统）
+sudo  apt   install    linux-image-686-pae linux-headers-686-pae  realtek-rtl88xxau-dkms -y  (这条用于32位的系统，64位的系统用上面的那条命令）
+sudo  apt   install    linux-image-arm64 linux-headers-arm64  realtek-rtl88xxau-dkms -y  (M1核的苹果或树莓派用这条命令）
+
+过程中有要选择的地方都选“yes”或者“是”，也有可能不提示。
+
+reboot
+
+modprobe   88XXau    （注意X是大写，后面也没有.ko，只是88XXau）
+
+
+如果没效果 就换make安装

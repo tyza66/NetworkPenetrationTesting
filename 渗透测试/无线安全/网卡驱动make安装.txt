@@ -1,0 +1,80 @@
+下面我简要说一个amd64_x86架构（电脑）的安装方法：
+
+0、安装依赖包
+
+sudo  apt update
+sudo  apt  install  dkms  bc  mokutil build-essential libelf-dev linux-headers-amd64  linux-image-amd64  -y
+1、下载驱动源代码
+
+git clone  https://gitee.com/lab37/aircrack_8812au.git  (如果要登陆，用户名：www-abc   密码：abc123)
+2、安装驱动
+
+cd     aircrack_8812au
+git  checkout   63cf0b4
+sudo  make  dkms_install
+make  &&  sudo make install
+3、加载驱动
+
+sudo  modprobe   88XXau    （注意没有.ko，只是88XXau）
+三、使用注意事项
+1、结束干扰进程
+
+airmon-ng  check   kill
+2、暂时关闭接口
+
+sudo ip link set wlan0 down   （你的不一定是wlan0，注意一下）
+3、设置monitor模式
+
+sudo iw dev wlan0 set type monitor
+4、重新打开端口
+
+sudo ip link set wlan0 up
+5、如果要设置TX功率，使用如下命令
+
+sudo iw dev wlan0 set txpower fixed 3000
+6、一个注意事项
+
+新版本的NetworkManager会默认开启mac地址随机化，这个有时会干扰网卡的使用，可以
+
+使用如下的方法关闭NetworkManager的mac地址随机化设置。
+
+在/etc/NetworkManager/NetworkManager.conf文件的最后添加下面两行:
+
+[device]
+wifi.scan-rand-mac-address=no
+然后用下面的命令重启NetworkManager：
+
+sudo systemctl restart NetworkManager
+
+
+
+7、一个tip
+
+对于自己连过的wifi，在aireplay-ng监听5G频道的时候可能会卡一下，然后监听不到bssid，
+
+这个要在aireplay-ng命令中加一个-D参数，让aireplay-ng不要非在等到beacon后才注入，
+
+而是直接把数据包注入出去。
+
+监听5G频段的wifi使用如下命令：
+airodump-ng   -C   5180-5885  wlan0
+
+
+8、设置NetworkManager不要管理这个网卡
+
+在/etc/NetworkManager/NetworkManager.conf文件中增加下面的配置
+
+[device]
+wifi.scan-rand-mac-address=no
+
+[ifupdown]
+managed=false
+
+[connection]
+wifi.powersave=0
+
+[main]
+plugins=keyfile
+
+[keyfile]
+unmanaged-devices=mac:A7:A7:A7:A7:A7（注意这里填的是你自己网卡的mac）

