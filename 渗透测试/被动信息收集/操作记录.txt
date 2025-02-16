@@ -679,4 +679,28 @@ arl_worker      tophant/arl:v2.6.2                  "sh -c 'wait-for-it.…"   w
 直接进入网页进行操
 点击资产分组 新建资产分组
 选域名 起个名 输入几个域名 也可以不带三级域名
-poc就是oroof of concept 观点验证程序
+poc就是oroof of concept 观点验证程序 就是用脚本验证一下漏洞是否存在
+为了区分功能我们可以创建策略
+端口一般扫80和443
+正常应该是新建策略 之后创建资产分组 之后资产再添加监控 添加监控的时候再将策略添加上去 后建立的项目还可以任务下发
+如果不是自己公司的服务器就可以使用资产侦察
+crt.sh 能收集证书信息
+----------------------------------------------------
+谷歌搜索引擎是通用技巧
+site 指定域名
+inurl URL 中存在的关键字页面
+intext 网页内容里面的关键字
+Filetype 指定文件类型
+intitle 网页标题中的关键字
+link 返回你所有的指定域名链接
+info 查找指定站点信息
+cache 搜索 Google 里的内容缓存
+inurl: admin.php
+intitle:index.of .hash_history 搜索对我们开放的索引界面 能获取服务器history
+intitle:index.of my.cnf 能获取mysql配置文件
+cache:xxx 可以搜到不存在的网站的缓存
+kali filetype:torrent 搜索内容包含种子的
+apache site:cnvd.org.cn   site可以将搜索限定在某个网站中 搜漏洞和文章比较好
+intext:user.sql intitle:index.of 查找包含user.sql用户数据库信息的页面 并且目录是开放状态 能搜到数据库备份状态
+
+site:gov.* intitle:"index of" *.csv
