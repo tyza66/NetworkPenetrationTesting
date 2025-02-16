@@ -1,0 +1,506 @@
+只ping一次
+┌──(root💀tyza66)-[~]
+└─# ping baidu.com -c 1
+PING baidu.com (39.156.66.10) 56(84) bytes of data.
+64 bytes from 39.156.66.10: icmp_seq=1 ttl=49 time=26.9 ms
+
+--- baidu.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 26.923/26.923/26.923/0.000 ms
+
+查看经过了几跳
+─(root💀tyza66)-[~]
+└─# traceroute baidu.com
+traceroute to baidu.com (39.156.66.10), 30 hops max, 60 byte packets
+ 1  192.168.101.1 (192.168.101.1)  1.554 ms  2.994 ms  2.821 ms
+ 2  192.168.2.1 (192.168.2.1)  3.853 ms  4.963 ms  4.907 ms
+ 3  42.180.192.1 (42.180.192.1)  7.260 ms  7.205 ms  7.274 ms
+ 4  218.24.229.141 (218.24.229.141)  8.112 ms 218.24.228.141 (218.24.228.141)  10.473 ms  10.692 ms
+ 5  * * 113.230.175.1 (113.230.175.1)  19.553 ms
+ 6  219.158.105.89 (219.158.105.89)  27.931 ms 219.158.101.13 (219.158.101.13)  28.658 ms *
+ 7  * * 219.158.96.186 (219.158.96.186)  28.401 ms
+ 8  219.158.33.190 (219.158.33.190)  22.550 ms  25.184 ms  24.150 ms
+ 9  221.183.94.37 (221.183.94.37)  25.631 ms  26.471 ms  25.251 ms
+10  * * *
+11  *
+
+我们会发现ttl的值 如果经过一个而路由器就会跳一下 如果ttl归零了就不找了
+***是隐藏的路由 
+
+arp可以将ip转为mac mac跑在二层协议
+32为的是ip 48位的是mac地址
+windows上使用C:\Users\tyza66>ipconfig /all可以看
+linux直接用ifconfig看就行
+
+查看网关
+┌──(root💀tyza66)-[~]
+└─# arping 192.168.101.1
+ARPING 192.168.101.1
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=0 time=1.218 msec
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=1 time=6.461 msec
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=2 time=6.976 msec
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=3 time=3.472 msec
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=4 time=2.281 msec
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=5 time=1.365 msec
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=6 time=4.363 msec
+60 bytes from a8:5a:e0:ce:86:f0 (192.168.101.1): index=7 time=3.426 msec
+^C
+--- 192.168.101.1 statistics ---
+8 packets transmitted, 8 packets received,   0% unanswered (0 extra)
+rtt min/avg/max/std-dev = 1.218/3.695/6.976/2.017 ms
+
+以前带宽很小 所以有那种p2p终结者和网络执法官冒充网关 现在很少有人这么做
+
+查看地址表
+┌──(root💀tyza66)-[~]
+└─# arp -n              
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.101.1            ether   a8:5a:e0:ce:86:f0   C                     eth0
+192.168.101.96           ether   38:68:93:8a:28:a2   C                     eth0
+                                                                                                                        
+因为原理是路由器可以主动更新mac地址表
+我们用自己设备快速更新了就行了 所有数据都得经过我这里了
+能实现全局限速啥的
+
+我们可以直接ifconfig ens33 192.168.101.1 将本地的网卡设置为网关的地址之后ping的时候就会掺杂我们的设备
+
+所以我们想看局域网有没有跟别人的ip冲突可以用arping 看mac地址
+
+如果我想知道整个局域网里面都有哪些设备在上网 可以使用netdiscover
+┌──(root💀tyza66)-[~]
+└─# netdiscover -i eth0
+ Currently scanning: 192.168.4.0/16   |   Screen View: Unique Hosts                                                       
+                                                                                                                          
+ 5 Captured ARP Req/Rep packets, from 1 hosts.   Total size: 300                                                          
+ _____________________________________________________________________________
+   IP            At MAC Address     Count     Len  MAC Vendor / Hostname      
+ -----------------------------------------------------------------------------
+ 192.168.101.1   a8:5a:e0:ce:86:f0      5     300  Huawei Device Co., Ltd.                                                
+
+                                                                                                                           
+┌──(root💀tyza66)-[~]
+└─# netdiscover -i eth0 -r 192.168.101.0/24
+ Currently scanning: Finished!   |   Screen View: Unique Hosts                                                            
+                                                                                                                          
+ 14 Captured ARP Req/Rep packets, from 4 hosts.   Total size: 840                                                         
+ _____________________________________________________________________________
+   IP            At MAC Address     Count     Len  MAC Vendor / Hostname      
+ -----------------------------------------------------------------------------
+ 192.168.101.1   a8:5a:e0:ce:86:f0     10     600  Huawei Device Co., Ltd.                                                
+ 192.168.101.26  00:21:6a:67:46:00      1      60  Intel Corporate                                                        
+ 192.168.101.96  38:68:93:8a:28:a2      2     120  Intel Corporate                                                        
+ 192.168.101.84  ba:f1:33:60:c8:ef      1      60  Unknown vendor                                                         
+
+上面的是主动模式 主动模式比较快 能马上出结果
+24/16/8 是子网掩码 三个255是24 两个是16 一个是8
+被动模式更加隐蔽 
+netdiscover -p
+谁回包了就会被查到
+┌──(root💀tyza66)-[~]
+└─# netdiscover -p                         
+ Currently scanning: (passive)   |   Screen View: Unique Hosts                                                            
+                                                                                                                          
+ 3 Captured ARP Req/Rep packets, from 3 hosts.   Total size: 180                                                          
+ _____________________________________________________________________________
+   IP            At MAC Address     Count     Len  MAC Vendor / Hostname      
+ -----------------------------------------------------------------------------
+ 192.168.101.96  38:68:93:8a:28:a2      1      60  Intel Corporate                                                        
+ 192.168.101.1   a8:5a:e0:ce:86:f0      1      60  Huawei Device Co., Ltd.                                                
+ 192.168.101.93  42:48:af:c0:07:62      1      60  Unknown vendor    
+
+
+fping也可以查询到局域网中有哪些机器
+┌──(root💀tyza66)-[~]
+└─# fping -ag 192.168.101.0/24
+192.168.101.1
+192.168.101.26
+192.168.101.53
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.2
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.2
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.2
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.2
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.4
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.4
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.4
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.4
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.3
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.3
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.3
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.3
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.6
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.6
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.6
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.6
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.5
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.5
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.5
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.5
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.8
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.8
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.8
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.8
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.7
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.7
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.7
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.7
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.10
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.10
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.10
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.10
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.9
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.9
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.9
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.9
+192.168.101.84
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.12
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.12
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.12
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.12
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.11
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.11
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.11
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.11
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.14
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.14
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.14
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.14
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.13
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.13
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.13
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.13
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.16
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.16
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.16
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.16
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.15
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.15
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.15
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.15
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.17
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.17
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.17
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.17
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.20
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.20
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.20
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.20
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.19
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.19
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.19
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.19
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.18
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.18
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.18
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.18
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.22
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.22
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.22
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.22
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.21
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.21
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.21
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.21
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.23
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.23
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.23
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.23
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.25
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.25
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.25
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.25
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.24
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.24
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.24
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.24
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.27
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.27
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.27
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.27
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.28
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.28
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.28
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.28
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.30
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.30
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.30
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.30
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.29
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.29
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.29
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.29
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.32
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.32
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.32
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.32
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.31
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.31
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.31
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.31
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.34
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.34
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.34
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.34
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.33
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.33
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.33
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.33
+192.168.101.96
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.35
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.35
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.35
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.35
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.37
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.37
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.37
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.37
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.36
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.36
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.36
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.36
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.38
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.38
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.38
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.38
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.39
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.39
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.39
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.39
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.41
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.41
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.41
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.41
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.40
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.40
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.40
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.40
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.42
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.42
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.42
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.42
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.44
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.44
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.44
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.44
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.43
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.43
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.43
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.43
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.45
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.45
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.45
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.45
+192.168.101.93
+192.168.101.93 : duplicate for [0], 64 bytes, 28.8 ms
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.47
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.47
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.47
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.47
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.46
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.46
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.46
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.46
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.48
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.48
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.48
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.48
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.49
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.49
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.49
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.49
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.50
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.50
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.50
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.50
+192.168.101.95
+192.168.101.95 : duplicate for [0], 64 bytes, 92.2 ms
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.51
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.51
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.51
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.51
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.54
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.54
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.54
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.54
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.52
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.52
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.52
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.52
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.56
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.56
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.56
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.56
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.55
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.55
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.55
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.55
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.58
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.58
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.58
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.58
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.57
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.57
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.57
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.57
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.60
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.60
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.60
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.60
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.59
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.59
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.59
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.59
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.61
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.61
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.61
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.61
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.64
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.64
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.64
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.64
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.63
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.63
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.63
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.63
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.62
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.62
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.62
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.62
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.66
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.66
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.66
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.66
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.65
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.65
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.65
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.65
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.67
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.67
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.67
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.67
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.68
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.68
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.68
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.68
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.69
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.69
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.69
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.69
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.71
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.71
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.71
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.71
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.70
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.70
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.70
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.70
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.72
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.72
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.72
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.72
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.74
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.74
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.74
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.74
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.73
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.73
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.73
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.73
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.75
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.75
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.75
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.75
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.76
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.76
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.76
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.76
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.77
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.77
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.77
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.77
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.78
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.78
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.78
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.78
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.79
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.79
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.79
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.79
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.81
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.81
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.81
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.81
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.80
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.80
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.80
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.80
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.82
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.82
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.82
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.82
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.83
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.83
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.83
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.83
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.85
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.85
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.85
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.85
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.86
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.86
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.86
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.86
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.87
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.87
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.87
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.87
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.89
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.89
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.89
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.89
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.88
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.88
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.88
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.88
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.91
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.91
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.91
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.91
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.90
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.90
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.90
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.90
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.92
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.92
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.92
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.92
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.94
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.94
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.94
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.94
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.97
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.97
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.97
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.97
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.98
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.98
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.98
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.98
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.100
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.100
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.100
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.100
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.99
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.99
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.99
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.99
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.102
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.102
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.102
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.102
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.101
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.101
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.101
+ICMP Host Unreachable from 192.168.101.53 for ICMP Echo sent to 192.168.101.101
+
+fping -ag 192.168.101.0/24 > fping.txt
+只会将正常的也就是可以找到的存起来
