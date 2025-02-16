@@ -78,3 +78,11 @@ plugins=keyfile
 
 [keyfile]
 unmanaged-devices=mac:A7:A7:A7:A7:A7（注意这里填的是你自己网卡的mac）
+
+
+
+
+
+
+
+

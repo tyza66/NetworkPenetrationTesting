@@ -3192,6 +3192,7 @@ session -K 结束后台所有会话
 
 
 接下来打一下linux靶机
-下载好靶机
+下载好靶机 我们使用Metasploitable3-Linux 这个ubuntu系统镜像作为靶机
+
 
 
