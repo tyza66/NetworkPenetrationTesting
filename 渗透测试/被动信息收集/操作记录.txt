@@ -672,3 +672,11 @@ arl_scheduler   tophant/arl:v2.6.2                  "sh -c 'wait-for-it.…"   s
 arl_web         tophant/arl:v2.6.2                  "sh -c 'gen_crt.sh; …"   web         59 seconds ago       Up 57 seconds   0.0.0.0:5003->443/tcp, :::5003->443/tcp
 arl_worker      tophant/arl:v2.6.2                  "sh -c 'wait-for-it.…"   worker      About a minute ago   Up 57 seconds   
 
+启动后可以看5003端口
+默认账号admin
+默认密码arlpass
+
+直接进入网页进行操
+点击资产分组 新建资产分组
+选域名 起个名 输入几个域名 也可以不带三级域名
+poc就是oroof of concept 观点验证程序
