@@ -2134,7 +2134,119 @@ C:\Windows\system32>net user Guest /active:no
 net user Guest /active:no
 The command completed successfully.
 
-接下来用smf的smb_enumshares模块基于SMB协议扫描共享文件(账号:密码)
+接下来用smf的smb_enumshares模块基于SMB协议扫描共享文件(需要账号:密码)
+配置了用户名和密码会获得更全面的信息
+先在windows上创建共享文件夹 回kali
+msf6 exploit(windows/smb/cve_2020_0796_smbghost) > back
+msf6 > search smb_enum
+
+Matching Modules
+================
+
+   #  Name                                        Disclosure Date  Rank    Check  Description
+   -  ----                                        ---------------  ----    -----  -----------
+   0  auxiliary/scanner/smb/smb_enumusers_domain  .                normal  No     SMB Domain User Enumeration
+   1  auxiliary/scanner/smb/smb_enum_gpp          .                normal  No     SMB Group Policy Preference Saved Passwords Enumeration
+   2  auxiliary/scanner/smb/smb_enumshares        .                normal  No     SMB Share Enumeration
+   3  auxiliary/scanner/smb/smb_enumusers         .                normal  No     SMB User Enumeration (SAM EnumUsers)
+
+
+Interact with a module by name or index. For example info 3, use 3 or use auxiliary/scanner/smb/smb_enumusers                                             
+
+msf6 > use 2
+[*] New in Metasploit 6.4 - This module can target a SESSION or an RHOST
+msf6 auxiliary(scanner/smb/smb_enumshares) > show options
+
+Module options (auxiliary/scanner/smb/smb_enumshares):
+
+   Name              Current Setting   Required  Description
+   ----              ---------------   --------  -----------
+   HIGHLIGHT_NAME_P  username|passwor  yes       PCRE regex of resource nam
+   ATTERN            d|user|pass|Grou            es to highlight
+                     ps.xml
+   LogSpider         3                 no        0 = disabled, 1 = CSV, 2 =
+                                                  table (txt), 3 = one line
+                                                 r (txt) (Accepted: 0, 1, 2
+                                                 , 3)
+   MaxDepth          999               yes       Max number of subdirectori
+                                                 es to spider
+   Share                               no        Show only the specified sh
+                                                 are
+   ShowFiles         false             yes       Show detailed information
+                                                 when spidering
+   SpiderProfiles    true              no        Spider only user profiles
+                                                 when share is a disk share
+   SpiderShares      false             no        Spider shares recursively
+
+
+   Used when making a new connection via RHOSTS:
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   RHOSTS                      no        The target host(s), see https://do
+                                         cs.metasploit.com/docs/using-metas
+                                         ploit/basics/using-metasploit.html
+   SMBDomain  .                no        The Windows domain to use for auth
+                                         entication
+   SMBPass                     no        The password for the specified use
+                                         rname
+   SMBUser                     no        The username to authenticate as
+   THREADS    1                yes       The number of concurrent threads (
+                                         max one per host)
+
+
+   Used when connecting via an existing SESSION:
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SESSION                   no        The session to run this module on
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/smb/smb_enumshares) > set RHOSTS 192.168.101.111
+RHOSTS => 192.168.101.111
+msf6 auxiliary(scanner/smb/smb_enumshares) > run
+
+[-] 192.168.101.111:139 - Login Failed: Unable to negotiate SMB1 with the remote host: Not a valid SMB packet
+[-] 192.168.101.111:445 - Login Failed: (0xc0000022) STATUS_ACCESS_DENIED: {Access Denied} A process has requested access to an object but has not been granted those access rights.
+[*] 192.168.101.111: - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/smb/smb_enumshares) > set SMBUSER tyza66
+SMBUSER => tyza66
+msf6 auxiliary(scanner/smb/smb_enumshares) > set SMBPASS 123456
+SMBPASS => 123456
+msf6 auxiliary(scanner/smb/smb_enumshares) > run
+
+[-] 192.168.101.111:139 - Login Failed: Unable to negotiate SMB1 with the remote host: Not a valid SMB packet
+[!] 192.168.101.111:445 - peer_native_os is only available with SMB1 (current version: SMB3)
+[!] 192.168.101.111:445 - peer_native_lm is only available with SMB1 (current version: SMB3)
+[+] 192.168.101.111:445 - ADMIN$ - (DISK|SPECIAL) 远程管理
+[+] 192.168.101.111:445 - C$ - (DISK|SPECIAL) 默认共享
+[+] 192.168.101.111:445 - IPC$ - (IPC|SPECIAL) 远程 IPC
+[+] 192.168.101.111:445 - Share - (DISK) 
+[+] 192.168.101.111:445 - Users - (DISK) 
+[*] 192.168.101.111: - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+获得了远程文件夹的信息 在kali中用 smbclient访问就行了
+smbclient -L //192.168.101.111 -U tyza66
+
+┌──(root💀tyza66)-[~]
+└─# smbclient -L //192.168.101.111 -U tyza66
+Password for [WORKGROUP\tyza66]:
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+        ADMIN$          Disk      远程管理
+        C$              Disk      默认共享
+        IPC$            IPC       远程 IPC
+        Share           Disk      
+        Users           Disk      
+Reconnecting with SMB1 for workgroup listing.
+do_connect: Connection to 192.168.101.111 failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
+Unable to connect with SMB1 -- no workgroup available
+                                                           
 
 
 
