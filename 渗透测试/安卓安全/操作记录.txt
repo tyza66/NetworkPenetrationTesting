@@ -1,0 +1,171 @@
+只在浅层面操作
+首先要用这个必须禁用ipv6
+echo "net.ipv6.conf.eth0.disable_ipv6 = 1" >> /etc/sysctl.conf
+
+┌──(root💀tyza66)-[~]
+└─# ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.101.53  netmask 255.255.255.0  broadcast 192.168.101.255
+        inet6 fe80::20c:29ff:fec5:433b  prefixlen 64  scopeid 0x20<link>
+        ether 00:0c:29:c5:43:3b  txqueuelen 1000  (Ethernet)
+        RX packets 1253349  bytes 519682588 (495.6 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 1201103  bytes 296739154 (282.9 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 1310795  bytes 257838679 (245.8 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 1310795  bytes 257838679 (245.8 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+wlan0: flags=803<UP,BROADCAST,NOTRAILERS,PROMISC,ALLMULTI>  mtu 2312
+        unspec 4A-BB-EE-B3-E6-23-00-8D-00-00-00-00-00-00-00-00  txqueuelen 1000  (UNSPEC)
+        RX packets 2637199  bytes 0 (0.0 B)
+        RX errors 0  dropped 2492954  overruns 0  frame 0
+        TX packets 5123  bytes 197467 (192.8 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# echo "net.ipv6.conf.eth0.disable_ipv6 = 1" >> /etc/sysctl.conf
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# sysctl -p              
+net.ipv6.conf.eth0.disable_ipv6 = 1
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ifoconfig
+找不到命令 “ifoconfig”，您的意思是：
+  “ifconfig” 命令来自 Debian 软件包 net-tools
+尝试 apt install <deb name>
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ifconfig 
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.101.53  netmask 255.255.255.0  broadcast 192.168.101.255
+        ether 00:0c:29:c5:43:3b  txqueuelen 1000  (Ethernet)
+        RX packets 1257371  bytes 520060509 (495.9 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 1207200  bytes 298127432 (284.3 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 1314024  bytes 258364225 (246.3 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 1314024  bytes 258364225 (246.3 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+wlan0: flags=803<UP,BROADCAST,NOTRAILERS,PROMISC,ALLMULTI>  mtu 2312
+        unspec 4A-BB-EE-B3-E6-23-00-48-00-00-00-00-00-00-00-00  txqueuelen 1000  (UNSPEC)
+        RX packets 2637199  bytes 0 (0.0 B)
+        RX errors 0  dropped 2492954  overruns 0  frame 0
+        TX packets 5123  bytes 197467 (192.8 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+                                                                             
+
+注意所有操作必须在root用户 且只在kail中
+┌──(root💀tyza66)-[~]
+└─# unzip CVE-2018-8174_EXP-master.zip            
+Archive:  CVE-2018-8174_EXP-master.zip
+d055e4d56920f10303f9a8879c8eb47e22abb01d
+   creating: CVE-2018-8174_EXP-master/
+  inflating: CVE-2018-8174_EXP-master/CVE-2018-8174.py  
+  inflating: CVE-2018-8174_EXP-master/README.md  
+
+┌──(root💀tyza66)-[~]
+└─# unzip master                      
+Archive:  master
+49ca40906f33fae54b1cddde49588787d96d3b3f
+   creating: Evil-Droid-master/
+  inflating: Evil-Droid-master/README.md  
+  inflating: Evil-Droid-master/changelog  
+  inflating: Evil-Droid-master/evil-droid  
+   creating: Evil-Droid-master/icons/
+ extracting: Evil-Droid-master/icons/cmlite.png  
+ extracting: Evil-Droid-master/icons/evil.png  
+ extracting: Evil-Droid-master/icons/fbhacker.png  
+  inflating: Evil-Droid-master/icons/fblite.png  
+ extracting: Evil-Droid-master/icons/remember.txt  
+  inflating: Evil-Droid-master/icons/wifi.png  
+   creating: Evil-Droid-master/tools/
+  inflating: Evil-Droid-master/tools/apktool.jar  
+ extracting: Evil-Droid-master/tools/doc.txt  
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd Evil-Droid-master 
+  
+──(root💀tyza66)-[~/Evil-Droid-master]
+└─# ls
+changelog  evil-droid  icons  README.md  tools
+                                                                             
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─# chmod +x evil-droid 
+
+之后修改主程序里面的一些东西
+
+在第40行 ping谷歌 改成 ping百度
+
+还有去掉649行的-fa monaco要去掉
+
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─# vim evil-droid
+
+然后下一步弄apktools 把apktool换成新版
+之后直接./evil-droid 运行一下
+它会自动安装依赖
+
+             .           .                                                  
+              M.          .M                                                 
+               MMMMMMMMMMM.                                                  
+            .MMM\MMMMMMM/MMM.                                                
+           .MMM.7MMMMMMM.7MMM.                                               
+          .MMMMMMMMMMMMMMMMMMM                                               
+          MMMMMMM.......MMMMMMM                                              
+          MMMMMMMMMMMMMMMMMMMMM                                              
+     MMMM MMMMMMMMMMMMMMMMMMMMM MMMM                                         
+    dMMMM.MMMMMMMMMMMMMMMMMMMMM.MMMMD                                        
+    dMMMM.MMMMMMMMMMMMMMMMMMMMM.MMMMD                                        
+    dMMMM.MMMMMMMMMMMMMMMMMMMMM.MMMMD                                        
+    dMMMM.MMMMMMMMMMMMMMMMMMMMM.MMMMD                                        
+    dMMMM.MMMMMMMMMMMMMMMMMMMMM.MMMMD                                        
+    dMMMM.MMMMMMMMMMMMMMMMMMMMM.MMMMD                                        
+    dMMMM.MMMMMMMMMMMMMMMMMMMMM.MMMMD                                        
+     MMM8 MMMMMMMMMMMMMMMMMMMMM 8MMM                                         
+          MMMMMMMMMMMMMMMMMMMMM                                              
+          MMMMMMMMMMMMMMMMMMMMM                                              
+              MMMMM   MMMMM  v0.3                                            
+              MMMMM   MMMMM                                                  
+              MMMMM   MMMMM                                                  
+              MMMMM   MMMMM                                                  
+              .MMM.   .MMM.                                                  
+      Mascerano Bachir - Dev-labs                                            
+                                                                             
+╔──────────────────────────────────────────────╗                             
+|          Evil-Droid Framework v0.3           |                             
+|      Hack & Remote android plateform         |                             
+┖──────────────────────────────────────────────┙                             
+[1] APK MSF                                                                  
+[2] BACKDOOR APK ORIGINAL (OLD)                                              
+[3] BACKDOOR APK ORIGINAL (NEW)                                              
+[4] BYPASS AV APK (ICON CHANGE)                                              
+[5] START LISTENER                                                           
+[c] CLEAN                                                                    
+[q] QUIT                                                                     
+[?] Select>:                                                                 
+
+选3
+
+之后我们看好ipv4地址 点确定
+选要植入后门的apk
+
+然后等它自动逆向
+
+                                                                           
