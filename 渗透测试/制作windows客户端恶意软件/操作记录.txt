@@ -1,0 +1,153 @@
+除了注入代码还有一种捆绑程序的方式
+就是不修改代码,打开的时候自动释放并运行
+
+先安装go语言
+┌──(root💀tyza66)-[~]
+└─# apt -y install golang
+下列软件包是自动安装的并且现在不需要了：       
+  cpp-13                   libgfrpc0         librdmacm1t64
+  ibverbs-providers        libgfxdr0         python3-lib2to3
+  libboost-iostreams1.83.0 libglusterfs0     python3.11
+  libboost-thread1.83.0    libibverbs1       python3.11-dev
+  libcephfs2               libpython3.11-dev python3.11-minimal
+  libgfapi0                librados2         samba-vfs-modules
+使用'apt autoremove'来卸载它(它们)。
+
+将要安装：
+  golang
+                                                                             
+将要安装的依赖：
+  golang-1.23     golang-1.23-go  golang-doc golang-src  pkgconf
+  golang-1.23-doc golang-1.23-src golang-go  libpkgconf3 pkgconf-bin         
+                                                                             
+建议安装：
+  bzr | brz mercurial
+
+摘要：
+  升级：0，安装：11，卸载：0，不升级：1906
+  下载大小：46.4 MB
+  所需的空间：243 MB / 83.5 GB 可用
+
+获取:1 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang-1.23-doc all 1.23.3-2 [109 kB]
+获取:2 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang-1.23-src all 1.23.3-2 [19.1 MB]
+获取:3 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang-1.23-go amd64 1.23.3-2 [27.0 MB]
+获取:4 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang-1.23 all 1.23.3-2 [15.5 kB]
+获取:5 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang-src all 2:1.23~2 [5,088 B]
+获取:6 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang-go amd64 2:1.23~2 [44.3 kB]
+获取:7 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang-doc all 2:1.23~2 [5,108 B]
+获取:8 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 golang amd64 2:1.23~2 [5,044 B]
+获取:9 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 libpkgconf3 amd64 1.8.1-4 [36.4 kB]
+获取:10 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 pkgconf-bin amd64 1.8.1-4 [30.2 kB]
+获取:11 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 pkgconf amd64 1.8.1-4 [26.2 kB]
+已下载 46.4 MB，耗时 7秒 (6,893 kB/s)                                       
+正在选中未选择的软件包 golang-1.23-doc。
+(正在读取数据库 ... 系统当前共安装有 417455 个文件和目录。)
+准备解压 .../00-golang-1.23-doc_1.23.3-2_all.deb  ...
+正在解压 golang-1.23-doc (1.23.3-2) ...
+正在选中未选择的软件包 golang-1.23-src。
+准备解压 .../01-golang-1.23-src_1.23.3-2_all.deb  ...
+正在解压 golang-1.23-src (1.23.3-2) ...
+正在选中未选择的软件包 golang-1.23-go。
+准备解压 .../02-golang-1.23-go_1.23.3-2_amd64.deb  ...
+正在解压 golang-1.23-go (1.23.3-2) ...
+正在选中未选择的软件包 golang-1.23。
+准备解压 .../03-golang-1.23_1.23.3-2_all.deb  ...
+正在解压 golang-1.23 (1.23.3-2) ...
+正在选中未选择的软件包 golang-src。
+准备解压 .../04-golang-src_2%3a1.23~2_all.deb  ...
+正在解压 golang-src (2:1.23~2) ...
+正在选中未选择的软件包 golang-go:amd64。
+准备解压 .../05-golang-go_2%3a1.23~2_amd64.deb  ...
+正在解压 golang-go:amd64 (2:1.23~2) ...
+正在选中未选择的软件包 golang-doc。
+准备解压 .../06-golang-doc_2%3a1.23~2_all.deb  ...
+正在解压 golang-doc (2:1.23~2) ...
+正在选中未选择的软件包 golang:amd64。
+准备解压 .../07-golang_2%3a1.23~2_amd64.deb  ...
+正在解压 golang:amd64 (2:1.23~2) ...
+正在选中未选择的软件包 libpkgconf3:amd64。
+准备解压 .../08-libpkgconf3_1.8.1-4_amd64.deb  ...
+正在解压 libpkgconf3:amd64 (1.8.1-4) ...
+正在选中未选择的软件包 pkgconf-bin。
+准备解压 .../09-pkgconf-bin_1.8.1-4_amd64.deb  ...
+正在解压 pkgconf-bin (1.8.1-4) ...
+正在选中未选择的软件包 pkgconf:amd64。
+准备解压 .../10-pkgconf_1.8.1-4_amd64.deb  ...
+正在解压 pkgconf:amd64 (1.8.1-4) ...
+正在设置 golang-1.23-doc (1.23.3-2) ...
+正在设置 libpkgconf3:amd64 (1.8.1-4) ...
+正在设置 golang-1.23-src (1.23.3-2) ...
+正在设置 pkgconf-bin (1.8.1-4) ...
+正在设置 golang-src (2:1.23~2) ...
+正在设置 pkgconf:amd64 (1.8.1-4) ...
+正在设置 golang-1.23-go (1.23.3-2) ...
+正在设置 golang-1.23 (1.23.3-2) ...
+正在设置 golang-go:amd64 (2:1.23~2) ...
+正在设置 golang-doc (2:1.23~2) ...
+正在设置 golang:amd64 (2:1.23~2) ...
+正在处理用于 libc-bin (2.38-10) 的触发器 ...
+正在处理用于 man-db (2.12.1-1) 的触发器 ...
+正在处理用于 kali-menu (2023.4.7) 的触发器 ...
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# go -version
+flag provided but not defined: -version
+Go is a tool for managing Go source code.
+
+Usage:
+
+        go <command> [arguments]
+
+The commands are:
+
+        bug         start a bug report
+        build       compile packages and dependencies
+        clean       remove object files and cached files
+        doc         show documentation for package or symbol
+        env         print Go environment information
+        fix         update packages to use new APIs
+        fmt         gofmt (reformat) package sources
+        generate    generate Go files by processing source
+        get         add dependencies to current module and install them
+        install     compile and install packages and dependencies
+        list        list packages or modules
+        mod         module maintenance
+        work        workspace maintenance
+        run         compile and run Go program
+        telemetry   manage telemetry data and settings
+        test        test packages
+        tool        run specified go tool
+        version     print Go version
+        vet         report likely mistakes in packages
+
+Use "go help <command>" for more information about a command.
+
+Additional help topics:
+
+        buildconstraint build constraints
+        buildmode       build modes
+        c               calling between Go and C
+        cache           build and test caching
+        environment     environment variables
+        filetype        file types
+        go.mod          the go.mod file
+        gopath          GOPATH environment variable
+        goproxy         module proxy protocol
+        importpath      import path syntax
+        modules         modules, module versions, and more
+        module-auth     module authentication using go.sum
+        packages        package lists and patterns
+        private         configuration for downloading non-public code
+        testflag        testing flags
+        testfunc        testing functions
+        vcs             controlling version control with GOVCS
+
+Use "go help <topic>" for more information about that topic.
+
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# go version 
+go version go1.23.3 linux/amd64
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# 

