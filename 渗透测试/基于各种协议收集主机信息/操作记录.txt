@@ -278,3 +278,85 @@ msf6 auxiliary(sniffer/psnuffle) >
 [*] Successful FTP Login: 192.168.101.53:60290-192.168.101.180:21 >> msfadmin / msfadmin
 
 同时局域网连接外网的时候也可以被监听到
+
+ftp连接上之后一直没有反应
+因为lftp默认使用被动方式进行连接服务 当前不支持
+打开那个注释就是主动模式了
+┌──(root💀tyza66)-[~]
+└─# lftp 192.168.101.180 -u msfadmin
+密码: 
+lftp msfadmin@192.168.101.180:~> ls                   
+`ls' 在 0 [正在建立数据连接...]
+
+中断                                        
+lftp msfadmin@192.168.101.180:/> 
+lftp msfadmin@192.168.101.180:/> exit
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# vim /etc/lftp.cong      
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# vim /etc/lftp.conf
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# lftp 192.168.101.180 -u msfadmin
+密码: 
+lftp msfadmin@192.168.101.180:~> ls                   
+-rw-r--r--   1 33       33          58875 Jul 27  2011 CHANGELOG.txt
+-rw-r--r--   1 33       33            996 Jul 27  2011 COPYRIGHT.txt
+-rw-r--r--   1 33       33           1447 Jul 27  2011 INSTALL.mysql.txt
+-rw-r--r--   1 33       33           1874 Jul 27  2011 INSTALL.pgsql.txt
+-rw-r--r--   1 33       33           1298 Jul 27  2011 INSTALL.sqlite.txt
+-rw-r--r--   1 33       33          17856 Jul 27  2011 INSTALL.txt
+-rw-r--r--   1 33       33          14940 Feb 24  2011 LICENSE.txt
+-rw-r--r--   1 33       33           7356 Jul 27  2011 MAINTAINERS.txt
+-rw-r--r--   1 33       33           3494 Jul 27  2011 README.txt
+-rw-r--r--   1 33       33           8811 Jul 27  2011 UPGRADE.txt
+-rw-r--r--   1 33       33           6605 Jul 27  2011 authorize.php
+-rw-r--r--   1 33       33            720 Jul 27  2011 cron.php
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 includes
+-rw-r--r--   1 33       33            529 Jul 27  2011 index.php
+-rw-r--r--   1 33       33            688 Jul 27  2011 install.php
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 misc
+drwxr-xr-x  42 33       33           4096 Jul 27  2011 modules
+drwxr-xr-x   5 33       33           4096 Jul 27  2011 profiles
+-rw-r--r--   1 33       33           1531 Jul 27  2011 robots.txt
+drwxr-xr-x   2 33       33           4096 Jul 27  2011 scripts
+drwxr-xr-x   4 33       33           4096 Jul 27  2011 sites
+drwxr-xr-x   8 33       33           4096 Jul 27  2011 themes
+-rw-r--r--   1 33       33          18039 Jul 27  2011 update.php
+-rw-r--r--   1 33       33           2051 Jul 27  2011 web.config
+-rw-r--r--   1 33       33            417 Jul 27  2011 xmlrpc.php
+lftp msfadmin@192.168.101.180:/> 
+
+接下来演示一下如何将提取到的数据包中支持的数据提取出来
+比如我们用一个wireshark抓到的一个包
+msf6 auxiliary(sniffer/psnuffle) > set PCAPFILE /home/dvwa.pcap
+PCAPFILE => /home/dvwa.pcap
+msf6 auxiliary(sniffer/psnuffle) > show options
+
+Module options (auxiliary/sniffer/psnuffle):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   FILTER                      no        The filter string for capturing traffic
+   INTERFACE                   no        The name of the interface
+   PCAPFILE   /home/dvwa.pcap  no        The name of the PCAP capture file to process
+   PROTOCOLS  all              yes       A comma-delimited list of protocols to sniff o
+                                         r "all".
+   SNAPLEN    65535            yes       The number of bytes to capture
+   TIMEOUT    500              yes       The number of seconds to wait for new data
+
+
+Auxiliary action:
+
+   Name     Description
+   ----     -----------
+   Sniffer  Run sniffer
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(sniffer/psnuffle) > run
+即可
