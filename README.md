@@ -17,5 +17,8 @@
 - Metasploit使用
 - 无线安全
 - 基于各种协议收集主机信息
+- 制作windows恶意软件
+- 制作linux恶意软件
+- 安卓安全
 
 By: tyza66

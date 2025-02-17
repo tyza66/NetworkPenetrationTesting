@@ -335,6 +335,17 @@ meterpreter >
 
 成功
 
+之后卸载掉扫雷游戏
+┌──(root💀tyza66)-[~]
+└─# dpkg -r freesweep
+(正在读取数据库 ... 系统当前共安装有 432279 个文件和目录。)
+正在卸载 freesweep (1.0.1-2) ...
+正在处理用于 man-db (2.12.1-1) 的触发器 ...
+正在处理用于 hicolor-icon-theme (0.17-2) 的触发器 ...
+正在处理用于 desktop-file-utils (0.27-2) 的触发器 ...
+
+连接依然存在
+
 
 
                                                                             
