@@ -2246,8 +2246,56 @@ Password for [WORKGROUP\tyza66]:
 Reconnecting with SMB1 for workgroup listing.
 do_connect: Connection to 192.168.101.111 failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
 Unable to connect with SMB1 -- no workgroup available
+
+查看文件夹内容的话就不要L直接到目录 携带账密
+smbclient //192.168.101.111/Share -U tyza66%123456
                                                            
 
+┌──(root💀tyza66)-[~]
+└─# smbclient //192.168.101.111/Share -U tyza66%123456
+Try "help" to get a list of possible commands.
+smb: \> ls
+  .                                   D        0  Mon Feb 17 11:01:35 2025
+  ..                                  D        0  Mon Feb 17 11:01:35 2025
+  服务器账密.txt                 A       15  Mon Feb 17 11:01:38 2025
+
+                15644159 blocks of size 4096. 10516230 blocks available
+smb: \> help
+?              allinfo        altname        archive        backup         
+blocksize      cancel         case_sensitive cd             chmod          
+chown          close          del            deltree        dir            
+du             echo           exit           get            getfacl        
+geteas         hardlink       help           history        iosize         
+lcd            link           lock           lowercase      ls             
+l              mask           md             mget           mkdir          
+mkfifo         more           mput           newer          notify         
+open           posix          posix_encrypt  posix_open     posix_mkdir    
+posix_rmdir    posix_unlink   posix_whoami   print          prompt         
+put            pwd            q              queue          quit           
+readlink       rd             recurse        reget          rename         
+reput          rm             rmdir          showacls       setea          
+setmode        scopy          stat           symlink        tar            
+tarmode        timeout        translate      unlock         volume         
+vuid           wdel           logon          listconnect    showconnect    
+tcon           tdis           tid            utimes         logoff         
+..             !              
+
+下载就是get一下就行
+get 服务器账密.txt
+
+当前在哪就下载到哪
+上传就put
+smb: \> get 服务器账密.txt
+getting file \服务器账密.txt of size 15 as 服务器账密.txt (1.8 KiloBytes/sec) (average 1.8 KiloBytes/sec)
+smb: \> put hello.txt
+putting file hello.txt as \hello.txt (0.5 kb/s) (average 0.5 kb/s)
+
+下载多个就是mget 之后需要的文件的文件名中间用空格去间隔
+
+创建文件夹mkdir
+pwd 当前在哪
+rm 删除文件
+rmdir 删除文件夹
 
 
 
