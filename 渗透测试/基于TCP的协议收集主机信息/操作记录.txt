@@ -1,0 +1,280 @@
+使用nmap扫描服务和版本 进行全端口扫描
+扫描一共65535个端口比较慢 按回车可以查看进度
+┌──(root💀tyza66)-[~/aircrack_8812au]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: Start commands with a space to avoid saving them to history
+                                                  
+
+                 _---------.
+             .' #######   ;."
+  .---,.    ;@             @@`;   .---,..
+." @@@@@'.,'@@            @@@@@',.'@@@@ ".
+'-.@@@@@@@@@@@@@          @@@@@@@@@@@@@ @;
+   `.@@@@@@@@@@@@        @@@@@@@@@@@@@@ .'
+     "--'.@@@  -.@        @ ,'-   .'--"
+          ".@' ; @       @ `.  ;'
+            |@@@@ @@@     @    .
+             ' @@@ @@   @@    ,
+              `.@@@@    @@   .
+                ',@@     @   ;           _____________
+                 (   3 C    )     /|___ / Metasploit! \
+                 ;@'. __*__,."    \|--- \_____________/
+                  '(.,...."/
+
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > db_nmap -p- -sV 192.168.101.180
+[*] Nmap: Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-02-17 07:38 CST
+[*] Nmap: Stats: 0:00:48 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
+[*] Nmap: SYN Stealth Scan Timing: About 35.74% done; ETC: 07:41 (0:01:26 remaining)
+
+在局域网内可以依靠ARP协议探测网段内有哪些存活主机
+SHOST 和 SMAC是可以伪装的
+
+msf6 > use auxiliary/scanner/discovery/arp_sweep
+msf6 auxiliary(scanner/discovery/arp_sweep) > show options
+
+Module options (auxiliary/scanner/discovery/arp_sweep):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   INTERFACE                   no        The name of the interface
+   RHOSTS                      yes       The target host(s), see https://docs.metasploit
+                                         .com/docs/using-metasploit/basics/using-metaspl
+                                         oit.html
+   SHOST                       no        Source IP Address
+   SMAC                        no        Source MAC Address
+   THREADS    1                yes       The number of concurrent threads (max one per h
+                                         ost)
+   TIMEOUT    5                yes       The number of seconds to wait for new data
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/discovery/arp_sweep) > set RHOSTS 192.16.101.0/24
+RHOSTS => 192.16.101.0/24
+msf6 auxiliary(scanner/discovery/arp_sweep) > run
+
+[+] 192.168.101.180 appears to be up (VMware, Inc.).
+^C[*] Caught interrupt from the console...
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/discovery/arp_sweep) > set RHOSTS 192.168.101.0/24
+RHOSTS => 192.168.101.0/24
+msf6 auxiliary(scanner/discovery/arp_sweep) > run
+
+[+] 192.168.101.1 appears to be up (UNKNOWN).
+[+] 192.168.101.26 appears to be up (Intel Corporate).
+[+] 192.168.101.180 appears to be up (VMware, Inc.).
+[+] 192.168.101.86 appears to be up (UNKNOWN).
+[+] 192.168.101.88 appears to be up (UNKNOWN).
+[+] 192.168.101.93 appears to be up (UNKNOWN).
+[+] 192.168.101.94 appears to be up (UNKNOWN).
+[+] 192.168.101.95 appears to be up (UNKNOWN).
+[+] 192.168.101.96 appears to be up (UNKNOWN).
+[+] 192.168.101.99 appears to be up (VMware, Inc.).
+[+] 192.168.101.180 appears to be up (VMware, Inc.).
+[+] 192.168.101.180 appears to be up (VMware, Inc.).
+^C[*] Caught interrupt from the console...
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/discovery/arp_sweep) > 
+
+除了用arp扫描还可以用半连接的方式进行扫描
+msf6 auxiliary(scanner/discovery/arp_sweep) > search portscan
+
+Matching Modules
+================
+
+   #  Name                                              Disclosure Date  Rank    Check  Description
+   -  ----                                              ---------------  ----    -----  -----------
+   0  auxiliary/scanner/portscan/ftpbounce              .                normal  No     FTP Bounce Port Scanner
+   1  auxiliary/scanner/natpmp/natpmp_portscan          .                normal  No     NAT-PMP External Port Scanner
+   2  auxiliary/scanner/sap/sap_router_portscanner      .                normal  No     SAPRouter Port Scanner
+   3  auxiliary/scanner/portscan/xmas                   .                normal  No     TCP "XMas" Port Scanner
+   4  auxiliary/scanner/portscan/ack                    .                normal  No     TCP ACK Firewall Scanner
+   5  auxiliary/scanner/portscan/tcp                    .                normal  No     TCP Port Scanner
+   6  auxiliary/scanner/portscan/syn                    .                normal  No     TCP SYN Port Scanner
+   7  auxiliary/scanner/http/wordpress_pingback_access  .                normal  No     Wordpress Pingback Locator
+
+
+Interact with a module by name or index. For example info 7, use 7 or use auxiliary/scannr/http/wordpress_pingback_access                                                         
+
+msf6 auxiliary(scanner/discovery/arp_sweep) > back
+msf6 > use auxiliary/scanner/portscan/syn 
+msf6 auxiliary(scanner/portscan/syn) > set RHOSTS 192.168.101.180
+RHOSTS => 192.168.101.180
+msf6 auxiliary(scanner/portscan/syn) > set PORTS 80
+PORTS => 80
+msf6 auxiliary(scanner/portscan/syn) > run
+
+[+]  TCP OPEN 192.168.101.180:80
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/portscan/syn) > Interrupt: use the 'exit' command to quit
+msf6 auxiliary(scanner/portscan/syn) > set PORTS 21-100
+PORTS => 21-100
+msf6 auxiliary(scanner/portscan/syn) > run
+
+[+]  TCP OPEN 192.168.101.180:21
+[+]  TCP OPEN 192.168.101.180:80
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+扫描到结果之后 可以进行敏感信息收集
+使用psnuffle进行嗅探
+可以在线嗅探 也可以离线嗅探已经抓到的数据包
+我们先不用设置直接run
+按下回车之后就可以在后台监听
+
+
+msf6 > search psnuffle
+
+Matching Modules
+================
+
+   #  Name                        Disclosure Date  Rank    Check  Description
+   -  ----                        ---------------  ----    -----  -----------
+   0  auxiliary/sniffer/psnuffle  .                normal  No     pSnuffle Packet Sniffer
+   1    \_ action: List           .                .       .      List protocols
+   2    \_ action: Sniffer        .                .       .      Run sniffer
+
+
+Interact with a module by name or index. For example info 2, use 2 or use auxiliary/sniffer/psnuffle                                                                              
+After interacting with a module you can manually set a ACTION with set ACTION 'Sniffer'
+
+msf6 > use 0
+msf6 auxiliary(sniffer/psnuffle) > options
+
+Module options (auxiliary/sniffer/psnuffle):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   FILTER                      no        The filter string for capturing traffic
+   INTERFACE                   no        The name of the interface
+   PCAPFILE                    no        The name of the PCAP capture file to process
+   PROTOCOLS  all              yes       A comma-delimited list of protocols to sniff o
+                                         r "all".
+   SNAPLEN    65535            yes       The number of bytes to capture
+   TIMEOUT    500              yes       The number of seconds to wait for new data
+
+
+Auxiliary action:
+
+   Name     Description
+   ----     -----------
+   Sniffer  Run sniffer
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(sniffer/psnuffle) > run
+[*] Auxiliary module running as background job 0.
+msf6 auxiliary(sniffer/psnuffle) > 
+[*] Loaded protocol FTP from /usr/share/metasploit-framework/data/exploits/psnuffle/ftp.rb...
+[*] Loaded protocol IMAP from /usr/share/metasploit-framework/data/exploits/psnuffle/imap.rb...
+[*] Loaded protocol POP3 from /usr/share/metasploit-framework/data/exploits/psnuffle/pop3.rb...
+[*] Loaded protocol SMB from /usr/share/metasploit-framework/data/exploits/psnuffle/smb.rb...
+[*] Loaded protocol URL from /usr/share/metasploit-framework/data/exploits/psnuffle/url.rb...
+[*] Sniffing traffic.....
+
+msf6 auxiliary(sniffer/psnuffle) > hobs
+[-] Unknown command: hobs. Run the help command for more details.
+msf6 auxiliary(sniffer/psnuffle) > jobs
+
+Jobs
+====
+
+  Id  Name                         Payload  Payload opts
+  --  ----                         -------  ------------
+  0   Auxiliary: sniffer/psnuffle
+
+msf6 auxiliary(sniffer/psnuffle) 
+
+默认回嗅探整个网段内的敏感信息
+
+我们另开一个终端 尝试连接ftp 实验账号和密码被捕获
+┌──(root💀tyza66)-[~]
+└─# apt update         
+命中:1 https://mirrors.ustc.edu.cn/kali kali-last-snapshot InRelease
+有 1906 个软件包可以升级。请执行 ‘apt list --upgradable’ 来查看它们。
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# apt install lftp   
+下列软件包是自动安装的并且现在不需要了：       
+  cpp-13                   libgfrpc0         librdmacm1t64
+  ibverbs-providers        libgfxdr0         python3-lib2to3
+  libboost-iostreams1.83.0 libglusterfs0     python3.11
+  libboost-thread1.83.0    libibverbs1       python3.11-dev
+  libcephfs2               libpython3.11-dev python3.11-minimal
+  libgfapi0                librados2         samba-vfs-modules
+使用'apt autoremove'来卸载它(它们)。
+
+将要安装：
+  lftp
+
+摘要：
+  升级：0，安装：1，卸载：0，不升级：1906
+  下载大小：768 kB
+  所需的空间：2,434 kB / 83.5 GB 可用
+
+获取:1 https://mirrors.ustc.edu.cn/kali kali-last-snapshot/main amd64 lftp amd64 4.9.2-3+b1 [768 kB]
+已下载 768 kB，耗时 0秒 (1,581 kB/s)
+正在选中未选择的软件包 lftp。
+(正在读取数据库 ... 系统当前共安装有 417416 个文件和目录。)
+准备解压 .../lftp_4.9.2-3+b1_amd64.deb  ...
+正在解压 lftp (4.9.2-3+b1) ...
+正在设置 lftp (4.9.2-3+b1) ...
+正在处理用于 kali-menu (2023.4.7) 的触发器 ...
+正在处理用于 desktop-file-utils (0.27-2) 的触发器 ...
+正在处理用于 hicolor-icon-theme (0.17-2) 的触发器 ...
+正在处理用于 man-db (2.12.1-1) 的触发器 ...
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# lftp 192.168.101.180 -u msfadmin
+密码: 
+lftp msfadmin@192.168.101.180:~> ls                   
+`ls' 在 0 [正在建立数据连接...]
+
+之后我们去监听那边就可以看到
+sf6 auxiliary(sniffer/psnuffle) > jobs -i 0
+
+Name: pSnuffle Packet Sniffer, started at 2025-02-17 07:54:53 +0800
+
+Module options (auxiliary/sniffer/psnuffle):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   FILTER                      no        The filter string for capturing traffic
+   INTERFACE                   no        The name of the interface
+   PCAPFILE                    no        The name of the PCAP capture file to process
+   PROTOCOLS  all              yes       A comma-delimited list of protocols to sniff o
+                                         r "all".
+   SNAPLEN    65535            yes       The number of bytes to capture
+   TIMEOUT    500              yes       The number of seconds to wait for new data
+
+
+Auxiliary action:
+
+   Name     Description
+   ----     -----------
+   Sniffer  Run sniffer
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(sniffer/psnuffle) > 
+[*] Successful FTP Login: 192.168.101.53:56034-192.168.101.180:21 >> msfadmin / msfadmin
+
+msf6 auxiliary(sniffer/psnuffle) > 
+[*] Successful FTP Login: 192.168.101.53:60290-192.168.101.180:21 >> msfadmin / msfadmin
+
+同时局域网连接外网的时候也可以被监听到
