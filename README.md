@@ -24,5 +24,6 @@
 - log4j2漏洞
 - Apache Flink上传漏洞
 - PHP文件上传漏洞
+- 宏感染word
 
 By: tyza66
