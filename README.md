@@ -22,5 +22,7 @@
 - 安卓安全
 - ThinkPHP5远程代码执行漏洞
 - log4j2漏洞
+- Apache Flink上传漏洞
+- PHP文件上传漏洞
 
 By: tyza66
