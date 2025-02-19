@@ -1,0 +1,129 @@
+anti-virus
+基本上就是改特征码
+杀软 使用特征码静态查杀 比如哈希值 局部哈希 检查我呢见签名信息 文件信息
+如果病毒库里面没有这个特征码 就可能躲过去
+
+还有的是上传云端进行云查杀
+源码免杀
+分离免杀  -  用一个加载器将云端的病毒读取到内存中
+修改特征码免杀
+加壳免杀
+花指令免杀
+内存免杀
+白加黑
+
+用strings 可以将二进制文件中的文本提取出来
+打开之后看见的那些都是特征码
+strings xxx.exe | shellcode 直接检索shellcode 非常明显
+使用VirTest制作测试文件
+
+进虚拟机打开测试文件 打开.vir文件
+
+点击定位特征码 会基于杀软标记出来哪些特征码被查杀了
+自动就行
+
+做免杀了之后就查不出来了
+点击左侧偏移量就能找到对应位置
+就是将检测到的特征码都改一下
+用x64dbg可以查看机器码 就是在一些容易被查杀的地方插入一些空指令(nop)和无效指令垃圾指令(交换寄存器自己和自己的值或者将eax和0异或)就叫花指令方式 或者拆分指令 或者将同功能指令替换
+
+恶意代码运行的时候会申请内存空间 有的杀软会检测内存
+
+有的文件默认在系统的白名单里面 我们直接干这些dll 这就叫dll劫持 
+白名单程序加载我们自己的恶意程序就是白加黑
+
+
+咱们使用的是分离免杀
+加载器+服务器
+加载器申请一段内存空间之后加载恶意代码然后运行
+加载器不限语言
+我们用shellcode shellcode还可以加密 各种加密 shellcode加密后通过加载器解密后打入内存执行
+如果这种木马失效了 很容易再次生成 
+
+先要安装gcc go语言中的race有非常好的免杀效果
+-race参数用于检测并发现代码中的数据竞争问题 多个任务同时访问共享变量的时候可能会导致数据竞争发生错误 race参数会启用数据竞争检测器这是一个复杂的工具 需要内存访问控制进行细颗粒度的监控 这种监控改变了恶意代码的原有结构 导致杀软不能正确识别恶意代码
+go语言中的数据竞争检测器是使用c++编写的 cgo支持go语言中引用或直接编写c/c++代码 所以使用race编译程序的时候需要安装gcc编译器和启用cgo功能
+
+这个可以在物理机弄了
+
+然后用CobaltStrike搞一下
+┌──(root💀tyza66)-[~/CVE-2018-8174_EXP-master]
+└─# cd                           
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# unzip CobaltStrike4.3.zip         
+Archive:  CobaltStrike4.3.zip
+   creating: CobaltStrike4.3/
+  inflating: CobaltStrike4.3/peclone  
+  inflating: CobaltStrike4.3/cobaltstrike  
+  inflating: CobaltStrike4.3/readme.txt  
+  inflating: CobaltStrike4.3/agscript  
+  inflating: CobaltStrike4.3/teamserver  
+  inflating: CobaltStrike4.3/.cobaltstrike.beacon_keys  
+  inflating: CobaltStrike4.3/start.sh  
+  inflating: CobaltStrike4.3/c2lint  
+  inflating: CobaltStrike4.3/license.pdf  
+ extracting: CobaltStrike4.3/cobaltstrike.auth  
+   creating: CobaltStrike4.3/third-party/
+  inflating: CobaltStrike4.3/third-party/README.winvnc.txt  
+  inflating: CobaltStrike4.3/third-party/winvnc.x86.dll  
+  inflating: CobaltStrike4.3/third-party/winvnc.x64.dll  
+  inflating: CobaltStrike4.3/cobaltstrike.store  
+  inflating: CobaltStrike4.3/icon.jpg  
+  inflating: CobaltStrike4.3/hook.jar  
+  inflating: CobaltStrike4.3/update.jar  
+  inflating: CobaltStrike4.3/update  
+  inflating: CobaltStrike4.3/cobaltstrike.jar  
+  inflating: CobaltStrike4.3/start.bat  
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# cd CobaltStrike4.3         
+                                                                             
+┌──(root💀tyza66)-[~/CobaltStrike4.3]
+└─# ls
+agscript           cobaltstrike.jar    license.pdf  start.sh     update.jar
+c2lint             cobaltstrike.store  peclone      teamserver
+cobaltstrike       hook.jar            readme.txt   third-party
+cobaltstrike.auth  icon.jpg            start.bat    update
+
+之后给一下权限
+┌──(root💀tyza66)-[~/CobaltStrike4.3]
+└─# chmod +x teamserver start.sh 
+
+┌──(root💀tyza66)-[~/CobaltStrike4.3]
+└─# ./teamserver 192.168.101.53 123456
+[*] Will use existing X509 certificate and keystore (for SSL)
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true
+Hook start
+Found desired class: common/Authorization
+[+] Team server is up on 0.0.0.0:41337
+[*] SHA256 hash of SSL cert is: e4aca4bc16d4673641ae6d44101e2eab09a37b6c6b79fd5022ad1d93a27615f0
+ 
+直接启动team端 注意这个工具当前版本有bug 千万不要暴露在外网
+
+客户端联机的时候也要注意SHA256 hash of SSL cert is: e4aca4bc16d4673641ae6d44101e2eab09a37b6c6b79fd5022ad1d93a27615f0
+哈希值应该是一致的
+之后不要关 再单独的启动一个客户端
+
+./start.sh
+sudo apt-get update
+sudo apt-get install libxaw7 libxtst6 libxi6
+
+换java17 行了
+./start.sh
+
+启动之后输入ip端口还有密码 用户名随便填
+先新建一个监听
+之后创建一个bin格式的后门
+添加HTTP Hosts 下面的也填写本地kali 选一下端口
+之后生成一个payload 点击攻击  点最后一个window(s)
+选刚才的监听器 类型选raw x64挑上
+之后用go语言解bin文件混淆后放入内存中运行即可
+还可以用Veil
+use 1
+选择 Evasion逃逸
+list use17(13)
+选择go语言模块
+选3 自定义payload
+
+

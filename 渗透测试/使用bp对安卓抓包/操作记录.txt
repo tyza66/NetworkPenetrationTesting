@@ -1,0 +1,73 @@
+开bp点代理 点代理设置
+点代理 选 编辑 指定地址为本地ip 确认
+起一个安卓12的模拟器
+点击设置 找到连接 按住鼠标左键 高级选项
+代理改为手动 指向刚才的地方
+有的安卓机器要安装证书 http://burp
+可以去burp下载der格式的
+可以在kali转换
+openssl x509 -inform der -in cacert.der -out cacert.pem
+openssl x509 -inform der -in cacert.der -out cacert.pem
+openssl x509 -inform PEM -subject_hash_old -in cacert.pem
+
+之后返回的哈希值对应的.0文件
+然后弄个adb 给这个.0文件放在adb目录
+netstat -ano |findstr "620"
+查一下端口号
+adb connect xxx
+adb root
+挂载读写权限
+adb remount
+将证书上传到目录
+adb push xxx.0 /system/etc/security/cacerts/
+查看安卓版本号
+adb shell getprop ro.build.version.release
+查看架构
+adb shell getprop ro.product.cpu.abi
+到安卓那边设置 安全  信任的凭证
+看看证书启用
+bp中在代理拦截里面点击拦截已开启
+手机访问页面或者app就行了
+https://xss-quiz.int21h.jp
+
+┌──(root💀tyza66)-[~]
+└─#  openssl x509 -inform der -in cacert.der -out cacert.pem
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# openssl x509 -inform PEM -subject_hash_old -in cacert.pem
+9a5ba575
+-----BEGIN CERTIFICATE-----
+MIIDqDCCApCgAwIBAgIFAOZGCtYwDQYJKoZIhvcNAQELBQAwgYoxFDASBgNVBAYT
+C1BvcnRTd2lnZ2VyMRQwEgYDVQQIEwtQb3J0U3dpZ2dlcjEUMBIGA1UEBxMLUG9y
+dFN3aWdnZXIxFDASBgNVBAoTC1BvcnRTd2lnZ2VyMRcwFQYDVQQLEw5Qb3J0U3dp
+Z2dlciBDQTEXMBUGA1UEAxMOUG9ydFN3aWdnZXIgQ0EwHhcNMTQwMjE4MDExMTA3
+WhcNMzUwMjE4MDExMTA3WjCBijEUMBIGA1UEBhMLUG9ydFN3aWdnZXIxFDASBgNV
+BAgTC1BvcnRTd2lnZ2VyMRQwEgYDVQQHEwtQb3J0U3dpZ2dlcjEUMBIGA1UEChML
+UG9ydFN3aWdnZXIxFzAVBgNVBAsTDlBvcnRTd2lnZ2VyIENBMRcwFQYDVQQDEw5Q
+b3J0U3dpZ2dlciBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMUt
+If8yDRR1vF50Yi6pe3iUiKXJInO6Py2K1wFlU6zbmUz8kcFvgvg9ongNAnPAYl/n
+vyXYHGw1Agj2yktIwZ5aSdS+kCiFqtcMGCIQKoQjvAex2d49SLeONZs/0hWdLWy7
+64rNzZJQ04TgVCPc14KRDq+xpqoVwP9SyiQbF40PYLmpuG29C/KXB8GtMakr667/
+dm/VT4MBaNpyRvO0gUC7BP8ElFX2it4v+QvCkyXNZVsfERyVMVrh9aA/mAVXk6mD
+jBuuG0J5ANjPKNiVlvVLOV1/J1DRd5ms4xaM8kuzT775I/e2IMRyEt635WJlDWWv
+uUly+Tj7R1+YSvuaONECAwEAAaMTMBEwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG
+9w0BAQsFAAOCAQEANnqfBv8Lc0usUDyFG8rti4gBSKT8r3MN6Qlamx+39rxAHupu
+7rBnyqfsdz+6f3TStSdCzdccV/WXs2IL4HvB33vvsj6OEjruYeXvipQ1nMPm9sxw
+dSll/sBNXGarNlmzg2NaYc7cmzsXQJH6iMx7GMfq9cXCHUktTfMFkkL0pkXdFvyH
+tAmRbRZQeRu/O5AH1Jl5CHJChF1xeb+z+xHmeCS5vCrh5Bk3LnqdDYIm6YRTdbwR
+8eiK4KAMYv0Du9sMUoCiM6raIAeOKD7Qt6W61eYZBhe5phF5S8Lx1xjn+cZTxU61
+HghwGIEtmVEoULi1Kn5Acl1YBwokSQ+3vQnvDQ==
+-----END CERTIFICATE-----
+                                                                             
+cp cacert.pem 9a5ba575.0
+netstat -ano |findstr "620"
+adb connect 127.0.0.1:62001
+adb root
+adb remount
+adb push 9a5ba575.0 /system/etc/security/cacerts/
+
+然后看看证书生效了没
+
+之后可以去http历史记录里面看
+或者拦截看
+然后还有就是有的设备不用装证书也行

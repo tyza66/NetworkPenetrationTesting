@@ -25,5 +25,8 @@
 - Apache Flink上传漏洞
 - PHP文件上传漏洞
 - 宏感染word
+- 0day漏洞获取
+- 反弹shell免杀
+- 
 
 By: tyza66
