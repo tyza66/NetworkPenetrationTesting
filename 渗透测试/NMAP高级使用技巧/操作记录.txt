@@ -1,0 +1,48 @@
+高级扫描技巧和漏扫发现
+
+nmap可以检测存活主机 检测开放端口 服务发现 操作系统 硬件信息 还可以用脚本检测脆弱漏洞
+
+nmap 192.168.101.96  会简单的扫描常用的1000个端口
+
+┌──(root💀tyza66)-[~]
+└─# nmap 192.168.101.96 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-02-19 13:12 CST
+Nmap scan report for 192.168.101.96
+Host is up (0.000075s latency).
+Not shown: 995 closed tcp ports (reset)
+PORT    STATE SERVICE
+135/tcp open  msrpc
+139/tcp open  netbios-ssn
+445/tcp open  microsoft-ds
+902/tcp open  iss-realsecure
+912/tcp open  apex-mesh
+MAC Address: 38:68:93:8A:28:A2 (Intel Corporate)
+
+Nmap done: 1 IP address (1 host up) scanned in 1.76 seconds
+nmap也可以扫外网域名地址
+
+接下来进行扫描一个机器 查看打开的端口及详细信息
+-v 能显示冗余信息 能显示扫描过程中的细节信息
+
+nmap -v 192.168.101.96
+
+设置端口范围
+nmap 192.168.101.96 -p 1-65535
+nmap 192.168.101.96 -p-  也是全端口扫描
+生成环境下我们只需要开启提供服务的端口 别的全部都关闭就行
+有不需要的服务直接systemctl stop rpcbind
+如果不认识的端口 可以查哪个进程运行的端口 可以找到进程找到文件 把文件关了
+lsof -i :6000  查端口
+ps aux | grep pid号  查谁在运行这个
+
+┌──(root💀tyza66)-[~]
+└─# lsof -i :22  
+COMMAND PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+sshd    915 root    3u  IPv4   9641      0t0  TCP *:ssh (LISTEN)
+sshd    915 root    4u  IPv6   9643      0t0  TCP *:ssh (LISTEN)
+                                                                             
+┌──(root💀tyza66)-[~]
+└─# ps aux | grep 915
+root         915  0.0  0.0  13540  8088 ?        Ss   2月18   0:00 sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups
+root     1298669  0.0  0.0   6584  2284 pts/0    S+   13:26   0:00 grep --color=auto 915
+                                                                             
