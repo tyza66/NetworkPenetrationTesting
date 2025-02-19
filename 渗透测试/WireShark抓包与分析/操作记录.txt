@@ -61,3 +61,43 @@ ping的type去的都是8 回的都是0
 
 再看看tcp的
 这里都是相对序号 ACK啥的那些
+可以看看flages seqraw 是绝对的序列
+点击统计 流量图
+看一下三次握手四次挥手
+
+然后是http协议的
+
+──(root💀tyza66)-[~]
+└─# curl -I baidu.com
+HTTP/1.1 200 OK
+Date: Wed, 19 Feb 2025 03:34:08 GMT
+Server: Apache
+Last-Modified: Tue, 12 Jan 2010 13:48:00 GMT
+ETag: "51-47cf7e6ee8400"
+Accept-Ranges: bytes
+Content-Length: 81
+Cache-Control: max-age=86400
+Expires: Thu, 20 Feb 2025 03:34:08 GMT
+Connection: Keep-Alive
+Content-Type: text/html
+
+请求一下头部信息
+http是握手后的数据传输
+再对应的条上右键 点击追踪流
+TCCP和http都行
+看上面红色是客户端分组
+蓝色是服务器分组
+如果服务器被黑 但是可以ping通网关 但是不能上网
+修改主机的TTL值为1  linux默认是64
+数据报文的生存周期就剩下1 了
+只能经过一跳(每经过一个路由节点)
+所以现在只能ping通网关 别的什么也ping不到 直接返回time to live TTL到期了
+之后抓包重新ping 抓包后就在网关那里就返回了
+抓包发现ping请求响应的地方太近了
+发现了问题之后把TTL值改回来 改回64就可以了
+echo "64" > /proc/sys/net/ipv4/ip_default_ttl
+我们还可以路由跟踪
+或者用mtr 可以看经过了哪些节点
+mtr 地址就可以查看网络数据包经过的路由节点
+或者直接看ping时候的ttl值
+用64减去这个显示的值就行了
