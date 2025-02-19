@@ -28,6 +28,7 @@
 - 0day漏洞获取
 - 反弹shell免杀
 - 使用bp对安卓抓包
-- 
+- WireShark抓包与分析
+- NMAP高级使用技巧
 
 By: tyza66
