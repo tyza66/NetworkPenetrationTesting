@@ -27,6 +27,7 @@
 - 宏感染word
 - 0day漏洞获取
 - 反弹shell免杀
+- 使用bp对安卓抓包
 - 
 
 By: tyza66
