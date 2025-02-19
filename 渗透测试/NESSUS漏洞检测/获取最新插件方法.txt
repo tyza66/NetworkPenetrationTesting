@@ -1,0 +1,13 @@
+执行 /opt/nessus/sbin/nessuscli fetch --challenge 获取新的挑战码
+root@xuegod53:~# /opt/nessus/sbin/nessuscli fetch --challenge
+
+You can copy the challenge code above and paste it alongside your
+Activation Code at:
+https://plugins.nessus.org/v2/offline.php
+
+打开浏览器，访问：https://plugins.nessus.org/v2/offline.php
+
+不用翻墙，获取激活码链接 https://www.tenable.com/products/nessus/nessus-essentials
+随意输入姓名，邮箱必须正确。会把激活码发你的邮箱中。
+
+点击submit后会生成最新插件的下载链接，点击直接下载或者复制链接打开迅雷进行下载即可

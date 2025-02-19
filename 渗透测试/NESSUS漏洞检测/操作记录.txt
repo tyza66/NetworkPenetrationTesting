@@ -1,0 +1,123 @@
+这个玩意比较吃内存 虚拟机给大点内存
+安装
+┌──(root💀tyza66)-[~]
+└─# dpkg -i Nessus-10.1.2-debian6_amd64.deb 
+正在选中未选择的软件包 nessus。
+(正在读取数据库 ... 系统当前共安装有 430305 个文件和目录。)
+准备解压 Nessus-10.1.2-debian6_amd64.deb  ...
+正在解压 nessus (10.1.2) ...
+正在设置 nessus (10.1.2) ...
+Unpacking Nessus Scanner Core Components...
+
+ - You can start Nessus Scanner by typing /bin/systemctl start nessusd.service
+ - Then go to https://tyza66:8834/ to configure your scanner
+
+┌──(root💀tyza66)-[~]
+└─# systemctl start nessusd        
+
+访问给的地址就行了
+注意是https
+https://tyza66:8834/
+https://192.168.101.53:8834/
+
+直接选择第一个免费的 第二部不用填
+激活码选离线方式
+复制挑战码 之后按住ctrl打开上面的连接 打不开就https://plugins.nessus.org/v2/offline.php
+挑战码填入第一个空
+之后去另外一个地址获得激活码
+https://www.tenable.com/products/nessus/nessus-essentials
+注册一下 在邮箱拿注册码
+You can now obtain the newest Nessus plugins at:
+https://plugins.nessus.org/v2/nessus.php?f=all-2.0.tar.gz&u=e15553b55e607b489dcb4230721687bb&p=17d602c870cfcb7425661ea07837903f
+
+You can copy the following license and paste it into the Nessus console to proceed:
+
+-----BEGIN TENABLE LICENSE-----
+aFRsRlpySmI1ZHByTldqU3NPeWdyZktUSmwxekdtV3RGWFF3bjVTMVNEYnNGLzZsS01xbGs0bTlz
+Z01OSlRocFR5N1NBalp4bXY3UjN3a0JKNm84Y2tHVkY4eEhBbEV0TzR6UzF2OXlNOWovbU9TL3NW
+REdRUjNoZHpnT2txaS9lY0xLQWV2aWtXcXY5ZEY2dWZSU2dmcFhrODRBZmpoVndRT3FxYUtZSFhR
+N3FqZHByU1RKK0VPSWx2SnBOZDVMc2REcDNvdVc0d083bTMyUmhYblVkRHhTb1RDRjI4SlNRaFcz
+cldKR2JyaVh5VjlYWTB5RFVUZXVhVDAxeWp6czMxcmhydjQ0OWtVajhwTzdzdjFiTmIzc2FVOGJx
+cjJFMXRLa2NreUY2Uk9SZWNBeXBxdVNyMWZJTnFRWjE2MFZaaUZWTnFJWDlaRVdSZWF1VDZQVTZ1
+YU9SS2xjTHBUVUMrVVpoZW5mZUc2RGJ2T3ljb3FXci94YWl
+
+复制进去 直接continue
+设置密码 例如admin 123456
+
+之后我们还得安装插件
+不装插件的时候创建扫描的时候插件里面没东西
+创建Advanced Scan没东西        
+
+插件包不要解压 进去导入  导入进去还需要时间
+/opt/nessus/sbin/nessuscli update /root/all-2.0.tar.gz 
+
+┌──(root💀tyza66)-[~]
+└─# /opt/nessus/sbin/nessuscli update /root/all-2.0.tar.gz 
+
+[info] Copying templates version 202203281503 to /opt/nessus/var/nessus/templates/tmp
+[info] Finished copying templates.
+[info] Moved new templates with version 202203281503 from plugins dir.
+[info] Moved new pendo client with version 21220 from plugins dir.
+ * Update successful.  The changes will be automatically processed by Nessus.
+
+安装前后最好弄好快照  别把 系统搞坏了
+┌──(root💀tyza66)-[~]
+└─# systemctl restart nessusd                             
+
+DG8FV-B9TKY-FRT9J-6CRCC-XPQ4G
+
+回去刷新 等条 条走完了会到编译界面 大概半个多小时就好了
+之后输入账密
+
+
+no folder可以加文件夹
+扫描系统的话点击
+不带update的都可以使用
+我们选高级扫描 填一下基础设置的名字和目标(支持多个目标 或者整个网段 支持ip也支持域名)
+还可以导入文件
+还可以启动一个计划任务 每天定时扫描
+还可以配置邮箱将扫描完的结果定时发到邮箱里
+邮箱在settings里面的高级配置里面的smtpserver里面配置
+
+discover 是存活主机发现 各种扫描
+里面还有各种扫描 还有特殊设备的扫描 打印机啥的
+还可以扫描端口
+还有服务发现相关的配置
+还有资产相关的
+还有暴力破解的
+扫描网站的
+windows的
+数据库的
+
+还有关于报告的和高级选项
+还有一些凭证 就是可以携带一些已知的密码账号可以携带
+可以点windows选择密码 设置账号密码
+他还支持很多凭证
+正常都是基于插件进行检测的 默认使用所有插件
+左边是插件分类 可以看一下
+很多插件时没有用的 可以点前面绿的的按钮禁用  点击之后就变灰了
+
+不想用里面小的就去右边点绿色按钮
+最后点下面的save就行了
+之后多一个条里面有个运行按钮lunch 点击可以开始扫描 然后等就行了
+然后点击任务名称可以查看状态
+
+确保电脑能ping通 然后扫 如果很快就自动完成了可能是没配置好
+CRITICALMicrosoft Windows XP Unsupported Installation Detection
+
+电脑扫完了 咱们试试扫描web服务 这次创建任务选择web application  tests
+
+discovery 里面配置全端口扫描
+
+扫描结果可以导出报告
+直接的导出是把扫描任务导出 .nessus文件
+导出之后可以在主界面点import导入
+还有审计跟踪
+
+php信息页主要看disable_functions
+
+扫完漏洞之后 可以将扫到的漏洞测试整理复现一下
+
+nessus也是可以挂代理的
+如果配置经常用可以新建policies(policy) 用于当作新的模板
+自定义的在user defined里面
